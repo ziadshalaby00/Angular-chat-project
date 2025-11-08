@@ -1,1 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
+@import "tailwindcss";
+@import "../using-fontawesome/css/all.min.css";
+@import "../node_modules/@ziadshalaby/ngx-zs-component/output.css";
+
+@custom-variant dark (&:where(.dark, .dark *)); /* Custom Variants */
+
+a, button {
+  cursor: pointer; 
+}

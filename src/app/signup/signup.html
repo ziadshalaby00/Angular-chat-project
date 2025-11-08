@@ -1,0 +1,124 @@
+<!-- signup.component.html -->
+<div class="min-h-[90vh] flex justify-center items-center m-4">
+  <ZS-card 
+  class="w-full max-w-120"
+  bodyClass="bg-white dark:bg-slate-900"
+  cardStyle='violet'
+  >
+    <form (submit)="submit($event)" class="p-6 flex flex-col gap-4 text-slate-800 dark:text-slate-300" novalidate>
+        <h2 class="text-2xl text-center font-bold mb-4 text-violet-800 dark:text-violet-300">Sign Up</h2>
+  
+        <ZS-input
+          [label]="'Full Name'"
+          [placeholder]="'Enter your full name'"
+          icon="fas fa-user"
+  
+          (changedEv)="changeValues($event, 'fullname')"
+          [touched]="form.touched()"
+  
+          [type]="'text'"
+          [required]="true"
+          [inputStyle]="'violet'"
+        ></ZS-input>
+      
+        <ZS-input
+          [label]="'Username'"
+          [hint]="'Enter a unique username.'"
+          [placeholder]="'Enter your username'"
+          icon="fas fa-user"
+  
+          (changedEv)="changeValues($event, 'username')"
+          [touched]="form.touched()"
+  
+          [type]="'text'"
+          [required]="true"
+          [inputStyle]="'violet'"
+        ></ZS-input>
+      
+        <ZS-input
+          [label]="'Email'"
+          [hint]="'Enter a unique email.'"
+          [placeholder]="'Enter your email'"
+          icon="fas fa-envelope"
+  
+          (changedEv)="changeValues($event, 'email')"
+          [touched]="form.touched()"
+  
+          [type]="'email'"
+          [required]="true"
+          [inputStyle]="'violet'"
+        ></ZS-input>
+      
+        <ZS-input #password
+          [label]="'Password'"
+          [placeholder]="'Enter password'"
+          icon="fas fa-lock"
+  
+          (changedEv)="changeValues($event, 'password')"
+          [touched]="form.touched()"
+  
+          [type]="'password'"
+          [required]="true"
+          [inputStyle]="'violet'"
+        ></ZS-input>
+      
+        <ZS-input #conf_password
+          [label]="'Confirm Password'"
+          [placeholder]="'Confirm password'"
+          icon="fas fa-lock"
+  
+          (changedEv)="changeValues($event, 'conf_password')"
+          [touched]="form.touched()"
+          [validateFns]="[confPassValidate]"
+  
+          [type]="'password'"
+          [required]="true"
+          [inputStyle]="'violet'"
+        ></ZS-input>
+    
+        
+        <div class="mt-4 flex flex-col gap-2">
+          <ZS-button
+          size="lg"
+          btnStyle="violet"
+          [type]="'submit'"
+          [disabled]="this.authService.googleLoading() || this.authService.signupLoading()"
+          [icon]="this.authService.signupLoading() ? 'fa fa-spinner fa-spin' : ''"
+          >
+            Sign Up
+          </ZS-button>
+  
+            <div class="relative my-4 flex items-center">
+                <div class="grow border-t border-gray-300 dark:border-gray-600"></div>
+                <span class="mx-3 text-gray-800 dark:text-gray-300 text-sm">OR</span>
+                <div class="grow border-t border-gray-300 dark:border-gray-600"></div>
+            </div>
+  
+          <ZS-button
+          (clickedEv)="google()"
+          size="lg"
+          btnStyle="secondary"
+          variant="outline"
+          [type]="'button'"
+          [disabled]="this.authService.googleLoading() || this.authService.signupLoading()"
+          [icon]="this.authService.googleLoading() ? 'fa fa-spinner fa-spin' : 'fa-brands fa-google'"
+          >
+            Sign Up With Google
+          </ZS-button>
+        </div>
+    
+        <div class="flex flex-wrap justify-center items-center gap-1.5 text-sm">
+          <span class="text-gray-700 dark:text-gray-300">
+            Already have an account?
+          </span>
+          <button
+          type="button"
+          class="text-blue-600 hover:text-blue-500 dark:text-blue-400"
+          (click)="router.navigate(['/login'])"
+          >
+          Login
+          </button>
+        </div>
+    </form>
+  </ZS-card>
+</div>

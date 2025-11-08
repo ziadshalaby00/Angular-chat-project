@@ -1,0 +1,18 @@
+<ZS-navbar
+  [logoUrl]="logoUrl"
+  [siteNameConfig]="siteNameConfig"
+
+  [authButtons]="authButtons"
+  [showUserSection]="true"
+
+  [navItems]="navItems"
+
+  [isLoggedIn]="authService.isLoggedin()"
+  [userProfile]="userProfile()"
+  [userMenuItems]="userMenuItems"
+
+  (loginClickedEv)="onLogin()"
+  (signupClickedEv)="onSignup()"
+
+  [(isMobileMenuOpen)]="isMobileMenuOpen"
+></ZS-navbar>
