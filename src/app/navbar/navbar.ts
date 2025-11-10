@@ -62,7 +62,8 @@ export class NavbarComp {
     return userData ? {
       name: userData.fullname,
       email: userData.email,
-      username: userData.username
+      username: userData.username,
+      imageUrl: userData.user_image
     } : undefined
   })
 
@@ -70,33 +71,14 @@ export class NavbarComp {
     { 
       label: 'Profile',
       routerLink: '/profile',
-      iconClass: 'fa-solid fa-user text-lg',
+      icon: 'fa-solid fa-circle-user text-xl',
       useDefaultColorClass: 'text'
     },
-    // { 
-    //   label: 'Cart', 
-    //   routerLink: '/cart', 
-    //   iconClass: 'fas fa-shopping-cart text-lg text-blue-700 dark:text-blue-500', 
-    // },
-    // { 
-    //   label: 'Dashboard', 
-    //   iconClass: 'fa-solid fa-gear',
-    //   children: [
-    //     { 
-    //       label: 'Orders', 
-    //       routerLink: '/orders', 
-    //       iconClass: 'fas fa-box text-lg text-indigo-500',
-    //       useDefaultColorClass: 'bg'
-    //     },
-    //     { label: 'Addresses', routerLink: '/addresses', iconClass: 'fa-solid fa-location-dot text-lg', useDefaultColorClass: 'bg' },
-    //     { label: 'Reviews', routerLink: '/reviews', iconClass: 'fa-solid fa-star text-lg', useDefaultColorClass: 'bg' },
-    //   ]
-    // },
     { 
       label: 'Logout', 
       action: () => this.logout(),
       colorClass: 'text-red-600 hover:text-red-800 dark:text-red-700 dark:hover:text-red-500',
-      iconClass: 'fas fa-sign-out-alt text-lg',
+      icon: 'fas fa-sign-out-alt text-lg',
     }
   ];
 

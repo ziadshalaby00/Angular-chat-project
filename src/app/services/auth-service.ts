@@ -20,6 +20,17 @@ export interface logBody {
   password: string,
 }
 
+interface UserDataType {
+  date_joined : string;
+  email : string;
+  fullname : string;
+  id : number;
+  is_active : boolean;
+  last_login : string;
+  user_image : string;
+  username : string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -30,7 +41,7 @@ export class AuthService {
   private config: ConfigService = inject(ConfigService);
   private router: Router = inject(Router)
 
-  readonly userData = signal<any>(null)
+  readonly userData = signal<UserDataType | null>(null)
   readonly isLoggedin = signal<boolean>(false)
 
   readonly error = signal<string[]>([]);
