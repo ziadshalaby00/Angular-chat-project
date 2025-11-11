@@ -20,7 +20,7 @@ export interface logBody {
   password: string,
 }
 
-interface UserDataType {
+export interface UserDataType {
   date_joined : string;
   email : string;
   fullname : string;
@@ -35,11 +35,11 @@ interface UserDataType {
   providedIn: 'root'
 })
 export class AuthService {
-  private alertService: AlertService = inject(AlertService)
-  private extractorService: ExtractorService = inject(ExtractorService)
-  private http: HttpClient= inject(HttpClient);
-  private config: ConfigService = inject(ConfigService);
-  private router: Router = inject(Router)
+  private readonly alertService: AlertService = inject(AlertService)
+  private readonly extractorService: ExtractorService = inject(ExtractorService)
+  private readonly http: HttpClient= inject(HttpClient);
+  private readonly config: ConfigService = inject(ConfigService);
+  private readonly router: Router = inject(Router)
 
   readonly userData = signal<UserDataType | null>(null)
   readonly isLoggedin = signal<boolean>(false)
@@ -294,6 +294,23 @@ export class AuthService {
         console.log(err)
         this.setErrors(err.error)
         this.passwordResetConfirmLoading.set(false)
+      }
+    })
+  }
+
+  getUsersProfile(user_id: number | null, successFn?: (res: any) => void, faildFn?: () => void) {
+    if(!user_id) return;
+
+    this.error.set([])
+
+    this.http.get(`${this.config.apiUrl}/api/auth/users-profile/${user_id}`, { withCredentials: true }).subscribe({
+      next: (res: any) => {
+        if(successFn) successFn(res)
+      },
+      error: (err: any) => {
+        if(faildFn) faildFn()
+
+        this.setErrors(err.error)
       }
     })
   }

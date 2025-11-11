@@ -10,7 +10,6 @@ import { AuthService } from './services/auth-service';
     RouterOutlet,
     NavbarComp,
     ThemeToggle,
-    ScrollToTop,
     Alert,
     Spinner,
     Footer

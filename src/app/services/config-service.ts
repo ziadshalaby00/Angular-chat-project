@@ -13,4 +13,25 @@ export class ConfigService {
   get apiUrl(): string {
     return this.isProd ? this.prodApiUrl : this.localApiUrl;
   }
+
+  public formatDate(dateString: string | null | undefined, withTime = false) {
+    if (!dateString) return '';
+
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return '';
+
+    const options: Intl.DateTimeFormatOptions = {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    };
+
+    if (withTime) {
+      options.hour = "2-digit";
+      options.minute = "2-digit";
+      options.hour12 = true;
+    }
+
+    return date.toLocaleString("en-GB", options);
+  }
 }

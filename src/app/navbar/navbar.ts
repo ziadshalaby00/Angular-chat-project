@@ -1,4 +1,4 @@
-import { Component, computed, inject, model } from '@angular/core';
+import { Component, computed, effect, inject, model, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertService, AuthButtonsType, Navbar, NavbarItemExport, navItemsType, SiteNameConfigType, UserProfile } from '@ziadshalaby/ngx-zs-component';
 import { AuthService } from '../services/auth-service';
@@ -16,6 +16,7 @@ export class NavbarComp {
   private readonly router: Router = inject(Router)
   readonly authService: AuthService = inject(AuthService)
   
+
   siteNameConfig: SiteNameConfigType = {
     siteName: 'Proton',
     siteNameColorClass: 'text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300'
@@ -57,7 +58,7 @@ export class NavbarComp {
     ]
   }
 
-  userProfile = computed<UserProfile | undefined>(() => {
+  navUserProfile = computed<UserProfile | undefined>(() => {
     const userData = this.authService.userData()
     return userData ? {
       name: userData.fullname,
@@ -70,9 +71,11 @@ export class NavbarComp {
   userMenuItems: NavbarItemExport[] = [
     { 
       label: 'Profile',
-      routerLink: '/profile',
       icon: 'fa-solid fa-circle-user text-xl',
-      useDefaultColorClass: 'text'
+      useDefaultColorClass: 'text',
+      action: () => {
+        this.router.navigate(['/profile', this.authService.userData()?.id])
+      }
     },
     { 
       label: 'Logout', 

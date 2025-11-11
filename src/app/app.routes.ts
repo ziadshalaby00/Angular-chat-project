@@ -8,7 +8,7 @@ import { Profile } from './profile/profile';
 export const routes: Routes = [
     { path: 'login', component: Login},
     { path: 'signup', component: Signup},
-    { path: 'profile', component: Profile},
+    { path: 'profile/:user_id', component: Profile},
     { path: 'reset-password/:uid/:token', component: ResetPassword },
     { path: '**', component: Page404Comp },
 ];

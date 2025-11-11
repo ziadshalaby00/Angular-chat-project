@@ -1,29 +1,80 @@
 <div class="min-h-[85vh] flex items-center justify-center p-4">
-    <div class="w-[400px] bg-sky-200 rounded-lg">
-        <div class="flex flex-col items-center gap-4 p-4">
-            <img [src]="authService.userData()?.user_image" alt="" class="size-46 rounded-full">
-            <h2 class="text-3xl font-semibold">{{ authService.userData()?.fullname }}</h2>
-            <h3 class="text-xl"> {{ authService.userData()?.username }} </h3>
-        </div>
-        <hr>
-        <div class="flex flex-col items-center gap-4 p-4">
-            Email: {{ authService.userData()?.email }}
-            Last Login: {{ authService.userData()?.last_login }}
-            Date Joined {{ authService.userData()?.date_joined }}
-        </div>
-        <hr>
-        <div class="flex flex-col gap-4 p-4">
-            <ZS-button
-            [btnStyle]="'secondary'"
-            >
-            Edit Account
-            </ZS-button>
-            <ZS-button
-            [btnStyle]="'danger'"
-            [variant]="'outline'"
-            >
-            Delete Account
-            </ZS-button>
-        </div>
+  @if (!userData()) {
+    <div class="flex flex-col items-center gap-2 text-slate-600 dark:text-slate-300">
+        <i class="fa-solid fa-user-xmark text-4xl text-red-500 dark:text-red-700 animate-pulse"></i>
+        <span class="text-3xl">No User Found</span>
     </div>
+  } @else {
+    <div
+      class="
+        w-[380px] bg-white/80 dark:bg-slate-900/70 backdrop-blur-xl rounded-3xl 
+        shadow-xl border border-slate-200/50 dark:border-slate-700/40
+        overflow-hidden transition-all
+      "
+    >
+      <!-- Header -->
+      <div
+        class="
+          flex flex-col items-center p-7 bg-gradient-to-b from-sky-400/90 to-sky-200/60 
+          dark:from-sky-700/90 dark:to-sky-800/70 text-center
+        "
+      >
+        <img
+          [src]="userData()?.user_image"
+          alt="User image"
+          class="
+            size-32 rounded-full shadow-lg ring-4 ring-white/70 
+            dark:ring-slate-800 object-cover
+          "
+        >
+
+        <h2 class="mt-4 text-2xl font-semibold text-slate-900 dark:text-white">
+          {{ userData()?.fullname }}
+        </h2>
+
+        <h3 class="text-sky-700 dark:text-sky-300 text-lg font-medium">
+          @{{ userData()?.username }}
+        </h3>
+      </div>
+
+      <!-- Info Section -->
+      <div class="p-6 space-y-4 text-slate-700 dark:text-slate-200">
+
+        @if(isUserLoggedIn()) {
+            <div class="flex flex-col">
+                <span class="text-sm font-semibold text-slate-500 dark:text-slate-400">
+                    Email
+                </span>
+                <span>{{ userData()?.email }}</span>
+            </div>
+
+            <div class="flex flex-col">
+              <span class="text-sm font-semibold text-slate-500 dark:text-slate-400">
+                Last Login
+              </span>
+              <span class="text-sm">{{ config.formatDate(userData()?.last_login ?? '', true) }}</span>
+            </div>
+        }
+
+        <div class="flex flex-col">
+          <span class="text-sm font-semibold text-slate-500 dark:text-slate-400">
+            Date Joined
+          </span>
+          <span class="text-sm">{{ config.formatDate(userData()?.date_joined ?? '', true) }}</span>
+        </div>
+      </div>
+
+      <!-- Optional Buttons -->
+      @if(isUserLoggedIn()) {
+        <hr class="border-slate-300 dark:border-slate-700">
+
+        <div class="p-6 flex flex-col gap-4">
+          <ZS-button btnStyle="secondary">Edit Account</ZS-button>
+          <ZS-button btnStyle="danger" variant="outline">
+            Delete Account
+          </ZS-button>
+        </div>
+      }
+    </div>
+  }
 </div>
