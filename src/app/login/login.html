@@ -38,8 +38,8 @@
           size="lg"
           btnStyle="primary"
           [type]="'submit'"
-          [disabled]="this.authService.googleLoading() || this.authService.loginLoading()"
-          [icon]="this.authService.loginLoading() ? 'fa fa-spinner fa-spin' : ''"
+          [disabled]="authApi.googleLoading() || authApi.loginLoading()"
+          [icon]="authApi.loginLoading() ? 'fa fa-spinner fa-spin' : ''"
           >
             Login
           </ZS-button>
@@ -57,8 +57,8 @@
           (clickedEv)="google()"
           [type]="'button'"
           icon="fa-brands fa-google"
-          [disabled]="this.authService.googleLoading() || this.authService.loginLoading()"
-          [icon]="this.authService.googleLoading() ? 'fa fa-spinner fa-spin' : 'fa-brands fa-google'"
+          [disabled]="authApi.googleLoading() || authApi.loginLoading()"
+          [icon]="authApi.googleLoading() ? 'fa fa-spinner fa-spin' : 'fa-brands fa-google'"
           >
             Login With Google
           </ZS-button>
@@ -107,16 +107,16 @@ position="center"
 
 [confirmConfig]="{
   btnStyle: 'info',
-  icon: authService.passwordResetLoading() ? 'fa fa-spinner fa-spin' : null,
-  disabled: authService.passwordResetLoading() ? true : false
+  icon: authApi.passwordResetLoading() ? 'fa fa-spinner fa-spin' : null,
+  disabled: authApi.passwordResetLoading() ? true : false
 }"
 [cancelConfig]="{
-  disabled: authService.passwordResetLoading() ? true : false
+  disabled: authApi.passwordResetLoading() ? true : false
 }"
-[showCancelIcon]="authService.passwordResetLoading() ? false : true"
+[showCancelIcon]="authApi.passwordResetLoading() ? false : true"
 
 [(open)]="passwordResetModal"
-[closeOnOverlay]="authService.passwordResetLoading() ? false : true"
+[closeOnOverlay]="authApi.passwordResetLoading() ? false : true"
 >
   <p class="text-sm dark:text-gray-100 mb-2">
     Enter your 

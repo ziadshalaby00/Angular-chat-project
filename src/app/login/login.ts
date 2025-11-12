@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { Button, Card, ChangeEventType, Form, Input, Modal } from '@ziadshalaby/ngx-zs-component';
-import { AuthService } from '../services/auth-service';
 import { Router } from '@angular/router';
+import { AuthApi } from '../services/auth-services/auth-api';
 
 @Component({
   selector: 'app-login',
@@ -15,11 +15,11 @@ import { Router } from '@angular/router';
   styleUrl: './login.css',
 })
 export class Login {
-  readonly authService: AuthService = inject(AuthService)
+  readonly authApi: AuthApi = inject(AuthApi);
   readonly router: Router = inject(Router)
 
   ngAfterViewInit() {
-    this.authService.initCodeClient()
+    this.authApi.initCodeClient()
   }
 
   readonly form = new Form({
@@ -34,14 +34,14 @@ export class Login {
   submit(event: SubmitEvent) {
     event.preventDefault();
     this.form.submit((values) => {
-      this.authService.loginLoading.set(true)
-      this.authService.login(values)
+      this.authApi.loginLoading.set(true)
+      this.authApi.login(values)
     })
   }
 
   google() {
-    this.authService.googleLoading.set(true)
-    this.authService.startRequestCode()
+    this.authApi.googleLoading.set(true)
+    this.authApi.startRequestCode()
   }
 
   // Password Reset
@@ -57,8 +57,8 @@ export class Login {
 
   confirmPasswordReset() {
     this.passwordResetForm.submit((values) => {
-      this.authService.passwordResetLoading.set(true)
-      this.authService.passwordReset(values, () => { this.passwordResetModal.set(false) })
+      this.authApi.passwordResetLoading.set(true)
+      this.authApi.passwordReset(values, () => { this.passwordResetModal.set(false) })
     })
   }
 }

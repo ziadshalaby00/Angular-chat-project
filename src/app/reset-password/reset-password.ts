@@ -1,7 +1,7 @@
 import { Component, inject, viewChild } from '@angular/core';
 import { Card, Input, Button, ChangeEventType, Form, ValidatorFn } from '@ziadshalaby/ngx-zs-component';
-import { AuthService } from '../services/auth-service';
 import { ActivatedRoute } from '@angular/router';
+import { AuthApi } from '../services/auth-services/auth-api';
 
 @Component({
   selector: 'app-reset-password',
@@ -10,8 +10,8 @@ import { ActivatedRoute } from '@angular/router';
   styleUrl: './reset-password.css',
 })
 export class ResetPassword {
-  readonly authService: AuthService = inject(AuthService)
-  readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute)
+  readonly authApi: AuthApi = inject(AuthApi);
+  readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 
   readonly pass = viewChild<Input>('pass')
   readonly conf_pass = viewChild<Input>('conf_pass')
@@ -56,8 +56,8 @@ export class ResetPassword {
         token: urlParams.get('token'),
       }
 
-      this.authService.passwordResetConfirmLoading.set(true);
-      this.authService.passwordResetConfirm(body);
+      this.authApi.passwordResetConfirmLoading.set(true);
+      this.authApi.passwordResetConfirm(body);
     })
   }
 }

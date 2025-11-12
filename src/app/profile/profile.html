@@ -15,18 +15,29 @@
       <!-- Header -->
       <div
         class="
-          flex flex-col items-center p-7 bg-gradient-to-b from-sky-400/90 to-sky-200/60 
+          flex flex-col items-center p-7 bg-linear-to-b from-sky-400/90 to-sky-200/60 
           dark:from-sky-700/90 dark:to-sky-800/70 text-center
         "
       >
+      <div class="w-full flex items-center justify-center relative">
         <img
           [src]="userData()?.user_image"
           alt="User image"
           class="
-            size-32 rounded-full shadow-lg ring-4 ring-white/70 
+            size-32 h-full rounded-full shadow-lg ring-4 ring-white/70 
             dark:ring-slate-800 object-cover
           "
         >
+        @if(isUserLoggedIn()) {
+          <button class="absolute top-2 right-1/5 
+          text-slate-800 dark:text-slate-300
+          hover:scale-[1.05] active:scale-[0.97] hover:opacity-75
+          ">
+            <i class="fa-solid fa-pen-to-square"></i>
+          </button>
+        }
+
+      </div>
 
         <h2 class="mt-4 text-2xl font-semibold text-slate-900 dark:text-white">
           {{ userData()?.fullname }}
@@ -35,6 +46,12 @@
         <h3 class="text-sky-700 dark:text-sky-300 text-lg font-medium">
           @{{ userData()?.username }}
         </h3>
+
+        @if (userData()?.bio) {
+          <p class="mt-3 text-slate-800 dark:text-slate-200/80 text-sm max-w-xs leading-snug">
+            "{{ userData()?.bio }}"
+          </p>
+        }
       </div>
 
       <!-- Info Section -->
@@ -69,8 +86,20 @@
         <hr class="border-slate-300 dark:border-slate-700">
 
         <div class="p-6 flex flex-col gap-4">
-          <ZS-button btnStyle="secondary">Edit Account</ZS-button>
-          <ZS-button btnStyle="danger" variant="outline">
+          <ZS-button btnStyle="secondary" class="grow" 
+          icon="fa-solid fa-user-pen"
+          (clickedEv)="openEditModal.set(true)">
+            Edit Account
+          </ZS-button>
+
+          <ZS-button btnStyle="warning" 
+          icon="fa-solid fa-pen"
+          class="grow whitespace-nowrap">
+            Change Password
+          </ZS-button>
+
+          <ZS-button btnStyle="danger" variant="outline"
+          icon="fa-solid fa-ban">
             Delete Account
           </ZS-button>
         </div>
@@ -78,3 +107,47 @@
     </div>
   }
 </div>
+
+
+<ZS-modal
+[(open)]="openEditModal"
+(cancelEv)="openEditModal.set(false)"
+(confirmEv)="updateProfile()"
+>
+
+<ZS-input
+label="Full Name"
+>
+</ZS-input>
+
+<ZS-input
+label="Username"
+>
+</ZS-input>
+
+<ZS-input
+label="Email"
+>
+</ZS-input>
+
+<ZS-input
+label="Bio"
+>
+</ZS-input>
+
+<!-- <ZS-input
+label="Old Password"
+>
+</ZS-input>
+
+<ZS-input
+label="New Password"
+>
+</ZS-input>
+
+<ZS-input
+label="Confirm New Password"
+>
+</ZS-input> -->
+
+</ZS-modal>

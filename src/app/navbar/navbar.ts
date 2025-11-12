@@ -1,7 +1,7 @@
-import { Component, computed, effect, inject, model, signal } from '@angular/core';
+import { Component, computed, inject, model } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertService, AuthButtonsType, Navbar, NavbarItemExport, navItemsType, SiteNameConfigType, UserProfile } from '@ziadshalaby/ngx-zs-component';
-import { AuthService } from '../services/auth-service';
+import { AuthApi } from '../services/auth-services/auth-api';
 
 @Component({
   selector: 'app-navbar',
@@ -12,10 +12,9 @@ import { AuthService } from '../services/auth-service';
 export class NavbarComp {
   readonly isMobileMenuOpen = model<boolean>(false);
 
-  readonly alertService: AlertService = inject(AlertService)
+  private readonly alertService: AlertService = inject(AlertService)
   private readonly router: Router = inject(Router)
-  readonly authService: AuthService = inject(AuthService)
-  
+  readonly authApi: AuthApi = inject(AuthApi);
 
   siteNameConfig: SiteNameConfigType = {
     siteName: 'Proton',
@@ -37,29 +36,11 @@ export class NavbarComp {
   logoUrl: string = 'https://i.postimg.cc/MpzpyjF1/android-chrome-512x512-proton.png';
 
   navItems: navItemsType = {
-    navItems: [
-      // { 
-      //   label: 'Test', 
-      //   routerLink: '/test', 
-      //   iconClass: 'fa-solid fa-vial text-lg', 
-      //   colorClass: `text-green-600 hover:text-green-700 dark:hover:text-green-500`, 
-      // },
-      // { label: 'Products', routerLink: '/products', iconClass: 'fas fa-tag text-lg'},
-      // { label: 'Cart', routerLink: '/cart', iconClass: 'fas fa-shopping-cart text-blue-700 dark:text-blue-500 text-lg'},
-      // { label: 'About Us', routerLink: '/about'},
-      // { label: 'Contact Us', routerLink: '/contact'},
-      // {
-      //   label: 'Legal Pages',
-      //   children: [
-      //     { label: 'Privacy Policy', routerLink: '/privacyPolicy', useDefaultColorClass: 'bg' },
-      //     { label: 'Terms & Conditions', routerLink: '/termsConditions', useDefaultColorClass: 'bg'},
-      //   ]
-      // },
-    ]
+    navItems: []
   }
 
   navUserProfile = computed<UserProfile | undefined>(() => {
-    const userData = this.authService.userData()
+    const userData = this.authApi.userData()
     return userData ? {
       name: userData.fullname,
       email: userData.email,
@@ -74,7 +55,7 @@ export class NavbarComp {
       icon: 'fa-solid fa-circle-user text-xl',
       useDefaultColorClass: 'text',
       action: () => {
-        this.router.navigate(['/profile', this.authService.userData()?.id])
+        this.router.navigate(['/profile', this.authApi.userData()?.id])
       }
     },
     { 
@@ -94,7 +75,7 @@ export class NavbarComp {
   }
 
   logout() {
-    this.authService.logout(
+    this.authApi.logout(
       (message?: string) => { 
         this.alertService.addAlert({
           message: message ?? '',

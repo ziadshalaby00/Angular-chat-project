@@ -1,17 +1,17 @@
-import { Component, effect, inject, signal, untracked } from '@angular/core';
-import { AuthService, UserDataType } from '../services/auth-service';
-import { Button } from '@ziadshalaby/ngx-zs-component';
+import { Component, effect, inject, signal } from '@angular/core';
+import { Button, Modal, Input } from '@ziadshalaby/ngx-zs-component';
 import { ActivatedRoute } from '@angular/router';
 import { ConfigService } from '../services/config-service';
+import { AuthApi, UserDataType } from '../services/auth-services/auth-api';
 
 @Component({
   selector: 'app-profile',
-  imports: [Button],
+  imports: [Button, Modal, Input],
   templateUrl: './profile.html',
   styleUrl: './profile.css',
 })
 export class Profile {
-  readonly authService = inject(AuthService);
+  readonly authApi: AuthApi = inject(AuthApi);
   readonly config = inject(ConfigService);
   readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 
@@ -31,16 +31,16 @@ export class Profile {
       this.userId.set(userId);
 
       // إذا البروفايل هو البروفايل بتاع المستخدم الحالي
-      if (userId === this.authService.userData()?.id) {
+      if (userId === this.authApi.userData()?.id) {
         this.isUserLoggedIn.set(true);
-        this.userData.set(this.authService.userData());
+        this.userData.set(this.authApi.userData());
         return;
       }
 
       // بروفايل مستخدم آخر
       this.isUserLoggedIn.set(false);
 
-      this.authService.getUsersProfile(
+      this.authApi.getUsersProfile(
         userId,
         (res) => {
           this.userData.set(res.user_profile);
@@ -50,5 +50,18 @@ export class Profile {
         }
       );
     });
+
+    effect(() => {
+      const isLoggedin = this.authApi.isLoggedin()
+
+      if(!isLoggedin) {
+        this.config.goOut()
+      }
+    })
+  }
+
+  readonly openEditModal = signal<boolean>(false);
+  updateProfile() {
+
   }
 }

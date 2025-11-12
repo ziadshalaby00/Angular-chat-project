@@ -1,0 +1,24 @@
+@if(authApi.verifyloading()) {
+  <div class="fixed inset-0 z-10000 flex flex-col justify-center items-center 
+              bg-linear-to-br from-sky-100 to-sky-200 dark:from-slate-900 dark:to-slate-800
+              backdrop-blur-sm">
+    
+    <!-- العنوان -->
+    <h1 class="mb-12 text-4xl sm:text-5xl font-bold text-sky-600 dark:text-sky-400 text-center animate-fade-in">
+      Welcome To Proton
+    </h1>
+    
+    <!-- spinner -->
+    <ZS-spinner
+      [loading]="true"
+      type="bars"
+      color="emerald"
+      size="lg">
+    </ZS-spinner>
+
+    <!-- رسالة إضافية صغيرة -->
+    <p class="mt-4 text-gray-700 dark:text-gray-300 text-lg animate-fade-in-delay">
+      Initializing your session...
+    </p>
+  </div>
+}

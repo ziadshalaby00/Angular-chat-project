@@ -1,6 +1,6 @@
+import { AuthApi } from './../services/auth-services/auth-api';
 import { Component, inject, viewChild } from '@angular/core';
 import { Button, Card, ChangeEventType, Form, Input, ValidatorFn } from '@ziadshalaby/ngx-zs-component';
-import { AuthService } from '../services/auth-service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -14,11 +14,11 @@ import { Router } from '@angular/router';
   styleUrl: './signup.css',
 })
 export class Signup {
-  readonly authService: AuthService = inject(AuthService)
-  readonly router: Router = inject(Router)
+  readonly authApi: AuthApi = inject(AuthApi);
+  readonly router: Router = inject(Router);
   
   ngAfterViewInit() {
-    this.authService.initCodeClient()
+    this.authApi.initCodeClient()
   }
   
   readonly pass = viewChild<Input>('password')
@@ -58,13 +58,13 @@ export class Signup {
   submit(event: SubmitEvent) {
     event.preventDefault();
     this.form.submit((values) => {
-      this.authService.signupLoading.set(true)
-      this.authService.signup(values)
+      this.authApi.signupLoading.set(true)
+      this.authApi.signup(values)
     });
   }
 
   google() {
-    this.authService.googleLoading.set(true)
-    this.authService.startRequestCode()
+    this.authApi.googleLoading.set(true)
+    this.authApi.startRequestCode()
   }
 }
