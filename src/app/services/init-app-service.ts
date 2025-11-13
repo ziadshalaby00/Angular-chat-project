@@ -26,8 +26,5 @@ export class InitAppService {
     this.stopInit.set(true);
     this.authApi.verifyloading.set(false);
     this.router.navigate([reRouting]);
-
-    console.log('CSRF FROM COOKIE IS: ', this.authApi.extractCSRFToken());
-    console.log("document.cookie: ", document.cookie);
   }
 }

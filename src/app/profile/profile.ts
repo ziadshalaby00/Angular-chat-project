@@ -97,6 +97,8 @@ export class Profile {
   }
 
   updateProfile() {
+    console.log('CSRF FROM COOKIE IS: ', this.authApi.extractCSRFToken());
+    
     this.updateAccForm.submit((values) => {
       console.log(values);
       this.authApi.updateProfileLoading.set(true);
