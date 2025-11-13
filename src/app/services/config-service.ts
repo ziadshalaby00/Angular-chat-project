@@ -7,8 +7,7 @@ import { Router } from '@angular/router';
 export class ConfigService {
   private readonly isProd = false;
 
-  private readonly router: Router = inject(Router);
-  private readonly localApiUrl = 'http://127.0.0.1:8000';
+  private readonly localApiUrl = 'http://localhost:8000';
   private readonly prodApiUrl = 'https://api.example.com';
 
   public get apiUrl(): string {

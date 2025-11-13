@@ -16,6 +16,11 @@ export interface UserDataType {
   bio: string;
 }
 
+export interface HttpOptions {
+  headers?: { [key: string]: string };
+  [key: string]: any;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -44,10 +49,46 @@ export class SharedUtils {
   readonly passwordResetConfirmLoading = signal<boolean>(false);
 
   readonly updateProfileLoading = signal<boolean>(false);
+  readonly getUsersProfileLoading = signal<boolean>(false);
 
   setErrors(errorObject: any) {
     const errors = this.extractorService.extract(errorObject)
     this.error.update((v: string[]) => [...v, ...errors]);
     this.alertService.bulkAlert(errors, { type: 'danger' });
+  }
+
+  extractCSRFToken(): string | null {
+    const name = 'csrftoken=';
+    const decodedCookie = decodeURIComponent(document.cookie);
+    const cookies = decodedCookie.split(';');
+
+    for (let c of cookies) {
+      c = c.trim();
+      if (c.startsWith(name)) {
+        return c.substring(name.length);
+      }
+    }
+
+    return null;
+  }
+
+  CredAndCsrf(extraOptions: HttpOptions = {}): HttpOptions {
+    const csrfToken = this.extractCSRFToken();
+
+    const defaultOptions: HttpOptions = {
+      withCredentials: true,
+      headers: {
+        'X-CSRFToken': csrfToken ?? ''
+      }
+    };
+
+    return {
+      ...defaultOptions,
+      ...extraOptions,
+      headers: {
+        ...defaultOptions.headers,
+        ...extraOptions.headers
+      }
+    };
   }
 }

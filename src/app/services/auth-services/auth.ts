@@ -113,23 +113,4 @@ export class Auth {
       return false;
     }
   }
-
-  extractCSRFToken(): string | null {
-    const name = 'csrftoken=';
-    const decodedCookie = decodeURIComponent(document.cookie);
-    const cookies = decodedCookie.split(';');
-
-    console.log("decodedCookie", decodedCookie)
-    console.log("cookies", cookies)
-    console.log("document.cookie: ", document.cookie);
-
-    for (let c of cookies) {
-      c = c.trim();
-      if (c.startsWith(name)) {
-        return c.substring(name.length);
-      }
-    }
-
-    return null;
-  }
 }

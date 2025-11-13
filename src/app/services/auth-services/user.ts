@@ -1,5 +1,5 @@
 import { inject, Injectable, Injector } from '@angular/core';
-import { SharedUtils } from './shared-utils';
+import { SharedUtils, UserDataType } from './shared-utils';
 import { Logout } from './logout';
 
 export interface UpdateProfileBody {
@@ -8,6 +8,7 @@ export interface UpdateProfileBody {
   email?: string;
   bio?: string;
   user_image?: File | null;
+  rem_image?: boolean;
   password?: string;
   old_password?: string;
 }
@@ -22,7 +23,8 @@ export class User {
 
   private readonly meUrl = `${this.shared.config.apiUrl}/api/auth/me/`;
   private readonly getUsersProfileURL = `${this.shared.config.apiUrl}/api/auth/users-profile`;
-  private readonly updateProfileURL = `${this.shared.config.apiUrl}/api/auth/update-profile/`
+  private readonly updateProfileURL = `${this.shared.config.apiUrl}/api/auth/update-profile/`;
+  private readonly deleteUserImageURL = `${this.shared.config.apiUrl}/api/auth/delete-user-image/`;
 
   me(successFn?: () => void, faildFn?: () => void) {
     this.shared.error.set([]);
@@ -57,7 +59,7 @@ export class User {
     })
   }
 
-  updateProfile(body: UpdateProfileBody) {
+  updateProfile(body: UpdateProfileBody, successFn?: () => void, faildFn?: () => void) {
     this.shared.error.set([]);
 
     const formData = new FormData();
@@ -67,19 +69,44 @@ export class User {
       }
     });
 
-    this.shared.http.post(this.updateProfileURL, formData, { withCredentials: true }).subscribe({
+    this.shared.http.patch(this.updateProfileURL, formData, this.shared.CredAndCsrf()).subscribe({
       next: (res: any) => {
         this.shared.userData.set(res.user);
-        this.shared.updateProfileLoading.set(false);
 
         this.shared.alertService.addAlert({
           message: res.message,
           type: 'success'
         })
+
+        if(successFn) successFn();
       },
       error: (err: any) => {
         this.shared.setErrors(err.error);
-        this.shared.updateProfileLoading.set(false);
+        if(faildFn) faildFn();
+      }
+    })
+  }
+
+  deleteUserImage(successFn?: () => void, faildFn?: () => void) {
+    this.shared.error.set([]);
+
+    this.shared.http.delete(this.deleteUserImageURL, this.shared.CredAndCsrf()).subscribe({
+      next: (res: any) => {
+        this.shared.userData.update((prev) => {
+          if (!prev) return prev;
+          return { ...prev, user_image: '' };
+        });
+
+        this.shared.alertService.addAlert({
+          message: res.message,
+          type: 'success'
+        })
+
+        if(successFn) successFn();
+      },
+      error: (err: any) => {
+        this.shared.setErrors(err.error);
+        if(faildFn) faildFn();
       }
     })
   }
