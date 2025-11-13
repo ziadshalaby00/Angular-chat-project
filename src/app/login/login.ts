@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import { Button, Card, ChangeEventType, Form, Input, Modal } from '@ziadshalaby/ngx-zs-component';
 import { Router } from '@angular/router';
 import { AuthApi } from '../services/auth-services/auth-api';
@@ -59,6 +59,16 @@ export class Login {
     this.passwordResetForm.submit((values) => {
       this.authApi.passwordResetLoading.set(true)
       this.authApi.passwordReset(values, () => { this.passwordResetModal.set(false) })
+    })
+  }
+
+  constructor() {
+    effect(() => {
+      const isLoggedin = this.authApi.isLoggedin()
+
+      if(isLoggedin) {
+        this.router.navigate(['/home'])
+      }
     })
   }
 }

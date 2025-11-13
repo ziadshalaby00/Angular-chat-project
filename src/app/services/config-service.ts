@@ -35,8 +35,4 @@ export class ConfigService {
 
     return date.toLocaleString("en-GB", options);
   }
-
-  public goOut() {
-    this.router.navigate(['/login'])
-  }
 }

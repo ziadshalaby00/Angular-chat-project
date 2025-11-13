@@ -5,8 +5,11 @@ import { ResetPassword } from './reset-password/reset-password';
 import { Page404Comp } from './page404/page404';
 import { Profile } from './profile/profile';
 import { InitPage } from './init-page/init-page';
+import { Chat } from './chat/chat';
 
 export const routes: Routes = [
+    { path: '', redirectTo: '/home', pathMatch: 'full' },
+    { path: 'home', component: Chat},
     { path: 'login', component: Login},
     { path: 'signup', component: Signup},
     { path: 'profile/:user_id', component: Profile},

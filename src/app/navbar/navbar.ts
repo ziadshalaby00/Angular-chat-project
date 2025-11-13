@@ -55,7 +55,7 @@ export class NavbarComp {
       icon: 'fa-solid fa-circle-user text-xl',
       useDefaultColorClass: 'text',
       action: () => {
-        this.router.navigate(['/profile', this.authApi.userData()?.id])
+        this.router.navigate(['/profile', this.authApi.userData()?.id]);
       }
     },
     { 

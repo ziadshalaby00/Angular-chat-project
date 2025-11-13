@@ -17,13 +17,17 @@ export class InitAppService {
     this.startInit(reRouting);
   }
 
-  private startInit(reRouting: string) {
+  private async startInit(reRouting: string) {
     this.authApi.verifyloading.set(true);
 
-    this.authApi.verifyAccess().then(() => {
-      this.stopInit.set(true);
-      this.authApi.verifyloading.set(false);
-      this.router.navigate([reRouting]);
-    })
+    await this.authApi.getCsrfToken();
+    await this.authApi.verifyAccess();
+
+    this.stopInit.set(true);
+    this.authApi.verifyloading.set(false);
+    this.router.navigate([reRouting]);
+
+    console.log('CSRF FROM COOKIE IS: ', this.authApi.extractCSRFToken());
+    console.log("document.cookie: ", document.cookie);
   }
 }

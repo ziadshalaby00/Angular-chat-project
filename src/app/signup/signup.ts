@@ -1,5 +1,5 @@
 import { AuthApi } from './../services/auth-services/auth-api';
-import { Component, inject, viewChild } from '@angular/core';
+import { Component, effect, inject, viewChild } from '@angular/core';
 import { Button, Card, ChangeEventType, Form, Input, ValidatorFn } from '@ziadshalaby/ngx-zs-component';
 import { Router } from '@angular/router';
 
@@ -66,5 +66,15 @@ export class Signup {
   google() {
     this.authApi.googleLoading.set(true)
     this.authApi.startRequestCode()
+  }
+
+  constructor() {
+    effect(() => {
+      const isLoggedin = this.authApi.isLoggedin()
+
+      if(isLoggedin) {
+        this.router.navigate(['/home'])
+      }
+    })
   }
 }

@@ -51,9 +51,14 @@ export class AuthApi {
   get passwordResetConfirmLoading() { return this.shared.passwordResetConfirmLoading; }
   get passwordResetLoading() { return this.shared.passwordResetLoading; }
 
+  get updateProfileLoading() { return this.shared.updateProfileLoading; }
+  // get passwordResetLoading() { return this.shared.passwordResetLoading; }
+
   // ====== RE-EXPORT METHODS ======
   me(...args: Parameters<User['me']>) { return this.user.me(...args); }
   getUsersProfile(...args: Parameters<User['getUsersProfile']>) { return this.user.getUsersProfile(...args); }
+  updateProfile(...args: Parameters<User['updateProfile']>) { return this.user.updateProfile(...args); }
+  // getUsersProfile(...args: Parameters<User['getUsersProfile']>) { return this.user.getUsersProfile(...args); }
 
   passwordReset(...args: Parameters<PasswordReset['passwordReset']>) { return this.passwordResetS.passwordReset(...args); }
   passwordResetConfirm(...args: Parameters<PasswordReset['passwordResetConfirm']>) { return this.passwordResetS.passwordResetConfirm(...args); }
@@ -66,6 +71,8 @@ export class AuthApi {
   signup(...args: Parameters<Auth['signup']>) { return this.auth.signup(...args); }
   login(...args: Parameters<Auth['login']>) { return this.auth.login(...args); }
   googleExchange(...args: Parameters<Auth['googleExchange']>) { return this.auth.googleExchange(...args); }
+  getCsrfToken(...args: Parameters<Auth['getCsrfToken']>) { return this.auth.getCsrfToken(...args); }
+  extractCSRFToken(...args: Parameters<Auth['extractCSRFToken']>) { return this.auth.extractCSRFToken(...args); }
 
   verifyAccess(...args: Parameters<AccessVerification['verifyAccess']>) { return this.accessVerification.verifyAccess(...args); }
 }

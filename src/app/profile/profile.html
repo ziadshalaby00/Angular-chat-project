@@ -108,46 +108,70 @@
   }
 </div>
 
-
 <ZS-modal
 [(open)]="openEditModal"
 (cancelEv)="openEditModal.set(false)"
 (confirmEv)="updateProfile()"
+[confirmConfig]="{
+  btnStyle: 'success',
+  disabled: authApi.updateProfileLoading(),
+  icon: authApi.updateProfileLoading() ? 'fa fa-spinner fa-spin' : ''
+}"
+[cancelConfig]="{
+  disabled: authApi.updateProfileLoading(),
+}"
+[showCancelIcon]="!authApi.updateProfileLoading()"
+[closeOnOverlay]="!authApi.updateProfileLoading()"
+[modalStyle]="'success'"
 >
+  <div class="flex flex-col gap-4">
+    <ZS-input
+    [label]="'Full Name'"
+    icon="fas fa-user"
+    [type]="'text'"
+    [inputStyle]="'secondary'"
 
-<ZS-input
-label="Full Name"
->
-</ZS-input>
+    [required]="true"
+    [value]="updateAccForm.fields.fullname().value ?? ''"
+    (changedEv)="changeEditAccValues($event, 'fullname')"
+    >
+    </ZS-input>
+    
+    <ZS-input
+    [label]="'Username'"
+    icon="fas fa-user"
+    [type]="'text'"
+    [inputStyle]="'secondary'"
 
-<ZS-input
-label="Username"
->
-</ZS-input>
+    [required]="true"
+    [value]="updateAccForm.fields.username().value ?? ''"
+    (changedEv)="changeEditAccValues($event, 'username')"
+    >
+    </ZS-input>
+    
+    <ZS-input
+    [label]="'Email'"
+    [hint]="'Enter a unique email.'"
+    icon="fas fa-envelope"
+    [type]="'email'"
+    [inputStyle]="'secondary'"
 
-<ZS-input
-label="Email"
->
-</ZS-input>
+    [required]="true"
+    [value]="updateAccForm.fields.email().value ?? ''"
+    (changedEv)="changeEditAccValues($event, 'email')"
+    >
+    </ZS-input>
+    
+    <ZS-input
+    [label]="'Bio'"
+    [hint]="'Write a short bio about yourself'"
+    icon="fa-solid fa-message"
+    [type]="'text'"
+    [inputStyle]="'secondary'"
 
-<ZS-input
-label="Bio"
->
-</ZS-input>
-
-<!-- <ZS-input
-label="Old Password"
->
-</ZS-input>
-
-<ZS-input
-label="New Password"
->
-</ZS-input>
-
-<ZS-input
-label="Confirm New Password"
->
-</ZS-input> -->
-
+    [value]="updateAccForm.fields.bio().value ?? ''"
+    (changedEv)="changeEditAccValues($event, 'bio')"
+    >
+    </ZS-input>
+  </div>
 </ZS-modal>

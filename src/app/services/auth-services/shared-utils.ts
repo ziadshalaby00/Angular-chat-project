@@ -27,7 +27,7 @@ export class SharedUtils {
   readonly config: ConfigService = inject(ConfigService);
   readonly router: Router = inject(Router);
 
-  readonly accessTokenExpire: number = 14.75;
+  readonly accessTokenExpire: number = 14.75; // Minutes
 
   readonly userData = signal<UserDataType | null>(null);
   readonly isLoggedin = signal<boolean>(false);

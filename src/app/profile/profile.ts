@@ -1,6 +1,6 @@
-import { Component, effect, inject, signal } from '@angular/core';
-import { Button, Modal, Input } from '@ziadshalaby/ngx-zs-component';
-import { ActivatedRoute } from '@angular/router';
+import { Component, effect, inject, signal, untracked } from '@angular/core';
+import { Button, Modal, Input, ChangeEventType, Form, BtnType } from '@ziadshalaby/ngx-zs-component';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ConfigService } from '../services/config-service';
 import { AuthApi, UserDataType } from '../services/auth-services/auth-api';
 
@@ -11,6 +11,7 @@ import { AuthApi, UserDataType } from '../services/auth-services/auth-api';
   styleUrl: './profile.css',
 })
 export class Profile {
+  readonly router: Router = inject(Router);
   readonly authApi: AuthApi = inject(AuthApi);
   readonly config = inject(ConfigService);
   readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
@@ -20,6 +21,37 @@ export class Profile {
   readonly isUserLoggedIn = signal<boolean>(false)
 
   constructor() {
+    this.startSubscribe();
+
+    effect(() => {
+      const isLoggedin = this.authApi.isLoggedin()
+
+      if(!isLoggedin) {
+        this.router.navigate(['/login'])
+      }
+    })
+
+    effect(() => {
+      const userData = this.userData();
+
+      untracked(() => {
+        const isUserLoggedIn = this.isUserLoggedIn();
+
+        if (isUserLoggedIn && userData) {
+          for (const item in this.updateAccForm.fields) {
+            if (item in userData) {
+              this.updateAccForm.set(
+                item as keyof typeof this.updateAccForm.fields,
+                userData[item as keyof typeof this.updateAccForm.fields] ?? ''
+              );
+            }
+          }
+        }
+      });
+    });
+  }
+
+  startSubscribe() {
     this.activatedRoute.paramMap.subscribe(params => {
       const userId = Number(params.get('user_id'));
       if (!userId) return;
@@ -50,18 +82,25 @@ export class Profile {
         }
       );
     });
+  }
+  
+  readonly openEditModal = signal<boolean>(false);
+  readonly updateAccForm = new Form({
+    fullname: '',
+    username: '',
+    email: '',
+    bio: '',
+  })
 
-    effect(() => {
-      const isLoggedin = this.authApi.isLoggedin()
-
-      if(!isLoggedin) {
-        this.config.goOut()
-      }
-    })
+  changeEditAccValues(event: ChangeEventType, key: keyof typeof this.updateAccForm.fields) {
+    this.updateAccForm.set(key, event.value, event.valid);
   }
 
-  readonly openEditModal = signal<boolean>(false);
   updateProfile() {
-
+    this.updateAccForm.submit((values) => {
+      console.log(values);
+      this.authApi.updateProfileLoading.set(true);
+      this.authApi.updateProfile(values);
+    });
   }
 }

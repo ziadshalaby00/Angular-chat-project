@@ -82,8 +82,8 @@
           size="lg"
           btnStyle="violet"
           [type]="'submit'"
-          [disabled]="this.authApi.googleLoading() || this.authApi.signupLoading()"
-          [icon]="this.authApi.signupLoading() ? 'fa fa-spinner fa-spin' : ''"
+          [disabled]="authApi.googleLoading() || authApi.signupLoading()"
+          [icon]="authApi.signupLoading() ? 'fa fa-spinner fa-spin' : ''"
           >
             Sign Up
           </ZS-button>
@@ -100,8 +100,8 @@
           btnStyle="secondary"
           variant="outline"
           [type]="'button'"
-          [disabled]="this.authApi.googleLoading() || this.authApi.signupLoading()"
-          [icon]="this.authApi.googleLoading() ? 'fa fa-spinner fa-spin' : 'fa-brands fa-google'"
+          [disabled]="authApi.googleLoading() || authApi.signupLoading()"
+          [icon]="authApi.googleLoading() ? 'fa fa-spinner fa-spin' : 'fa-brands fa-google'"
           >
             Sign Up With Google
           </ZS-button>

@@ -2,6 +2,7 @@ import { inject, Injectable, Injector } from '@angular/core';
 import { SharedUtils } from './shared-utils';
 import { User } from './user';
 import { Token } from './token';
+import { firstValueFrom } from 'rxjs';
 
 export interface RegBody {
   fullname: string,
@@ -27,6 +28,7 @@ export class Auth {
   private readonly signupURL = `${this.shared.config.apiUrl}/api/auth/register/`;
   private readonly loginURL = `${this.shared.config.apiUrl}/api/auth/login/`;
   private readonly googleLoginURL = `${this.shared.config.apiUrl}/api/auth/google-login/`;
+  private readonly csrfTokenURL = `${this.shared.config.apiUrl}/api/auth/get_csrf/`;
 
   signup(body: RegBody) {
     this.shared.error.set([])
@@ -97,5 +99,33 @@ export class Auth {
         this.shared.setErrors(err.error);
       }
     })
+  }
+
+  async getCsrfToken(): Promise<boolean> {
+    try {
+      const res = await firstValueFrom(
+        this.shared.http.get(this.csrfTokenURL, { withCredentials: true })
+      );
+      console.log('CSRF token fetched', res);
+      return true;
+    } catch (err) {
+      console.warn('CSRF token fetch failed', err);
+      return false;
+    }
+  }
+
+  extractCSRFToken(): string | null {
+    const name = 'csrftoken=';
+    const decodedCookie = decodeURIComponent(document.cookie);
+    const cookies = decodedCookie.split(';');
+
+    for (let c of cookies) {
+      c = c.trim();
+      if (c.startsWith(name)) {
+        return c.substring(name.length);
+      }
+    }
+
+    return null;
   }
 }

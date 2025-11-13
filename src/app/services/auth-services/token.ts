@@ -2,6 +2,7 @@ import { inject, Injectable, Injector } from '@angular/core';
 import { SharedUtils } from './shared-utils';
 import { User } from './user';
 import { Logout } from './logout';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -14,26 +15,35 @@ export class Token {
 
   private readonly refreshTokenURL = `${this.shared.config.apiUrl}/api/auth/token/refresh/`;
 
-  refreshToken() {
+  async refreshToken(): Promise<boolean> {
     this.shared.error.set([]);
 
-    return new Promise((resolve, reject) => {
-      this.shared.http.post(this.refreshTokenURL, {}, { withCredentials: true }).subscribe({
-        next: (res: any) => {
-          this.user.me(
-            () => {
-              this.shared.isLoggedin.set(true);
-              this.refreshEventLoop(this.shared.accessTokenExpire);
-              resolve(true);
-            },
-            () => resolve(true)
-          )
-        },
-        error: (err: any) => {
-          this.logout.logout(() => resolve(true));
-        }
-      })
-    })
+    try {
+      await firstValueFrom(
+        this.shared.http.post(this.refreshTokenURL, {}, { withCredentials: true })
+      );
+
+      await new Promise<void>((resolve) => {
+        this.user.me(
+          () => {
+            this.shared.isLoggedin.set(true);
+            this.refreshEventLoop(this.shared.accessTokenExpire);
+            resolve();
+          },
+          () => resolve()
+        );
+      });
+
+      console.log('Refreshed Token Done');
+      return true;
+
+    } catch (err) {
+      console.warn('refreshToken failed', err);
+
+      await new Promise<void>((resolve) => this.logout.logout(() => resolve()));
+
+      return true;
+    }
   }
 
   private refreshIntervalId: any = null;
