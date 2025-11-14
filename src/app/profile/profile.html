@@ -114,12 +114,14 @@
           </ZS-button>
 
           <ZS-button btnStyle="warning" 
+          (clickedEv)="openChangePassModal.set(true)"
           icon="fa-solid fa-pen"
           class="grow whitespace-nowrap">
             Change Password
           </ZS-button>
 
           <ZS-button btnStyle="danger" variant="outline"
+          (clickedEv)="openDelUserAccModal.set(true)"
           icon="fa-solid fa-ban">
             Delete Account
           </ZS-button>
@@ -129,12 +131,14 @@
   }
 </div>
 
+<!-- ------------------------- Update Account ------------------------- -->
 <ZS-modal
+[title]="'Edit Account'"
 [(open)]="openUpdateAccModal"
 (cancelEv)="openUpdateAccModal.set(false)"
 (confirmEv)="updateAccProfile()"
 [confirmConfig]="{
-  btnStyle: 'success',
+  btnStyle: 'dark',
   disabled: authApi.updateProfileLoading(),
   icon: authApi.updateProfileLoading() ? 'fa fa-spinner fa-spin' : ''
 }"
@@ -143,7 +147,7 @@
 }"
 [showCancelIcon]="!authApi.updateProfileLoading()"
 [closeOnOverlay]="!authApi.updateProfileLoading()"
-[modalStyle]="'primary'"
+[modalStyle]="'secondary'"
 >
   <div class="flex flex-col gap-4">
     <ZS-input
@@ -197,12 +201,14 @@
   </div>
 </ZS-modal>
 
+<!-- ------------------------- Edit User Image ------------------------- -->
 <ZS-modal
+[title]="'Edit Image'"
 [(open)]="openEditImgModal"
 (cancelEv)="openEditImgModal.set(false)"
 (confirmEv)="editImgProfile()"
 [confirmConfig]="{
-  btnStyle: 'success',
+  btnStyle: 'primary',
   disabled: authApi.updateProfileLoading(),
   icon: authApi.updateProfileLoading() ? 'fa fa-spinner fa-spin' : ''
 }"
@@ -228,5 +234,98 @@
     (valueChange)="this.EditImgForm.set('rem_image', $event)"
     >
     </ZS-checkbox>
+  </div>
+</ZS-modal>
+
+<!-- ------------------------- Change Password ------------------------- -->
+<ZS-modal
+[title]="'Change Password'"
+[(open)]="openChangePassModal"
+(cancelEv)="openChangePassModal.set(false)"
+(confirmEv)="changePass()"
+[confirmConfig]="{
+  btnStyle: 'warning',
+  disabled: authApi.updateProfileLoading(),
+  icon: authApi.updateProfileLoading() ? 'fa fa-spinner fa-spin' : ''
+}"
+[cancelConfig]="{
+  disabled: authApi.updateProfileLoading(),
+}"
+[showCancelIcon]="!authApi.updateProfileLoading()"
+[closeOnOverlay]="!authApi.updateProfileLoading()"
+[modalStyle]="'warning'"
+>
+  <div class="flex flex-col gap-4">
+    <ZS-input
+    [label]="'Old Password'"
+    placeholder="Enter your password"
+
+    icon="fas fa-lock"
+    [type]="'password'"
+    [inputStyle]="'warning'"
+
+    [required]="true"
+    (changedEv)="changeChPassValues($event, 'old_password')"
+    >
+    </ZS-input>
+
+    <ZS-input #password
+    [label]="'New Password'"
+    placeholder="Enter the new password"
+
+    icon="fas fa-lock"
+    [type]="'password'"
+    [inputStyle]="'warning'"
+
+    [required]="true"
+    (changedEv)="changeChPassValues($event, 'password')"
+    >
+    </ZS-input>
+
+    <ZS-input #conf_password
+    [label]="'Confirm New Password'"
+    placeholder="Confirm the new password"
+
+    [validateFns]="[confPassValidate]"
+
+    icon="fas fa-lock"
+    [type]="'password'"
+    [inputStyle]="'warning'"
+
+    [required]="true"
+    (changedEv)="changeChPassValues($event, 'conf_password')"
+    >
+    </ZS-input>
+  </div>
+</ZS-modal>
+
+<!-- ------------------------- Delete User Account ------------------------- -->
+<ZS-modal
+[title]="'Delete Account'"
+[(open)]="openDelUserAccModal"
+(cancelEv)="openDelUserAccModal.set(false)"
+[showFooter]="false"
+[modalStyle]="'danger'"
+>
+<!-- [showCancelIcon]="!authApi.delUserAccLoading()"
+[closeOnOverlay]="!authApi.delUserAccLoading()" -->
+  <div class="flex flex-col gap-4">
+    <!-- note -->
+    <p class="text-sm text-red-700 dark:text-red-400">
+      If you delete your account, all your chats and messages will be permanently removed from all parties, 
+      and you will no longer be able to access them. 
+      Messages sent by others will not be removed from their chats.
+    </p>
+
+    <ZS-input
+    [label]="'To confirm, please enter: delete + your username.'"
+    [placeholder]="'delete ' + profileData()?.username"
+    icon=""
+    [type]="'text'"
+    [inputStyle]="'danger'"
+
+    [required]="true"
+    >
+    </ZS-input>
   </div>
 </ZS-modal>

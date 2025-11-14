@@ -1,5 +1,5 @@
-import { Component, effect, inject, signal, untracked } from '@angular/core';
-import { Button, Modal, Input, ChangeEventType, Form, FileInput, FileData, Checkbox, Spinner } from '@ziadshalaby/ngx-zs-component';
+import { Component, effect, inject, signal, untracked, viewChild, WritableSignal } from '@angular/core';
+import { Button, Modal, Input, ChangeEventType, Form, FileInput, FileData, Checkbox, Spinner, ValidatorFn } from '@ziadshalaby/ngx-zs-component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfigService } from '../services/config-service';
 import { AuthApi, UserDataType } from '../services/auth-services/auth-api';
@@ -18,7 +18,7 @@ export class Profile {
 
   readonly userId = signal<number | null>(null);
   readonly profileData = signal<UserDataType | null>(null);
-  readonly isProfileForUserLoggedIn = signal<boolean>(false)
+  readonly isProfileForUserLoggedIn = signal<boolean>(false);
 
   constructor() {
     this.startSubscribe();
@@ -49,7 +49,6 @@ export class Profile {
               );
             }
           }
-          this.updateAccForm.patch('bio', { valid: true })
         }
       });
     });
@@ -64,13 +63,11 @@ export class Profile {
         }
       })
     });
-
-    this.EditImgForm.patch('rem_image', { valid: true });
-    this.EditImgForm.patch('user_image', { valid: true });
   }
 
   startSubscribe() {
-    this.activatedRoute.paramMap.subscribe(params => {
+    this.activatedRoute.paramMap
+    .subscribe(params => {
       const userId = Number(params.get('user_id'));
       if (!userId) return;
 
@@ -105,6 +102,17 @@ export class Profile {
     });
   }
   
+  handleCloseSc = (modalToClose?: WritableSignal<boolean>) => 
+    () => {
+      console.log(modalToClose)
+      if(modalToClose) modalToClose.set(false);
+      this.authApi.updateProfileLoading.set(false);
+    }
+
+  handleCloseFd: () => void = () => {
+    this.authApi.updateProfileLoading.set(false);
+  }
+
   // =============== Update Account Profile (username, fullname, email, bio) =============== //
   readonly openUpdateAccModal = signal<boolean>(false);
   readonly updateAccForm = new Form({
@@ -115,28 +123,23 @@ export class Profile {
   })
 
   changeUpdateAccValues(event: ChangeEventType, key: keyof typeof this.updateAccForm.fields) {
+    if(event.value === null) event.value = '';
     this.updateAccForm.set(key, event.value, event.valid);
   }
 
   updateAccProfile() {
     this.updateAccForm.submit((values) => {
       this.authApi.updateProfileLoading.set(true);
-
-      const handleClose = () => {
-        this.openUpdateAccModal.set(false);
-        this.authApi.updateProfileLoading.set(false);
-      };
-
-      const cleanedValues = Object.fromEntries(
-        Object.entries(values).map(([key, value]) => [key, value ?? ''])
-      ) as typeof values;
-
-      this.authApi.updateProfile(cleanedValues, handleClose, handleClose);
+      this.authApi.updateProfile(
+        values,
+        this.handleCloseSc(this.openUpdateAccModal),
+        this.handleCloseFd
+      );
     }, ['bio']);
   }
-  // ===============/ Update Account Profile /=============== //
+  // ==============================/ Update Account Profile /============================== //
 
-  // =============== Edit User Image =============== //
+  // ================================== Edit User Image ================================== //
   readonly openEditImgModal = signal<boolean>(false);
   readonly EditImgForm = new Form<{
     user_image: File | null;
@@ -147,16 +150,15 @@ export class Profile {
   })
 
   async changeEditImgcValues(event: ChangeEventType<FileData[]>, key: keyof typeof this.EditImgForm.fields) {
-    const fileData = event.value[0];
-    if (!fileData?.url) return;
+    const fileData = event.value.length ? event.value[0] : null;
+    if (!fileData || !fileData?.url) {
+      this.EditImgForm.set(key, null, event.valid);
+      return;
+    }
 
     const blob = await fetch(fileData.url).then(res => res.blob());
     const file = new File([blob], fileData.name, { type: fileData.type });
     this.EditImgForm.set(key, file, event.valid);
-  }
-
-  filesChange(e: any) {
-    console.log(e);
   }
 
   editImgProfile() {
@@ -165,24 +167,77 @@ export class Profile {
 
       const { user_image, rem_image } = values;
 
-      const handleClose = () => {
-        this.openEditImgModal.set(false);
-        this.authApi.updateProfileLoading.set(false);
-      }
-
       if (rem_image) {
-        this.authApi.deleteUserImage(handleClose, handleClose);
+        this.authApi.deleteUserImage(
+          this.handleCloseSc(this.openEditImgModal),
+          this.handleCloseFd
+        );
         return;
       }
 
       if (!user_image) {
-        handleClose();
+        this.handleCloseSc(this.openEditImgModal)();
         this.authApi.updateProfileLoading.set(false);
         return;
       }
 
-      this.authApi.updateProfile({ user_image }, handleClose, handleClose);
-    }, ['user_image']);
+      this.authApi.updateProfile(
+        { user_image },
+        this.handleCloseSc(this.openEditImgModal),
+        this.handleCloseFd
+      );
+    }, ['user_image'], ['rem_image', 'user_image']);
   }
-  // ===============/ Edit User Image /=============== //
+  // =================================/ Edit User Image /================================== //
+
+  // ================================= Change Password ================================= //
+  readonly openChangePassModal = signal<boolean>(false);
+  readonly changePassForm = new Form({
+    old_password: '',
+    password: '',
+    conf_password: ''
+  })
+
+  readonly pass = viewChild<Input>('password')
+  readonly conf_pass = viewChild<Input>('conf_password')
+
+  confPassValidate: ValidatorFn = (value: string | null) => {
+    if(this.changePassForm.get('password').value !== value)
+      return ['The passwords do not match.']
+    return []
+  }
+
+  changeChPassValues(event: ChangeEventType, key: keyof typeof this.changePassForm.fields) {
+    this.changePassForm.set(key, event.value, event.valid);
+
+    if (event.fromForce) return;
+    
+    if (key === 'password') {
+      const conf = this.conf_pass();
+      if (conf) conf.forceChange();
+    }
+
+    if (key === 'conf_password') {
+      const pass = this.pass();
+      if (pass) pass.forceChange();
+    }
+  }
+
+  changePass() {
+    this.changePassForm.submit((values) => {
+      this.authApi.updateProfileLoading.set(true);
+      this.authApi.updateProfile(
+        values,
+        this.handleCloseSc(this.openChangePassModal),
+        this.handleCloseFd
+      );
+    });
+  }
+  // =================================/ Change Password /================================= //
+
+  // ================================= Delete User Account ================================= //
+  readonly openDelUserAccModal = signal<boolean>(false);
+
+
+  // =================================/ Delete User Account /================================= //
 }
