@@ -312,19 +312,24 @@
   <div class="flex flex-col gap-4">
     <!-- note -->
     <p class="text-sm text-red-700 dark:text-red-400">
-      If you delete your account, all your chats and messages will be permanently removed from all parties, 
-      and you will no longer be able to access them. 
-      Messages sent by others will not be removed from their chats.
+      Deleting your account will:
     </p>
 
-    <ZS-input
-    [label]="'To confirm, please enter: delete + your username.'"
-    [placeholder]="'delete ' + profileData()?.username"
-    icon=""
-    [type]="'text'"
-    [inputStyle]="'danger'"
+    <ul class="list-disc list-inside text-sm text-red-700 dark:text-red-400 space-y-2">
+      <li>Deactivate your profile and show it as "Deleted User" to others.</li>
+      <li>Your chats and messages will remain visible to other users, but you will no longer be able to access them.</li>
+      <li>Your email will be removed, allowing you to create a new account with the same email in the future.</li>
+      <li>Nothing associated with you will appear on the site anymore. You will not receive any messages in any chat you were part of, except for group chats where you were a member.</li>
+      <li>Prevent you from logging in again. This action cannot be undone.</li>
+    </ul>
 
-    [required]="true"
+    <ZS-input
+      [label]="'To confirm, please enter: delete + your username.'"
+      [placeholder]="'delete ' + profileData()?.username"
+      icon=""
+      [type]="'text'"
+      [inputStyle]="'danger'"
+      [required]="true"
     >
     </ZS-input>
   </div>
