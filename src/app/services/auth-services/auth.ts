@@ -3,6 +3,7 @@ import { SharedUtils } from './shared-utils';
 import { User } from './user';
 import { Token } from './token';
 import { firstValueFrom } from 'rxjs';
+import { Logout } from './logout';
 
 export interface RegBody {
   fullname: string,
@@ -24,11 +25,13 @@ export class Auth {
   private get shared(): SharedUtils { return this.injector.get(SharedUtils); }
   private get user(): User { return this.injector.get(User); }
   private get token(): Token { return this.injector.get(Token); }
+  private get logout(): Logout { return this.injector.get(Logout); }
 
   private readonly signupURL = `${this.shared.config.apiUrl}/api/auth/register/`;
   private readonly loginURL = `${this.shared.config.apiUrl}/api/auth/login/`;
   private readonly googleLoginURL = `${this.shared.config.apiUrl}/api/auth/google-login/`;
   private readonly csrfTokenURL = `${this.shared.config.apiUrl}/api/auth/get_csrf/`;
+  private readonly deleteAccURL = `${this.shared.config.apiUrl}/api/auth/delete-user/`;
 
   signup(body: RegBody) {
     this.shared.error.set([])
@@ -112,5 +115,25 @@ export class Auth {
       console.warn('CSRF token fetch failed', err);
       return false;
     }
+  }
+
+  deleteAcc(password: string) {
+    this.shared.error.set([]);
+
+    this.shared.http.post(this.deleteAccURL, { password } ,this.shared.CredAndCsrf()).subscribe({
+      next: (res: any) => {
+        this.shared.deleteAccLoading.set(false);
+        this.shared.alertService.addAlert({
+          message: res.message,
+          type: 'success'
+        })
+
+        this.logout.logout();
+      },
+      error: (err: any) => {
+        this.shared.deleteAccLoading.set(false);
+        this.shared.setErrors(err.error);
+      }
+    })
   }
 }

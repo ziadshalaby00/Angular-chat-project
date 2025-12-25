@@ -54,6 +54,8 @@ export class AuthApi {
   get updateProfileLoading() { return this.shared.updateProfileLoading; }
   get getUsersProfileLoading() { return this.shared.getUsersProfileLoading; }
 
+  get deleteAccLoading() { return this.shared.deleteAccLoading; }
+
   // ====== RE-EXPORT METHODS ======
   me(...args: Parameters<User['me']>) { return this.user.me(...args); }
   getUsersProfile(...args: Parameters<User['getUsersProfile']>) { return this.user.getUsersProfile(...args); }
@@ -72,6 +74,7 @@ export class AuthApi {
   login(...args: Parameters<Auth['login']>) { return this.auth.login(...args); }
   googleExchange(...args: Parameters<Auth['googleExchange']>) { return this.auth.googleExchange(...args); }
   getCsrfToken(...args: Parameters<Auth['getCsrfToken']>) { return this.auth.getCsrfToken(...args); }
+  deleteAcc(...args: Parameters<Auth['deleteAcc']>) { return this.auth.deleteAcc(...args); }
 
   verifyAccess(...args: Parameters<AccessVerification['verifyAccess']>) { return this.accessVerification.verifyAccess(...args); }
   

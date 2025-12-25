@@ -16,7 +16,7 @@ import { AuthApi } from '../services/auth-services/auth-api';
 })
 export class Login {
   readonly authApi: AuthApi = inject(AuthApi);
-  readonly router: Router = inject(Router)
+  readonly router: Router = inject(Router);
 
   ngAfterViewInit() {
     this.authApi.initCodeClient()

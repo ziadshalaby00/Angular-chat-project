@@ -51,6 +51,8 @@ export class SharedUtils {
   readonly updateProfileLoading = signal<boolean>(false);
   readonly getUsersProfileLoading = signal<boolean>(false);
 
+  readonly deleteAccLoading = signal<boolean>(false);
+
   setErrors(errorObject: any) {
     const errors = this.extractorService.extract(errorObject)
     this.error.update((v: string[]) => [...v, ...errors]);

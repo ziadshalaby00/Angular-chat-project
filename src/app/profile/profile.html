@@ -306,31 +306,71 @@
 (cancelEv)="openDelUserAccModal.set(false)"
 [showFooter]="false"
 [modalStyle]="'danger'"
+
+[showCancelIcon]="!authApi.deleteAccLoading()"
+[closeOnOverlay]="!authApi.deleteAccLoading()"
 >
-<!-- [showCancelIcon]="!authApi.delUserAccLoading()"
-[closeOnOverlay]="!authApi.delUserAccLoading()" -->
   <div class="flex flex-col gap-4">
-    <!-- note -->
-    <p class="text-sm text-red-700 dark:text-red-400">
-      Deleting your account will:
-    </p>
+    @if(step() === 1) {
+      <!-- note -->
+      <p class="text-sm text-red-700 dark:text-red-400">
+        Deleting your account will:
+      </p>
+  
+      <ul class="list-disc list-inside text-sm text-red-700 dark:text-red-400 space-y-2">
+        <li>Deactivate your profile and show it as "Deleted User" to others.</li>
+        <li>Your chats and messages will remain visible to other users, but you will no longer be able to access them.</li>
+        <li>Your email will be removed, allowing you to create a new account with the same email in the future.</li>
+        <li>Nothing associated with you will appear on the site anymore. You will not receive any messages in any chat you were part of, except for group chats where you were a member.</li>
+        <li>Prevent you from logging in again. This action cannot be undone.</li>
+      </ul>
+  
+      <div class="flex flex-col gap-4 mb-4">
+        <ZS-input
+          [label]="'To confirm, please enter: `Delete + username`.'"
+          [placeholder]="'Delete ' + profileData()?.username"
+          icon=""
+          [type]="'text'"
+          [inputStyle]="'primary'"
+          [required]="true"
+          [validateFns]="[del_UsernameValdate]"
 
-    <ul class="list-disc list-inside text-sm text-red-700 dark:text-red-400 space-y-2">
-      <li>Deactivate your profile and show it as "Deleted User" to others.</li>
-      <li>Your chats and messages will remain visible to other users, but you will no longer be able to access them.</li>
-      <li>Your email will be removed, allowing you to create a new account with the same email in the future.</li>
-      <li>Nothing associated with you will appear on the site anymore. You will not receive any messages in any chat you were part of, except for group chats where you were a member.</li>
-      <li>Prevent you from logging in again. This action cannot be undone.</li>
-    </ul>
-
-    <ZS-input
-      [label]="'To confirm, please enter: delete + your username.'"
-      [placeholder]="'delete ' + profileData()?.username"
-      icon=""
-      [type]="'text'"
-      [inputStyle]="'danger'"
-      [required]="true"
-    >
-    </ZS-input>
+          (changedEv)="setDel_Username($event)"
+          [(touched)]="ddToCnSTouch"
+        >
+        </ZS-input>
+  
+        <ZS-button
+        (clickedEv)="continueDelete()"
+        variant="outline"
+        >
+          Continue
+        </ZS-button>
+      </div>
+    }@else if(step() === 2) {
+      <div class="flex flex-col gap-4 mb-4">
+        <ZS-input
+          [label]="'Pls enter your password to delete your account.'"
+          [placeholder]="'Enter password'"
+          icon=""
+          [type]="'text'"
+          [inputStyle]="'primary'"
+          [required]="true"
+  
+          (changedEv)="setPassForDA($event)"
+          [(touched)]="passForDATouch"
+        >
+        </ZS-input>
+  
+        <ZS-button
+        (clickedEv)="DeleteAcc()"
+        [btnStyle]="'danger'"
+        [icon]="authApi.deleteAccLoading() ? 'fas fa-spinner fa-spin' : ''"
+        [disabled]="authApi.deleteAccLoading()"
+        >
+          Delete Account
+        </ZS-button>
+      </div>
+    }
   </div>
 </ZS-modal>

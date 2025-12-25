@@ -240,4 +240,51 @@ export class Profile {
 
 
   // =================================/ Delete User Account /================================= //
+  readonly step = signal<1 | 2>(1);
+
+  readonly del_UsernameValdate = (value: string | null) => {
+    if(value !== `Delete ${this.authApi.userData()?.username}`) {
+      return ['Pls enter `Delete + username`'];
+    }
+    return [];
+  }
+
+  readonly del_Username = signal<ChangeEventType>({
+    value: '',
+    valid: false,
+    fromForce: false
+  });
+  readonly ddToCnSTouch = signal<boolean>(false);
+
+  setDel_Username(event: ChangeEventType) {
+    this.del_Username.set(event);
+  }
+
+  continueDelete() {
+    if(this.del_Username().valid) {
+      this.step.set(2)
+    }else {
+      this.ddToCnSTouch.set(true);
+    }
+  }
+
+  readonly passForDA = signal<ChangeEventType>({
+    value: '',
+    valid: false,
+    fromForce: false
+  });
+  readonly passForDATouch = signal<boolean>(false);
+
+  setPassForDA(event: ChangeEventType) {
+    this.passForDA.set(event);
+  }
+
+  DeleteAcc() {
+    if(this.passForDA().valid) {
+      this.authApi.deleteAccLoading.set(true);
+      this.authApi.deleteAcc(this.passForDA().value ?? '')
+    }else {
+      this.passForDATouch.set(true);
+    }
+  }
 }
