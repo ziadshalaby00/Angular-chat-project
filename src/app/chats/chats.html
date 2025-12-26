@@ -1,0 +1,40 @@
+
+<div class="h-[85vh] pr-4 dark:text-gray-50">
+    <ZS-sidebar
+    header="Chats"
+    [openSide]="true"
+    >
+    <div main class="flex flex-col max-h-full gap-6 px-2 pb-2">
+        <ZS-input
+        type="search"
+        inputStyle="primary"
+        >
+        </ZS-input>
+
+        <div class='flex flex-col gap-4 max-h-full pr-2 overflow-y-auto scroll scroll-success'>
+            @for(item of ['ziad', 'ahmed', 'salah', 'mohamed', 'ali', 'ibrahim', 'some one 1', 'some one 2', 'some one 3', 'some one 4', 'some one 5', 'some one 6', 'some one 7', 'some one 8', 'some one 9', 'some one 10']; track item) {
+                @if(item === 'ahmed') {
+                    <ZS-card
+                    [clickable]="true"
+                    cardStyle="success"
+                    bodyClass="bg-green-300 dark:bg-green-700"
+                    >
+                        <div class="py-4 px-6">
+                            {{ item }}
+                        </div>
+                    </ZS-card>
+                }@else {
+                    <ZS-card
+                    [clickable]="true"
+                    cardStyle="success"
+                    >
+                        <div class="py-4 px-6">
+                            {{ item }}
+                        </div>
+                    </ZS-card>
+                }
+            }
+        </div>
+    </div>
+    </ZS-sidebar>
+</div>

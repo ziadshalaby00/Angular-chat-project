@@ -36,8 +36,10 @@ export class App {
     )
     .subscribe((event: NavigationStart) => {
       this.router.navigate(['/init-app']);
+      const reRouting = event.url === '/init-app' ? '/home' : event.url
       console.log('Actual URL:', event.url);
-      this.initAppService.initApp(event.url);
+      console.log('Re routing URL:', reRouting);
+      this.initAppService.initApp(reRouting);
     });
 
     effect(() => {

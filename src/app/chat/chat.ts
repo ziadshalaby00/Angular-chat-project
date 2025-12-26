@@ -9,16 +9,16 @@ import { Router } from '@angular/router';
   styleUrl: './chat.css',
 })
 export class Chat {
-  readonly authApi: AuthApi = inject(AuthApi);
-  readonly router: Router = inject(Router);
+  // readonly authApi: AuthApi = inject(AuthApi);
+  // readonly router: Router = inject(Router);
 
-  constructor() {
-    effect(() => {
-      const isLoggedin = this.authApi.isLoggedin()
+  // constructor() {
+  //   effect(() => {
+  //     const isLoggedin = this.authApi.isLoggedin()
 
-      if(!isLoggedin) {
-        this.router.navigate(['/login'])
-      }
-    })
-  }
+  //     if(!isLoggedin) {
+  //       this.router.navigate(['/login'])
+  //     }
+  //   })
+  // }
 }

@@ -36,7 +36,22 @@ export class NavbarComp {
   logoUrl: string = 'https://i.postimg.cc/MpzpyjF1/android-chrome-512x512-proton.png';
 
   navItems: navItemsType = {
-    navItems: []
+    navItems: [
+      {
+        label: 'Home',
+        routerLink: '/home',
+        icon: 'fa-solid fa-house',
+        routerLinkActive: 'bg-blue-500 dark:bg-blue-600 text-gray-50',
+        useDefaultColorClass: 'bg',
+      },
+      {
+        label: 'Chats',
+        routerLink: '/chats',
+        icon: 'fa-solid fa-comment-dots',
+        routerLinkActive: 'bg-green-500 dark:bg-green-600 text-gray-50',
+        useDefaultColorClass: 'bg',
+      },
+    ]
   }
 
   navUserProfile = computed<UserProfile | undefined>(() => {
