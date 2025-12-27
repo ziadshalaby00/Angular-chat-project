@@ -2,10 +2,11 @@ import { Component, effect, inject } from '@angular/core';
 import { AuthApi } from '../services/auth-services/auth-api';
 import { Router } from '@angular/router';
 import { Sidebar, Input, Card } from '@ziadshalaby/ngx-zs-component';
+import { Chat } from "../chat/chat";
 
 @Component({
   selector: 'app-chats',
-  imports: [Sidebar, Input, Card],
+  imports: [Sidebar, Input, Card, Chat],
   templateUrl: './chats.html',
   styleUrl: './chats.css',
 })
@@ -21,5 +22,9 @@ export class Chats {
         this.router.navigate(['/login'])
       }
     })
+  }
+
+  onSearchForChat(event: any) {
+    console.log(event);
   }
 }
