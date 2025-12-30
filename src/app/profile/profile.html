@@ -8,8 +8,8 @@
       </ZS-spinner>
     </div>
   }@else if (!profileData()) {
-    <div class="flex flex-col items-center gap-2 text-slate-600 dark:text-slate-300">
-      <i class="fa-solid fa-user-xmark text-4xl text-red-500 dark:text-red-700 animate-pulse"></i>
+    <div class="flex flex-col items-center gap-2 text-slate-600 dark:text-slate-300 transition-colors">
+      <i class="fa-solid fa-user-xmark text-4xl text-red-500 dark:text-red-700 animate-pulse transition-colors"></i>
       <span class="text-3xl">No User Found</span>
     </div>
   } @else {
@@ -24,7 +24,7 @@
       <div
         class="
           flex flex-col items-center p-7 bg-linear-to-b from-sky-400/90 to-sky-200/60 
-          dark:from-sky-700/90 dark:to-sky-800/70 text-center
+          dark:from-sky-700/90 dark:to-sky-800/70 text-center transition-colors
         "
       >
       <div class="w-full flex items-center justify-center relative">
@@ -34,7 +34,7 @@
             alt="User image"
             class="
               size-32 rounded-full shadow-lg ring-4 ring-white/70 
-              dark:ring-slate-800 object-cover
+              dark:ring-slate-800 object-cover transition-colors
             "
           >
         }@else {
@@ -42,7 +42,7 @@
             class="
               size-32 rounded-full shadow-lg ring-4 ring-white/70 
               dark:ring-slate-800 flex items-center justify-center
-              bg-blue-500 text-white font-bold text-[5rem]
+              bg-blue-500 text-white font-bold text-[5rem] transition-colors
             "
           >
             <i class="fa fa-user"></i>
@@ -51,7 +51,7 @@
         @if(isProfileForUserLoggedIn()) {
           <button (click)="openEditImgModal.set(true)"
           class="absolute top-2 right-1/5 
-          text-slate-800 dark:text-slate-300
+          text-slate-800 dark:text-slate-300 transition-colors
           hover:scale-[1.05] active:scale-[0.97] hover:opacity-75
           ">
             <i class="fa-solid fa-pen-to-square"></i>
@@ -60,34 +60,34 @@
 
       </div>
 
-        <h2 class="mt-4 text-2xl font-semibold text-slate-900 dark:text-white">
+        <h2 class="mt-4 text-2xl font-semibold text-slate-900 dark:text-white transition-colors">
           {{ profileData()?.fullname }}
         </h2>
 
-        <h3 class="text-sky-700 dark:text-sky-300 text-lg font-medium">
+        <h3 class="text-sky-700 dark:text-sky-300 text-lg font-medium transition-colors">
           @{{ profileData()?.username }}
         </h3>
 
         @if (profileData()?.bio) {
-          <p class="mt-3 text-slate-800 dark:text-slate-200/80 text-sm max-w-xs leading-snug">
+          <p class="mt-3 text-slate-800 dark:text-slate-200/80 text-sm max-w-xs leading-snug transition-colors">
             "{{ profileData()?.bio }}"
           </p>
         }
       </div>
 
       <!-- Info Section -->
-      <div class="p-6 space-y-4 text-slate-700 dark:text-slate-200">
+      <div class="p-6 space-y-4 text-slate-700 dark:text-slate-200 transition-colors">
 
         @if(isProfileForUserLoggedIn()) {
             <div class="flex flex-col">
-                <span class="text-sm font-semibold text-slate-500 dark:text-slate-400">
+                <span class="text-sm font-semibold text-slate-500 dark:text-slate-400 transition-colors">
                     Email
                 </span>
                 <span>{{ profileData()?.email }}</span>
             </div>
 
             <div class="flex flex-col">
-              <span class="text-sm font-semibold text-slate-500 dark:text-slate-400">
+              <span class="text-sm font-semibold text-slate-500 dark:text-slate-400 transition-colors">
                 Last Login
               </span>
               <span class="text-sm">{{ config.formatDate(profileData()?.last_login ?? '', true) }}</span>
@@ -95,7 +95,7 @@
         }
 
         <div class="flex flex-col">
-          <span class="text-sm font-semibold text-slate-500 dark:text-slate-400">
+          <span class="text-sm font-semibold text-slate-500 dark:text-slate-400 transition-colors">
             Date Joined
           </span>
           <span class="text-sm">{{ config.formatDate(profileData()?.date_joined ?? '', true) }}</span>
@@ -104,7 +104,7 @@
 
       <!-- Optional Buttons -->
       @if(isProfileForUserLoggedIn()) {
-        <hr class="border-slate-300 dark:border-slate-700">
+        <hr class="border-slate-300 dark:border-slate-700 transition-colors">
 
         <div class="p-6 flex flex-col gap-4">
           <ZS-button btnStyle="secondary" class="grow" 
@@ -113,9 +113,9 @@
             Edit Account
           </ZS-button>
 
-          <ZS-button btnStyle="warning" 
+          <ZS-button btnStyle="secondary" 
           (clickedEv)="openChangePassModal.set(true)"
-          icon="fa-solid fa-pen"
+          icon="fa-solid fa-key"
           class="grow whitespace-nowrap">
             Change Password
           </ZS-button>
@@ -138,7 +138,7 @@
 (cancelEv)="openUpdateAccModal.set(false)"
 (confirmEv)="updateAccProfile()"
 [confirmConfig]="{
-  btnStyle: 'dark',
+  btnStyle: 'primary',
   disabled: authApi.updateProfileLoading(),
   icon: authApi.updateProfileLoading() ? 'fa fa-spinner fa-spin' : ''
 }"
@@ -147,9 +147,9 @@
 }"
 [showCancelIcon]="!authApi.updateProfileLoading()"
 [closeOnOverlay]="!authApi.updateProfileLoading()"
-[modalStyle]="'secondary'"
+[modalStyle]="'primary'"
 >
-  <div class="flex flex-col gap-4">
+  <div class="flex flex-col gap-4 text-gray-800 dark:text-gray-300 transition-colors">
     <ZS-input
     [label]="'Full Name'"
     icon="fas fa-user"
@@ -221,19 +221,23 @@
 >
   <div class="flex flex-col gap-4">
     <ZS-file
+    [disabled]="authApi.updateProfileLoading()"
     [inputStyle]="'primary'"
     (changeEv)="changeEditImgcValues($event, 'user_image')"
     >
     </ZS-file>
 
-    <ZS-checkbox
-    label="Remove Picture"
-    hint="If you have an image, it will be deleted, and any image you select will be ignored."
-    [inputStyle]="'primary'"
-    [variant]="'solid'"
-    (valueChange)="this.EditImgForm.set('rem_image', $event)"
+    <!-- or -->
+    <app-or></app-or>
+
+    <ZS-button
+    [disabled]="authApi.updateProfileLoading()"
+    [icon]="authApi.updateProfileLoading() ? 'fa fa-spinner fa-spin' : ''"
+    btnStyle="danger"
+    (clickedEv)="removeUserImg()"
     >
-    </ZS-checkbox>
+      Remove Picture
+    </ZS-button>
   </div>
 </ZS-modal>
 
@@ -255,7 +259,7 @@
 [closeOnOverlay]="!authApi.updateProfileLoading()"
 [modalStyle]="'warning'"
 >
-  <div class="flex flex-col gap-4">
+  <div class="flex flex-col gap-4 text-yellow-600 dark:text-yellow-500 transition-colors">
     <ZS-input
     [label]="'Old Password'"
     placeholder="Enter your password"
@@ -313,15 +317,15 @@
   <div class="flex flex-col gap-4">
     @if(step() === 1) {
       <!-- note -->
-      <p class="text-sm text-red-700 dark:text-red-400">
+      <p class="text-sm text-red-700 dark:text-red-400 transition-colors">
         Deleting your account will:
       </p>
   
-      <ul class="list-disc list-inside text-sm text-red-700 dark:text-red-400 space-y-2">
+      <ul class="list-disc list-inside text-sm text-red-700 dark:text-red-400 space-y-2 transition-colors">
         <li>Deactivate your profile and show it as "Deleted User" to others.</li>
         <li>Your chats and messages will remain visible to other users, but you will no longer be able to access them.</li>
         <li>Your email will be removed, allowing you to create a new account with the same email in the future.</li>
-        <li>Nothing associated with you will appear on the site anymore. You will not receive any messages in any chat you were part of, except for group chats where you were a member.</li>
+        <li>Nothing associated with you will appear on the site anymore.</li>
         <li>Prevent you from logging in again. This action cannot be undone.</li>
       </ul>
   
@@ -331,7 +335,7 @@
           [placeholder]="'Delete ' + profileData()?.username"
           icon=""
           [type]="'text'"
-          [inputStyle]="'primary'"
+          [inputStyle]="'danger'"
           [required]="true"
           [validateFns]="[del_UsernameValdate]"
 
@@ -343,6 +347,7 @@
         <ZS-button
         (clickedEv)="continueDelete()"
         variant="outline"
+        btnStyle="secondary"
         >
           Continue
         </ZS-button>
@@ -354,7 +359,7 @@
           [placeholder]="'Enter password'"
           icon=""
           [type]="'text'"
-          [inputStyle]="'primary'"
+          [inputStyle]="'secondary'"
           [required]="true"
   
           (changedEv)="setPassForDA($event)"

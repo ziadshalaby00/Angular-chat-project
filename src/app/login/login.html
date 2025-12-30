@@ -1,11 +1,11 @@
 <div class="min-h-[81.5vh] flex justify-center items-center m-4">
   <ZS-card 
   class="w-full max-w-120"
-  bodyClass="bg-white dark:bg-slate-900"
+  bodyClass="bg-white dark:bg-slate-900 transition-colors"
   cardStyle='primary'
   >
-    <form (submit)="submit($event)" class="p-6 flex flex-col gap-4 text-slate-800 dark:text-slate-300" novalidate>
-        <h2 class="text-2xl text-center font-bold mb-4 text-blue-800 dark:text-blue-300">Login</h2>
+    <form (submit)="submit($event)" class="p-6 flex flex-col gap-4 text-slate-800 dark:text-slate-300 transition-colors" novalidate>
+        <h2 class="text-2xl text-center font-bold mb-4 text-blue-800 dark:text-blue-300 transition-colors">Login</h2>
       
         <ZS-input
           [label]="'Username'"
@@ -44,11 +44,8 @@
             Login
           </ZS-button>
   
-            <div class="relative my-4 flex items-center">
-                <div class="grow border-t border-gray-300 dark:border-gray-600"></div>
-                <span class="mx-3 text-gray-800 dark:text-gray-300 text-sm">OR</span>
-                <div class="grow border-t border-gray-300 dark:border-gray-600"></div>
-            </div>
+          <!-- or -->
+          <app-or></app-or>
 
           <ZS-button
           size="lg"
@@ -66,12 +63,12 @@
     
         <div class="flex flex-col gap-1.5  text-sm">
           <div class="flex flex-wrap justify-center items-center gap-1.5">
-              <span class="text-gray-700 dark:text-gray-300">
+              <span class="text-gray-700 dark:text-gray-300 transition-colors">
                 Forgot
               </span>
               <button
               type="button"
-              class="text-sky-600 hover:text-sky-500 dark:text-sky-400"
+              class="text-sky-600 hover:text-sky-500 dark:text-sky-400 transition-colors"
               (click)="passwordResetModal.set(true)"
               >
               Passowrd?
@@ -79,12 +76,12 @@
           </div>
   
           <div class="flex flex-wrap justify-center items-center gap-1.5">
-              <span class="text-gray-700 dark:text-gray-300">
+              <span class="text-gray-700 dark:text-gray-300 transition-colors">
                 Don’t have an account?
               </span>
               <button
               type="button"
-              class="text-violet-600 hover:text-violet-500 dark:text-violet-400"
+              class="text-violet-600 hover:text-violet-500 dark:text-violet-400 transition-colors"
               (click)="router.navigate(['/signup'])"
               >
               Sign Up
@@ -118,7 +115,7 @@ position="center"
 [(open)]="passwordResetModal"
 [closeOnOverlay]="authApi.passwordResetLoading() ? false : true"
 >
-  <p class="text-sm dark:text-gray-100 mb-2">
+  <p class="text-sm dark:text-gray-100 mb-2 transition-colors">
     Enter your 
     <span class="font-semibold">email address</span> 
     and we’ll send you a link to 

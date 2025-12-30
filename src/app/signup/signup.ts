@@ -2,13 +2,15 @@ import { AuthApi } from './../services/auth-services/auth-api';
 import { Component, effect, inject, viewChild } from '@angular/core';
 import { Button, Card, ChangeEventType, Form, Input, ValidatorFn } from '@ziadshalaby/ngx-zs-component';
 import { Router } from '@angular/router';
+import { Or } from '../or/or';
 
 @Component({
   selector: 'app-signup',
   imports: [
     Card,
     Input,
-    Button
+    Button,
+    Or
   ],
   templateUrl: './signup.html',
   styleUrl: './signup.css',

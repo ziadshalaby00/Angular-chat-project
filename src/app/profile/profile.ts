@@ -3,10 +3,11 @@ import { Button, Modal, Input, ChangeEventType, Form, FileInput, FileData, Check
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfigService } from '../services/config-service';
 import { AuthApi, UserDataType } from '../services/auth-services/auth-api';
+import { Or } from '../or/or';
 
 @Component({
   selector: 'app-profile',
-  imports: [Button, Modal, Input, FileInput, Checkbox, Spinner],
+  imports: [Button, Modal, Input, FileInput, Spinner, Or],
   templateUrl: './profile.html',
   styleUrl: './profile.css',
 })
@@ -143,10 +144,8 @@ export class Profile {
   readonly openEditImgModal = signal<boolean>(false);
   readonly EditImgForm = new Form<{
     user_image: File | null;
-    rem_image: boolean;
   }>({
     user_image: null,
-    rem_image: false
   })
 
   async changeEditImgcValues(event: ChangeEventType<FileData[]>, key: keyof typeof this.EditImgForm.fields) {
@@ -162,19 +161,8 @@ export class Profile {
   }
 
   editImgProfile() {
-    this.EditImgForm.submit((values) => {
+    this.EditImgForm.submit((user_image) => {
       this.authApi.updateProfileLoading.set(true);
-
-      const { user_image, rem_image } = values;
-
-      if (rem_image) {
-        this.authApi.deleteUserImage(
-          this.handleCloseSc(this.openEditImgModal),
-          this.handleCloseFd
-        );
-        return;
-      }
-
       if (!user_image) {
         this.handleCloseSc(this.openEditImgModal)();
         this.authApi.updateProfileLoading.set(false);
@@ -182,11 +170,19 @@ export class Profile {
       }
 
       this.authApi.updateProfile(
-        { user_image },
+        user_image,
         this.handleCloseSc(this.openEditImgModal),
         this.handleCloseFd
       );
-    }, ['user_image'], ['rem_image', 'user_image']);
+    });
+  }
+
+  removeUserImg() {
+    this.authApi.updateProfileLoading.set(true);
+    this.authApi.deleteUserImage(
+      this.handleCloseSc(this.openEditImgModal),
+      this.handleCloseFd
+    );
   }
   // =================================/ Edit User Image /================================== //
 
