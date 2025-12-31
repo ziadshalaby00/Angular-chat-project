@@ -8,8 +8,8 @@
       </ZS-spinner>
     </div>
   }@else if (!profileData()) {
-    <div class="flex flex-col items-center gap-2 text-slate-600 dark:text-slate-300 transition-colors">
-      <i class="fa-solid fa-user-xmark text-4xl text-red-500 dark:text-red-700 animate-pulse transition-colors"></i>
+    <div class="flex flex-col items-center gap-2 text-slate-600 dark:text-slate-300">
+      <i class="fa-solid fa-user-xmark text-4xl text-red-500 dark:text-red-700 animate-pulse"></i>
       <span class="text-3xl">No User Found</span>
     </div>
   } @else {
@@ -24,7 +24,7 @@
       <div
         class="
           flex flex-col items-center p-7 bg-linear-to-b from-sky-400/90 to-sky-200/60 
-          dark:from-sky-700/90 dark:to-sky-800/70 text-center transition-colors
+          dark:from-sky-700/90 dark:to-sky-800/70 text-center
         "
       >
       <div class="w-full flex items-center justify-center relative">
@@ -34,7 +34,7 @@
             alt="User image"
             class="
               size-32 rounded-full shadow-lg ring-4 ring-white/70 
-              dark:ring-slate-800 object-cover transition-colors
+              dark:ring-slate-800 object-cover
             "
           >
         }@else {
@@ -42,7 +42,7 @@
             class="
               size-32 rounded-full shadow-lg ring-4 ring-white/70 
               dark:ring-slate-800 flex items-center justify-center
-              bg-blue-500 text-white font-bold text-[5rem] transition-colors
+              bg-blue-500 text-white font-bold text-[5rem]
             "
           >
             <i class="fa fa-user"></i>
@@ -51,7 +51,7 @@
         @if(isProfileForUserLoggedIn()) {
           <button (click)="openEditImgModal.set(true)"
           class="absolute top-2 right-1/5 
-          text-slate-800 dark:text-slate-300 transition-colors
+          text-slate-800 dark:text-slate-300
           hover:scale-[1.05] active:scale-[0.97] hover:opacity-75
           ">
             <i class="fa-solid fa-pen-to-square"></i>
@@ -60,34 +60,34 @@
 
       </div>
 
-        <h2 class="mt-4 text-2xl font-semibold text-slate-900 dark:text-white transition-colors">
+        <h2 class="mt-4 text-2xl font-semibold text-slate-900 dark:text-white">
           {{ profileData()?.fullname }}
         </h2>
 
-        <h3 class="text-sky-700 dark:text-sky-300 text-lg font-medium transition-colors">
+        <h3 class="text-sky-700 dark:text-sky-300 text-lg font-medium">
           @{{ profileData()?.username }}
         </h3>
 
         @if (profileData()?.bio) {
-          <p class="mt-3 text-slate-800 dark:text-slate-200/80 text-sm max-w-xs leading-snug transition-colors">
+          <p class="mt-3 text-slate-800 dark:text-slate-200/80 text-sm max-w-xs leading-snug">
             "{{ profileData()?.bio }}"
           </p>
         }
       </div>
 
       <!-- Info Section -->
-      <div class="p-6 space-y-4 text-slate-700 dark:text-slate-200 transition-colors">
+      <div class="p-6 space-y-4 text-slate-700 dark:text-slate-200">
 
         @if(isProfileForUserLoggedIn()) {
             <div class="flex flex-col">
-                <span class="text-sm font-semibold text-slate-500 dark:text-slate-400 transition-colors">
+                <span class="text-sm font-semibold text-slate-500 dark:text-slate-400">
                     Email
                 </span>
                 <span>{{ profileData()?.email }}</span>
             </div>
 
             <div class="flex flex-col">
-              <span class="text-sm font-semibold text-slate-500 dark:text-slate-400 transition-colors">
+              <span class="text-sm font-semibold text-slate-500 dark:text-slate-400">
                 Last Login
               </span>
               <span class="text-sm">{{ config.formatDate(profileData()?.last_login ?? '', true) }}</span>
@@ -95,7 +95,7 @@
         }
 
         <div class="flex flex-col">
-          <span class="text-sm font-semibold text-slate-500 dark:text-slate-400 transition-colors">
+          <span class="text-sm font-semibold text-slate-500 dark:text-slate-400">
             Date Joined
           </span>
           <span class="text-sm">{{ config.formatDate(profileData()?.date_joined ?? '', true) }}</span>
@@ -104,7 +104,7 @@
 
       <!-- Optional Buttons -->
       @if(isProfileForUserLoggedIn()) {
-        <hr class="border-slate-300 dark:border-slate-700 transition-colors">
+        <hr class="border-slate-300 dark:border-slate-700">
 
         <div class="p-6 flex flex-col gap-4">
           <ZS-button btnStyle="secondary" class="grow" 
@@ -149,7 +149,7 @@
 [closeOnOverlay]="!authApi.updateProfileLoading()"
 [modalStyle]="'primary'"
 >
-  <div class="flex flex-col gap-4 text-gray-800 dark:text-gray-300 transition-colors">
+  <div class="flex flex-col gap-4 text-gray-800 dark:text-gray-300">
     <ZS-input
     [label]="'Full Name'"
     icon="fas fa-user"
@@ -259,7 +259,7 @@
 [closeOnOverlay]="!authApi.updateProfileLoading()"
 [modalStyle]="'warning'"
 >
-  <div class="flex flex-col gap-4 text-yellow-600 dark:text-yellow-500 transition-colors">
+  <div class="flex flex-col gap-4 text-yellow-600 dark:text-yellow-500">
     <ZS-input
     [label]="'Old Password'"
     placeholder="Enter your password"
@@ -317,11 +317,11 @@
   <div class="flex flex-col gap-4">
     @if(step() === 1) {
       <!-- note -->
-      <p class="text-sm text-red-700 dark:text-red-400 transition-colors">
+      <p class="text-sm text-red-700 dark:text-red-400">
         Deleting your account will:
       </p>
   
-      <ul class="list-disc list-inside text-sm text-red-700 dark:text-red-400 space-y-2 transition-colors">
+      <ul class="list-disc list-inside text-sm text-red-700 dark:text-red-400 space-y-2">
         <li>Deactivate your profile and show it as "Deleted User" to others.</li>
         <li>Your chats and messages will remain visible to other users, but you will no longer be able to access them.</li>
         <li>Your email will be removed, allowing you to create a new account with the same email in the future.</li>
