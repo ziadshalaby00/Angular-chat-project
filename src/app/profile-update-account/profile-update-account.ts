@@ -10,22 +10,24 @@ import { AuthApi, UserDataType } from '../services/auth-services/auth-api';
 })
 export class ProfileUpdateAccount {
   readonly authApi: AuthApi = inject(AuthApi);
+
   readonly profileData = input<UserDataType | null>(null);
   readonly isProfileForUserLoggedIn = input<boolean>(false);
   
   readonly openUpdateAccModal = model<boolean>(false);
 
-  readonly handleCloseSc = input<(modalToClose?: WritableSignal<boolean>) => () => void>()
-  readonly handleCloseFd = input<() => void>()
+  readonly handleCloseSuccess = input<(modalToClose?: WritableSignal<boolean>) => void>()
+  readonly handleCloseFail = input<() => void>()
 
   constructor() {
     effect(() => {
       const profileData = this.profileData();
+      const openUpdateAccModal = this.openUpdateAccModal();
 
       untracked(() => {
         const isProfileForUserLoggedIn = this.isProfileForUserLoggedIn();
 
-        if (isProfileForUserLoggedIn && profileData) {
+        if ((isProfileForUserLoggedIn || !openUpdateAccModal) && profileData) {
           for (const item in this.updateAccForm.fields) {
             if (item in profileData) {
               this.updateAccForm.set(
@@ -57,8 +59,8 @@ export class ProfileUpdateAccount {
       this.authApi.updateProfileLoading.set(true);
       this.authApi.updateProfile(
         values,
-        this.handleCloseSc()?.(this.openUpdateAccModal),
-        this.handleCloseFd()
+        () => this.handleCloseSuccess()?.(this.openUpdateAccModal),
+        this.handleCloseFail()
       );
     }, ['bio']);
   }

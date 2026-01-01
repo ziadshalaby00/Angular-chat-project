@@ -33,6 +33,7 @@
           [required]="true"
           [validateFns]="[del_UsernameValdate]"
 
+          [(value)]="del_Username().value"
           (changedEv)="setDel_Username($event)"
           [(touched)]="ddToCnSTouch"
         >
@@ -55,7 +56,8 @@
           [type]="'text'"
           [inputStyle]="'secondary'"
           [required]="true"
-  
+
+          [(value)]="passForDA().value"
           (changedEv)="setPassForDA($event)"
           [(touched)]="passForDATouch"
         >

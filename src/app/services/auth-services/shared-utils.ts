@@ -49,6 +49,7 @@ export class SharedUtils {
   readonly passwordResetConfirmLoading = signal<boolean>(false);
 
   readonly updateProfileLoading = signal<boolean>(false);
+  readonly remImgProfileLoading = signal<boolean>(false);
   readonly getUsersProfileLoading = signal<boolean>(false);
 
   readonly deleteAccLoading = signal<boolean>(false);

@@ -1,4 +1,4 @@
-import { Component, inject, input, model, signal, viewChild, WritableSignal } from '@angular/core';
+import { Component, effect, inject, input, model, signal, viewChild, WritableSignal } from '@angular/core';
 import { Modal, Input, Form, ValidatorFn, ChangeEventType } from '@ziadshalaby/ngx-zs-component';
 import { AuthApi } from '../services/auth-services/auth-api';
 
@@ -11,9 +11,18 @@ import { AuthApi } from '../services/auth-services/auth-api';
 export class ProfileChangePassword {
   readonly authApi: AuthApi = inject(AuthApi);
 
-  readonly handleCloseSc = input<(modalToClose?: WritableSignal<boolean>) => () => void>()
-  readonly handleCloseFd = input<() => void>()
+  readonly handleCloseSuccess = input<(modalToClose?: WritableSignal<boolean>) => void>()
+  readonly handleCloseFail = input<() => void>()
   
+  constructor() {
+    effect(() => {
+      const openChangePassModal = this.openChangePassModal();
+      if (!openChangePassModal) {
+        this.changePassForm.reset()
+      }
+    })
+  }
+
   // ================================= Change Password ================================= //
   readonly openChangePassModal = model<boolean>(false);
   readonly changePassForm = new Form({
@@ -52,8 +61,8 @@ export class ProfileChangePassword {
       this.authApi.updateProfileLoading.set(true);
       this.authApi.updateProfile(
         values,
-          this.handleCloseSc()?.(this.openChangePassModal),
-          this.handleCloseFd()
+          () => this.handleCloseSuccess()?.(this.openChangePassModal),
+          this.handleCloseFail()
       );
     });
   }

@@ -1,5 +1,5 @@
-import { Component, inject, input, model, signal, WritableSignal } from '@angular/core';
-import { ChangeEventType, FileData, FileInput, Form, Modal, Button } from '@ziadshalaby/ngx-zs-component';
+import { Component, effect, inject, input, model, signal, WritableSignal } from '@angular/core';
+import { ChangeEventType, FileData, FileInput, Form, Modal, Button, FilesType } from '@ziadshalaby/ngx-zs-component';
 import { AuthApi } from '../services/auth-services/auth-api';
 import { Or } from '../or/or';
 
@@ -12,11 +12,23 @@ import { Or } from '../or/or';
 export class ProfileEditUserImg {
   readonly authApi: AuthApi = inject(AuthApi);
   
-  readonly handleCloseSc = input<(modalToClose?: WritableSignal<boolean>) => () => void>()
-  readonly handleCloseFd = input<() => void>()
+  readonly handleCloseSuccess = input<(modalToClose?: WritableSignal<boolean>) => void>()
+  readonly handleCloseFail = input<() => void>()
+
+  readonly openEditImgModal = model<boolean>(false);
+  readonly filesType = signal(new Map());
+
+  constructor() {
+    effect(() => {
+      const openEditImgModal = this.openEditImgModal();
+      if(!openEditImgModal) {
+        this.EditImgForm.reset();
+        this.filesType.set(new Map())
+      }
+    })
+  }
 
   // ================================== Edit User Image ================================== //
-  readonly openEditImgModal = model<boolean>(false);
   readonly EditImgForm = new Form<{
     user_image: File | null;
   }>({
@@ -39,24 +51,28 @@ export class ProfileEditUserImg {
     this.EditImgForm.submit((user_image) => {
       this.authApi.updateProfileLoading.set(true);
       if (!user_image) {
-        this.handleCloseSc()?.(this.openEditImgModal);
+        this.handleCloseSuccess()?.(this.openEditImgModal);
         this.authApi.updateProfileLoading.set(false);
         return;
       }
 
       this.authApi.updateProfile(
         user_image,
-        this.handleCloseSc()?.(this.openEditImgModal),
-        this.handleCloseFd()
+        () => this.handleCloseSuccess()?.(this.openEditImgModal),
+        this.handleCloseFail()
       );
     });
   }
 
+  readonly confRemUserImg = signal<boolean>(false)
   removeUserImg() {
-    this.authApi.updateProfileLoading.set(true);
+    this.authApi.remImgProfileLoading.set(true);
     this.authApi.deleteUserImage(
-      this.handleCloseSc()?.(this.openEditImgModal),
-      this.handleCloseFd()
+      () => {
+        this.handleCloseSuccess()?.(this.openEditImgModal)
+        this.handleCloseSuccess()?.(this.confRemUserImg)
+      },
+      this.handleCloseFail()
     );
   }
   // =================================/ Edit User Image /================================== //

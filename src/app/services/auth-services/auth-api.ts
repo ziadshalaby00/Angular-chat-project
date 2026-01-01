@@ -52,6 +52,7 @@ export class AuthApi {
   get passwordResetLoading() { return this.shared.passwordResetLoading; }
 
   get updateProfileLoading() { return this.shared.updateProfileLoading; }
+  get remImgProfileLoading() { return this.shared.remImgProfileLoading; }
   get getUsersProfileLoading() { return this.shared.getUsersProfileLoading; }
 
   get deleteAccLoading() { return this.shared.deleteAccLoading; }

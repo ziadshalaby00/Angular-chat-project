@@ -15,7 +15,7 @@
   } @else {
     <div
       class="
-        w-[380px] bg-white/80 dark:bg-slate-900/70 backdrop-blur-xl rounded-3xl 
+        w-95 bg-white/80 dark:bg-slate-900/70 backdrop-blur-xl rounded-3xl 
         shadow-xl border border-slate-200/50 dark:border-slate-700/40
         overflow-hidden floating-card transition-all
       "
@@ -138,16 +138,16 @@
 
 [(openUpdateAccModal)]="openUpdateAccModal"
 
-[handleCloseSc]="handleCloseSc"
-[handleCloseFd]="handleCloseFd"
+[handleCloseSuccess]="handleCloseSuccess"
+[handleCloseFail]="handleCloseFail"
 ></app-profile-update-account>
 
 <!-- ------------------------- Edit User Image ------------------------- -->
 <app-profile-edit-user-img
 [(openEditImgModal)]="openEditImgModal"
 
-[handleCloseSc]="handleCloseSc"
-[handleCloseFd]="handleCloseFd"
+[handleCloseSuccess]="handleCloseSuccess"
+[handleCloseFail]="handleCloseFail"
 >
 </app-profile-edit-user-img>
 
@@ -155,8 +155,8 @@
 <app-profile-change-password
 [(openChangePassModal)]="openChangePassModal"
 
-[handleCloseSc]="handleCloseSc"
-[handleCloseFd]="handleCloseFd"
+[handleCloseSuccess]="handleCloseSuccess"
+[handleCloseFail]="handleCloseFail"
 >
 </app-profile-change-password>
 

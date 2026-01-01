@@ -4,6 +4,7 @@
 (cancelEv)="openUpdateAccModal.set(false)"
 (confirmEv)="updateAccProfile()"
 [confirmConfig]="{
+  text: 'Edit',
   btnStyle: 'primary',
   disabled: authApi.updateProfileLoading(),
   icon: authApi.updateProfileLoading() ? 'fa fa-spinner fa-spin' : ''
@@ -23,7 +24,7 @@
     [inputStyle]="'secondary'"
 
     [required]="true"
-    [value]="updateAccForm.fields.fullname().value ?? ''"
+    [(value)]="updateAccForm.fields.fullname().value"
     (changedEv)="changeUpdateAccValues($event, 'fullname')"
     >
     </ZS-input>
@@ -35,7 +36,7 @@
     [inputStyle]="'secondary'"
 
     [required]="true"
-    [value]="updateAccForm.fields.username().value ?? ''"
+    [(value)]="updateAccForm.fields.username().value"
     (changedEv)="changeUpdateAccValues($event, 'username')"
     >
     </ZS-input>
@@ -48,7 +49,7 @@
     [inputStyle]="'secondary'"
 
     [required]="true"
-    [value]="updateAccForm.fields.email().value ?? ''"
+    [(value)]="updateAccForm.fields.email().value"
     (changedEv)="changeUpdateAccValues($event, 'email')"
     >
     </ZS-input>
@@ -60,7 +61,7 @@
     [type]="'text'"
     [inputStyle]="'secondary'"
 
-    [value]="updateAccForm.fields.bio().value ?? ''"
+    [(value)]="updateAccForm.fields.bio().value"
     (changedEv)="changeUpdateAccValues($event, 'bio')"
     >
     </ZS-input>
