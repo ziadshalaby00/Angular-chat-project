@@ -1,8 +1,9 @@
-<div class="h-[85vh] pr-4 flex dark:text-gray-50">
+<div class="h-[85vh] flex dark:text-gray-50">
     <ZS-sidebar
     header="Chats"
+    [floating]="false"
     [openSide]="true"
-    class='h-[85vh]'
+    class='h-[85vh] bg-blue-300/80 dark:bg-blue-800/60'
     >
         <div main class="flex flex-col h-full gap-6 pt-4 pb-5 pl-1.5 pr-3">
             <div class="px-3">
@@ -16,7 +17,7 @@
                 </ZS-input>
             </div>
             <div class='flex flex-col gap-4 h-full pt-2 pb-6 px-3 overflow-y-auto scroll scroll-success'>
-                @for(item of ['ziad', 'ahmed', 'salah', 'mohamed', 'ali', 'ibrahim', 'some one 1', 'some one 2', 'some one 3', 'some one 4', 'some one 5', 'some one 6', 'some one 7', 'some one 8', 'some one 9', 'some one 10']; track item) {
+                @for(item of ['ziad', 'ahmed', 'salah']; track item) {
                     @if(item === 'ahmed') {
                         <ZS-card
                         [clickable]="true"

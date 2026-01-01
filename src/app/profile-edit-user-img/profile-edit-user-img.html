@@ -1,0 +1,38 @@
+<ZS-modal
+[title]="'Edit Image'"
+[(open)]="openEditImgModal"
+(cancelEv)="openEditImgModal.set(false)"
+(confirmEv)="editImgProfile()"
+[confirmConfig]="{
+  btnStyle: 'primary',
+  disabled: authApi.updateProfileLoading(),
+  icon: authApi.updateProfileLoading() ? 'fa fa-spinner fa-spin' : ''
+}"
+[cancelConfig]="{
+  disabled: authApi.updateProfileLoading(),
+}"
+[showCancelIcon]="!authApi.updateProfileLoading()"
+[closeOnOverlay]="!authApi.updateProfileLoading()"
+[modalStyle]="'primary'"
+>
+  <div class="flex flex-col gap-4">
+    <ZS-file
+    [disabled]="authApi.updateProfileLoading()"
+    [inputStyle]="'primary'"
+    (changeEv)="changeEditImgcValues($event, 'user_image')"
+    >
+    </ZS-file>
+
+    <!-- or -->
+    <app-or></app-or>
+
+    <ZS-button
+    [disabled]="authApi.updateProfileLoading()"
+    [icon]="authApi.updateProfileLoading() ? 'fa fa-spinner fa-spin' : ''"
+    btnStyle="danger"
+    (clickedEv)="removeUserImg()"
+    >
+      Remove Picture
+    </ZS-button>
+  </div>
+</ZS-modal>

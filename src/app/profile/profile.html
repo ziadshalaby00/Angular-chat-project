@@ -132,250 +132,37 @@
 </div>
 
 <!-- ------------------------- Update Account ------------------------- -->
-<ZS-modal
-[title]="'Edit Account'"
-[(open)]="openUpdateAccModal"
-(cancelEv)="openUpdateAccModal.set(false)"
-(confirmEv)="updateAccProfile()"
-[confirmConfig]="{
-  btnStyle: 'primary',
-  disabled: authApi.updateProfileLoading(),
-  icon: authApi.updateProfileLoading() ? 'fa fa-spinner fa-spin' : ''
-}"
-[cancelConfig]="{
-  disabled: authApi.updateProfileLoading(),
-}"
-[showCancelIcon]="!authApi.updateProfileLoading()"
-[closeOnOverlay]="!authApi.updateProfileLoading()"
-[modalStyle]="'primary'"
->
-  <div class="flex flex-col gap-4 text-gray-800 dark:text-gray-300">
-    <ZS-input
-    [label]="'Full Name'"
-    icon="fas fa-user"
-    [type]="'text'"
-    [inputStyle]="'secondary'"
+<app-profile-update-account
+[profileData]="profileData()"
+[isProfileForUserLoggedIn]="isProfileForUserLoggedIn()"
 
-    [required]="true"
-    [value]="updateAccForm.fields.fullname().value ?? ''"
-    (changedEv)="changeUpdateAccValues($event, 'fullname')"
-    >
-    </ZS-input>
-    
-    <ZS-input
-    [label]="'Username'"
-    icon="fas fa-user"
-    [type]="'text'"
-    [inputStyle]="'secondary'"
+[(openUpdateAccModal)]="openUpdateAccModal"
 
-    [required]="true"
-    [value]="updateAccForm.fields.username().value ?? ''"
-    (changedEv)="changeUpdateAccValues($event, 'username')"
-    >
-    </ZS-input>
-    
-    <ZS-input
-    [label]="'Email'"
-    [hint]="'Enter a unique email.'"
-    icon="fas fa-envelope"
-    [type]="'email'"
-    [inputStyle]="'secondary'"
-
-    [required]="true"
-    [value]="updateAccForm.fields.email().value ?? ''"
-    (changedEv)="changeUpdateAccValues($event, 'email')"
-    >
-    </ZS-input>
-    
-    <ZS-input
-    [label]="'Bio'"
-    [hint]="'Write a short bio about yourself'"
-    icon="fa-solid fa-message"
-    [type]="'text'"
-    [inputStyle]="'secondary'"
-
-    [value]="updateAccForm.fields.bio().value ?? ''"
-    (changedEv)="changeUpdateAccValues($event, 'bio')"
-    >
-    </ZS-input>
-  </div>
-</ZS-modal>
+[handleCloseSc]="handleCloseSc"
+[handleCloseFd]="handleCloseFd"
+></app-profile-update-account>
 
 <!-- ------------------------- Edit User Image ------------------------- -->
-<ZS-modal
-[title]="'Edit Image'"
-[(open)]="openEditImgModal"
-(cancelEv)="openEditImgModal.set(false)"
-(confirmEv)="editImgProfile()"
-[confirmConfig]="{
-  btnStyle: 'primary',
-  disabled: authApi.updateProfileLoading(),
-  icon: authApi.updateProfileLoading() ? 'fa fa-spinner fa-spin' : ''
-}"
-[cancelConfig]="{
-  disabled: authApi.updateProfileLoading(),
-}"
-[showCancelIcon]="!authApi.updateProfileLoading()"
-[closeOnOverlay]="!authApi.updateProfileLoading()"
-[modalStyle]="'primary'"
+<app-profile-edit-user-img
+[(openEditImgModal)]="openEditImgModal"
+
+[handleCloseSc]="handleCloseSc"
+[handleCloseFd]="handleCloseFd"
 >
-  <div class="flex flex-col gap-4">
-    <ZS-file
-    [disabled]="authApi.updateProfileLoading()"
-    [inputStyle]="'primary'"
-    (changeEv)="changeEditImgcValues($event, 'user_image')"
-    >
-    </ZS-file>
-
-    <!-- or -->
-    <app-or></app-or>
-
-    <ZS-button
-    [disabled]="authApi.updateProfileLoading()"
-    [icon]="authApi.updateProfileLoading() ? 'fa fa-spinner fa-spin' : ''"
-    btnStyle="danger"
-    (clickedEv)="removeUserImg()"
-    >
-      Remove Picture
-    </ZS-button>
-  </div>
-</ZS-modal>
+</app-profile-edit-user-img>
 
 <!-- ------------------------- Change Password ------------------------- -->
-<ZS-modal
-[title]="'Change Password'"
-[(open)]="openChangePassModal"
-(cancelEv)="openChangePassModal.set(false)"
-(confirmEv)="changePass()"
-[confirmConfig]="{
-  btnStyle: 'warning',
-  disabled: authApi.updateProfileLoading(),
-  icon: authApi.updateProfileLoading() ? 'fa fa-spinner fa-spin' : ''
-}"
-[cancelConfig]="{
-  disabled: authApi.updateProfileLoading(),
-}"
-[showCancelIcon]="!authApi.updateProfileLoading()"
-[closeOnOverlay]="!authApi.updateProfileLoading()"
-[modalStyle]="'warning'"
+<app-profile-change-password
+[(openChangePassModal)]="openChangePassModal"
+
+[handleCloseSc]="handleCloseSc"
+[handleCloseFd]="handleCloseFd"
 >
-  <div class="flex flex-col gap-4 text-yellow-600 dark:text-yellow-500">
-    <ZS-input
-    [label]="'Old Password'"
-    placeholder="Enter your password"
-
-    icon="fas fa-lock"
-    [type]="'password'"
-    [inputStyle]="'warning'"
-
-    [required]="true"
-    (changedEv)="changeChPassValues($event, 'old_password')"
-    >
-    </ZS-input>
-
-    <ZS-input #password
-    [label]="'New Password'"
-    placeholder="Enter the new password"
-
-    icon="fas fa-lock"
-    [type]="'password'"
-    [inputStyle]="'warning'"
-
-    [required]="true"
-    (changedEv)="changeChPassValues($event, 'password')"
-    >
-    </ZS-input>
-
-    <ZS-input #conf_password
-    [label]="'Confirm New Password'"
-    placeholder="Confirm the new password"
-
-    [validateFns]="[confPassValidate]"
-
-    icon="fas fa-lock"
-    [type]="'password'"
-    [inputStyle]="'warning'"
-
-    [required]="true"
-    (changedEv)="changeChPassValues($event, 'conf_password')"
-    >
-    </ZS-input>
-  </div>
-</ZS-modal>
+</app-profile-change-password>
 
 <!-- ------------------------- Delete User Account ------------------------- -->
-<ZS-modal
-[title]="'Delete Account'"
-[(open)]="openDelUserAccModal"
-(cancelEv)="openDelUserAccModal.set(false)"
-[showFooter]="false"
-[modalStyle]="'danger'"
-
-[showCancelIcon]="!authApi.deleteAccLoading()"
-[closeOnOverlay]="!authApi.deleteAccLoading()"
+<app-profile-delete-user-account
+[profileData]="profileData()"
+[(openDelUserAccModal)]="openDelUserAccModal"
 >
-  <div class="flex flex-col gap-4">
-    @if(step() === 1) {
-      <!-- note -->
-      <p class="text-sm text-red-700 dark:text-red-400">
-        Deleting your account will:
-      </p>
-  
-      <ul class="list-disc list-inside text-sm text-red-700 dark:text-red-400 space-y-2">
-        <li>Deactivate your profile and show it as "Deleted User" to others.</li>
-        <li>Your chats and messages will remain visible to other users, but you will no longer be able to access them.</li>
-        <li>Your email will be removed, allowing you to create a new account with the same email in the future.</li>
-        <li>Nothing associated with you will appear on the site anymore.</li>
-        <li>Prevent you from logging in again. This action cannot be undone.</li>
-      </ul>
-  
-      <div class="flex flex-col gap-4 mb-4">
-        <ZS-input
-          [label]="'To confirm, please enter: `Delete + username`.'"
-          [placeholder]="'Delete ' + profileData()?.username"
-          icon=""
-          [type]="'text'"
-          [inputStyle]="'danger'"
-          [required]="true"
-          [validateFns]="[del_UsernameValdate]"
-
-          (changedEv)="setDel_Username($event)"
-          [(touched)]="ddToCnSTouch"
-        >
-        </ZS-input>
-  
-        <ZS-button
-        (clickedEv)="continueDelete()"
-        variant="outline"
-        btnStyle="secondary"
-        >
-          Continue
-        </ZS-button>
-      </div>
-    }@else if(step() === 2) {
-      <div class="flex flex-col gap-4 mb-4">
-        <ZS-input
-          [label]="'Pls enter your password to delete your account.'"
-          [placeholder]="'Enter password'"
-          icon=""
-          [type]="'text'"
-          [inputStyle]="'secondary'"
-          [required]="true"
-  
-          (changedEv)="setPassForDA($event)"
-          [(touched)]="passForDATouch"
-        >
-        </ZS-input>
-  
-        <ZS-button
-        (clickedEv)="DeleteAcc()"
-        [btnStyle]="'danger'"
-        [icon]="authApi.deleteAccLoading() ? 'fas fa-spinner fa-spin' : ''"
-        [disabled]="authApi.deleteAccLoading()"
-        >
-          Delete Account
-        </ZS-button>
-      </div>
-    }
-  </div>
-</ZS-modal>
+</app-profile-delete-user-account>
