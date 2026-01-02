@@ -1,4 +1,4 @@
-import { Component, effect, inject, input, model, signal, WritableSignal } from '@angular/core';
+import { Component, effect, inject, input, model, signal, TemplateRef, viewChild, WritableSignal } from '@angular/core';
 import { ChangeEventType, FileData, FileInput, Form, Modal, Button, FilesType } from '@ziadshalaby/ngx-zs-component';
 import { AuthApi } from '../services/auth-services/auth-api';
 import { Or } from '../or/or';
@@ -17,6 +17,8 @@ export class ProfileEditUserImg {
 
   readonly openEditImgModal = model<boolean>(false);
   readonly filesType = signal(new Map());
+
+  readonly loaderIconTpl = viewChild<TemplateRef<any>>('loaderIcon');
 
   constructor() {
     effect(() => {
@@ -69,7 +71,6 @@ export class ProfileEditUserImg {
     this.authApi.remImgProfileLoading.set(true);
     this.authApi.deleteUserImage(
       () => {
-        this.handleCloseSuccess()?.(this.openEditImgModal)
         this.handleCloseSuccess()?.(this.confRemUserImg)
       },
       this.handleCloseFail()

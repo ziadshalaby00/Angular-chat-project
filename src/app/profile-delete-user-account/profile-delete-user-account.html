@@ -27,7 +27,6 @@
         <ZS-input
           [label]="'To confirm, please enter: `Delete + username`.'"
           [placeholder]="'Delete ' + profileData()?.username"
-          icon=""
           [type]="'text'"
           [inputStyle]="'danger'"
           [required]="true"
@@ -52,11 +51,11 @@
         <ZS-input
           [label]="'Pls enter your password to delete your account.'"
           [placeholder]="'Enter password'"
-          icon=""
           [type]="'password'"
           [inputStyle]="'secondary'"
           [required]="true"
 
+          [iconTpl]="lockIcon"
           [(value)]="passForDA().value"
           (changedEv)="setPassForDA($event)"
           [(touched)]="passForDATouch"
@@ -66,7 +65,7 @@
         <ZS-button
         (clickedEv)="DeleteAcc()"
         [btnStyle]="'danger'"
-        [icon]="authApi.deleteAccLoading() ? 'fas fa-spinner fa-spin' : ''"
+        [iconTpl]="authApi.deleteAccLoading() ? loaderIcon : undefined"
         [disabled]="authApi.deleteAccLoading()"
         >
           Delete Account
@@ -75,3 +74,12 @@
     }
   </div>
 </ZS-modal>
+
+<!-- Loader Icon -->
+<ng-template #loaderIcon>
+  <i class="fa fa-spinner fa-spin"></i>
+</ng-template>
+<!-- Lock Icon -->
+<ng-template #lockIcon>
+  <i class="fas fa-lock mr-1.5"></i>
+</ng-template>

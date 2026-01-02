@@ -11,7 +11,7 @@
         <ZS-input
           [label]="'Full Name'"
           [placeholder]="'Enter your full name'"
-          icon="fas fa-user"
+          [iconTpl]="userIcon"
   
           (changedEv)="changeValues($event, 'fullname')"
           [(touched)]="form.fields.fullname().touched"
@@ -25,7 +25,7 @@
           [label]="'Username'"
           [hint]="'Enter a unique username.'"
           [placeholder]="'Enter your username'"
-          icon="fas fa-user"
+          [iconTpl]="userIcon"
   
           (changedEv)="changeValues($event, 'username')"
           [(touched)]="form.fields.username().touched"
@@ -39,7 +39,7 @@
           [label]="'Email'"
           [hint]="'Enter a unique email.'"
           [placeholder]="'Enter your email'"
-          icon="fas fa-envelope"
+          [iconTpl]="envelopeIcon"
   
           (changedEv)="changeValues($event, 'email')"
           [(touched)]="form.fields.email().touched"
@@ -52,7 +52,7 @@
         <ZS-input #password
           [label]="'Password'"
           [placeholder]="'Enter password'"
-          icon="fas fa-lock"
+          [iconTpl]="lockIcon"
   
           (changedEv)="changeValues($event, 'password')"
           [(touched)]="form.fields.password().touched"
@@ -65,7 +65,7 @@
         <ZS-input #conf_password
           [label]="'Confirm Password'"
           [placeholder]="'Confirm password'"
-          icon="fas fa-lock"
+          [iconTpl]="lockIcon"
   
           (changedEv)="changeValues($event, 'conf_password')"
           [(touched)]="form.fields.conf_password().touched"
@@ -83,7 +83,7 @@
           btnStyle="violet"
           [type]="'submit'"
           [disabled]="authApi.googleLoading() || authApi.signupLoading()"
-          [icon]="authApi.signupLoading() ? 'fa fa-spinner fa-spin' : ''"
+          [iconTpl]="authApi.signupLoading() ? loaderIcon : undefined"
           >
             Sign Up
           </ZS-button>
@@ -98,7 +98,7 @@
           variant="outline"
           [type]="'button'"
           [disabled]="authApi.googleLoading() || authApi.signupLoading()"
-          [icon]="authApi.googleLoading() ? 'fa fa-spinner fa-spin' : 'fa-brands fa-google'"
+          [iconTpl]="authApi.googleLoading() ? loaderIcon : googleIcon"
           >
             Sign Up With Google
           </ZS-button>
@@ -119,3 +119,25 @@
     </form>
   </ZS-card>
 </div>
+
+<!-- Loader Icon -->
+<ng-template #loaderIcon>
+  <i class="fa fa-spinner fa-spin"></i>
+</ng-template>
+<!-- Google Icon -->
+<ng-template #googleIcon>
+  <i class="fa-brands fa-google"></i>
+</ng-template>
+
+<!-- User Icon -->
+<ng-template #userIcon>
+  <i class="fas fa-user mr-1.5"></i>
+</ng-template>
+<!-- Envelope Icon -->
+<ng-template #envelopeIcon>
+  <i class="fas fa-envelope mr-1.5"></i>
+</ng-template>
+<!-- Lock Icon -->
+<ng-template #lockIcon>
+  <i class="fas fa-lock mr-1.5"></i>
+</ng-template>

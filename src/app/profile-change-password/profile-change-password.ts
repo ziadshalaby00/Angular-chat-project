@@ -1,4 +1,4 @@
-import { Component, effect, inject, input, model, signal, viewChild, WritableSignal } from '@angular/core';
+import { Component, effect, inject, input, model, signal, TemplateRef, viewChild, WritableSignal } from '@angular/core';
 import { Modal, Input, Form, ValidatorFn, ChangeEventType } from '@ziadshalaby/ngx-zs-component';
 import { AuthApi } from '../services/auth-services/auth-api';
 
@@ -11,8 +11,10 @@ import { AuthApi } from '../services/auth-services/auth-api';
 export class ProfileChangePassword {
   readonly authApi: AuthApi = inject(AuthApi);
 
-  readonly handleCloseSuccess = input<(modalToClose?: WritableSignal<boolean>) => void>()
-  readonly handleCloseFail = input<() => void>()
+  readonly handleCloseSuccess = input<(modalToClose?: WritableSignal<boolean>) => void>();
+  readonly handleCloseFail = input<() => void>();
+
+  readonly loaderIconTpl = viewChild<TemplateRef<any>>('loaderIcon');
   
   constructor() {
     effect(() => {

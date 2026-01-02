@@ -7,7 +7,7 @@
   text: 'Edit',
   btnStyle: 'primary',
   disabled: authApi.updateProfileLoading(),
-  icon: authApi.updateProfileLoading() ? 'fa fa-spinner fa-spin' : ''
+  iconTpl: authApi.updateProfileLoading() ? loaderIconTpl : null
 }"
 [cancelConfig]="{
   disabled: authApi.updateProfileLoading(),
@@ -19,7 +19,7 @@
   <div class="flex flex-col gap-4 text-gray-800 dark:text-gray-300">
     <ZS-input
     [label]="'Full Name'"
-    icon="fas fa-user"
+    [iconTpl]="userIcon"
     [type]="'text'"
     [inputStyle]="'secondary'"
 
@@ -31,7 +31,7 @@
     
     <ZS-input
     [label]="'Username'"
-    icon="fas fa-user"
+    [iconTpl]="userIcon"
     [type]="'text'"
     [inputStyle]="'secondary'"
 
@@ -44,7 +44,7 @@
     <ZS-input
     [label]="'Email'"
     [hint]="'Enter a unique email.'"
-    icon="fas fa-envelope"
+    [iconTpl]="envelopeIcon"
     [type]="'email'"
     [inputStyle]="'secondary'"
 
@@ -57,7 +57,7 @@
     <ZS-input
     [label]="'Bio'"
     [hint]="'Write a short bio about yourself'"
-    icon="fa-solid fa-message"
+    [iconTpl]="messageIcon"
     [type]="'text'"
     [inputStyle]="'secondary'"
 
@@ -67,3 +67,21 @@
     </ZS-input>
   </div>
 </ZS-modal>
+
+<!-- Loader Icon -->
+<ng-template #loaderIcon>
+  <i class="fa fa-spinner fa-spin"></i>
+</ng-template>
+
+<!-- User Icon -->
+<ng-template #userIcon>
+  <i class="fas fa-user mr-1.5"></i>
+</ng-template>
+<!-- Envelope Icon -->
+<ng-template #envelopeIcon>
+  <i class="fas fa-envelope mr-1.5"></i>
+</ng-template>
+<!-- Message Icon -->
+<ng-template #messageIcon>
+  <i class="fa-solid fa-message mr-1.5"></i>
+</ng-template>

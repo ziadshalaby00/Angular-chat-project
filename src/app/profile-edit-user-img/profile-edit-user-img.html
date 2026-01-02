@@ -7,7 +7,7 @@
   text: 'Edit',
   btnStyle: 'primary',
   disabled: authApi.updateProfileLoading(),
-  icon: authApi.updateProfileLoading() ? 'fa fa-spinner fa-spin' : ''
+  iconTpl: authApi.updateProfileLoading() ? loaderIconTpl : null
 }"
 [cancelConfig]="{
   disabled: authApi.updateProfileLoading(),
@@ -48,7 +48,7 @@
   text: 'Remove',
   btnStyle: 'danger',
   disabled: authApi.remImgProfileLoading(),
-  icon: authApi.remImgProfileLoading() ? 'fa fa-spinner fa-spin' : ''
+  iconTpl: authApi.remImgProfileLoading() ? loaderIconTpl : null
 }"
 [cancelConfig]="{
   disabled: authApi.remImgProfileLoading(),
@@ -65,3 +65,8 @@
     Do you really want to remove your profile picture?
   </p>
 </ZS-modal>
+
+<!-- Loader Icon -->
+<ng-template #loaderIcon>
+  <i class="fa fa-spinner fa-spin"></i>
+</ng-template>

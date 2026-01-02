@@ -1,4 +1,4 @@
-import { Component, effect, inject, input, model, signal, untracked, WritableSignal } from '@angular/core';
+import { Component, effect, inject, input, model, signal, TemplateRef, untracked, viewChild, WritableSignal } from '@angular/core';
 import { ChangeEventType, Form, Modal, Input } from '@ziadshalaby/ngx-zs-component';
 import { AuthApi, UserDataType } from '../services/auth-services/auth-api';
 
@@ -16,8 +16,10 @@ export class ProfileUpdateAccount {
   
   readonly openUpdateAccModal = model<boolean>(false);
 
-  readonly handleCloseSuccess = input<(modalToClose?: WritableSignal<boolean>) => void>()
-  readonly handleCloseFail = input<() => void>()
+  readonly handleCloseSuccess = input<(modalToClose?: WritableSignal<boolean>) => void>();
+  readonly handleCloseFail = input<() => void>();
+
+  readonly loaderIconTpl = viewChild<TemplateRef<any>>('loaderIcon');
 
   constructor() {
     effect(() => {

@@ -1,6 +1,6 @@
-import { Component, computed, inject, model } from '@angular/core';
+import { Component, computed, inject, model, TemplateRef, viewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { AlertService, AuthButtonsType, Navbar, NavbarItemExport, navItemsType, SiteNameConfigType, UserProfile } from '@ziadshalaby/ngx-zs-component';
+import { AlertService, AuthButtonsType, Navbar, NavbarItemExport, NavItemsType, SiteNameConfigType, UserItemsType, UserProfile } from '@ziadshalaby/ngx-zs-component';
 import { AuthApi } from '../services/auth-services/auth-api';
 
 @Component({
@@ -35,26 +35,34 @@ export class NavbarComp {
 
   logoUrl: string = 'https://i.postimg.cc/MpzpyjF1/android-chrome-512x512-proton.png';
 
-  navItems: navItemsType = {
-    navItems: [
+  readonly homeIconTpl = viewChild<TemplateRef<any>>('homeIcon');
+  readonly chatsIconTpl = viewChild<TemplateRef<any>>('chatsIcon');
+  readonly addIconTpl = viewChild<TemplateRef<any>>('addIcon');
+
+  navItems: NavItemsType = {
+    routerLinkActive: 'bg-blue-500 dark:bg-blue-600 text-gray-50',
+    closeMobileMenu: true,
+    closeUserMenu: false,
+    closeMoreMenu: false,
+    items: [
       {
         label: 'Home',
         routerLink: '/home',
-        icon: 'fa-solid fa-house',
-        routerLinkActive: 'bg-blue-500 dark:bg-blue-600 text-gray-50',
+        iconTpl: this.homeIconTpl,
+        // routerLinkActive: 'bg-blue-500 dark:bg-blue-600 text-gray-50',
         useDefaultColorClass: 'bg',
       },
       {
         label: 'Chats',
         routerLink: '/chats',
-        icon: 'fa-solid fa-comment-dots',
-        routerLinkActive: 'bg-green-500 dark:bg-green-600 text-gray-50',
+        iconTpl: this.chatsIconTpl,
+        // routerLinkActive: 'bg-green-500 dark:bg-green-600 text-gray-50',
         useDefaultColorClass: 'bg',
       },
       {
-        label: 'Add',
-        icon: 'fa-solid fa-user-plus',
-        colorClass: ''
+        label: 'New Chat',
+        iconTpl: this.addIconTpl,
+        colorClass: 'bg-teal-500 hover:bg-teal-600 dark:hover:bg-teal-500 dark:bg-teal-600 text-gray-100',
       },
     ]
   }
@@ -69,22 +77,30 @@ export class NavbarComp {
     } : undefined
   })
 
-  userMenuItems: NavbarItemExport[] = [
-    { 
-      label: 'Profile',
-      icon: 'fa-solid fa-circle-user text-xl',
-      useDefaultColorClass: 'text',
-      action: () => {
-        this.router.navigate(['/profile', this.authApi.userData()?.id]);
+  readonly profileIconTpl = viewChild<TemplateRef<any>>('profileIcon');
+  readonly logoutIconTpl = viewChild<TemplateRef<any>>('logoutIcon');
+
+  userMenuItems: UserItemsType = {
+    closeMobileMenu: true,
+    closeUserMenu: true,
+    closeMoreMenu: false,
+    items: [
+      { 
+        label: 'Profile',
+        iconTpl: this.profileIconTpl,
+        useDefaultColorClass: 'text',
+        action: () => {
+          this.router.navigate(['/profile', this.authApi.userData()?.id]);
+        }
+      },
+      { 
+        label: 'Logout', 
+        action: () => this.logout(),
+        colorClass: 'text-red-600 hover:text-red-800 dark:text-red-700 dark:hover:text-red-500',
+        iconTpl: this.logoutIconTpl,
       }
-    },
-    { 
-      label: 'Logout', 
-      action: () => this.logout(),
-      colorClass: 'text-red-600 hover:text-red-800 dark:text-red-700 dark:hover:text-red-500',
-      icon: 'fas fa-sign-out-alt text-lg',
-    }
-  ];
+    ]
+  }
 
   onLogin() {
     this.router.navigate(['/login'])

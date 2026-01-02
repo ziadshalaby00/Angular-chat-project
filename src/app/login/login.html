@@ -10,7 +10,7 @@
         <ZS-input
           [label]="'Username'"
           [placeholder]="'Enter your username'"
-          icon="fas fa-user"
+          [iconTpl]="userIcon"
   
           (changedEv)="changeValues($event, 'username')"
           [(touched)]="form.fields.username().touched"
@@ -23,7 +23,7 @@
         <ZS-input
           [label]="'Password'"
           [placeholder]="'Enter password'"
-          icon="fas fa-lock"
+          [iconTpl]="lockIcon"
   
           (changedEv)="changeValues($event, 'password')"
           [(touched)]="form.fields.password().touched"
@@ -39,7 +39,7 @@
           btnStyle="primary"
           [type]="'submit'"
           [disabled]="authApi.googleLoading() || authApi.loginLoading()"
-          [icon]="authApi.loginLoading() ? 'fa fa-spinner fa-spin' : ''"
+          [iconTpl]="authApi.loginLoading() ? loaderIcon : undefined"
           >
             Login
           </ZS-button>
@@ -53,9 +53,8 @@
           variant="outline"
           (clickedEv)="google()"
           [type]="'button'"
-          icon="fa-brands fa-google"
           [disabled]="authApi.googleLoading() || authApi.loginLoading()"
-          [icon]="authApi.googleLoading() ? 'fa fa-spinner fa-spin' : 'fa-brands fa-google'"
+          [iconTpl]="authApi.googleLoading() ? loaderIcon : googleIcon"
           >
             Login With Google
           </ZS-button>
@@ -104,7 +103,7 @@ position="center"
 
 [confirmConfig]="{
   btnStyle: 'info',
-  icon: authApi.passwordResetLoading() ? 'fa fa-spinner fa-spin' : null,
+  iconTpl: authApi.passwordResetLoading() ? loaderIconTpl : null,
   disabled: authApi.passwordResetLoading() ? true : false
 }"
 [cancelConfig]="{
@@ -125,7 +124,7 @@ position="center"
   inputStyle="info"
   type="email"
   [placeholder]="'Enter your email'"
-  icon="fas fa-envelope"
+  [iconTpl]="envelopeIcon"
   [required]="true"
 
   [(touched)]="passwordResetForm.fields.email().touched"
@@ -133,3 +132,25 @@ position="center"
   >
   </ZS-input>
 </ZS-modal>
+
+<!-- Loader Icon -->
+<ng-template #loaderIcon>
+  <i class="fa fa-spinner fa-spin"></i>
+</ng-template>
+<!-- Google Icon -->
+<ng-template #googleIcon>
+  <i class="fa-brands fa-google"></i>
+</ng-template>
+
+<!-- User Icon -->
+<ng-template #userIcon>
+  <i class="fas fa-user mr-1.5"></i>
+</ng-template>
+<!-- Lock Icon -->
+<ng-template #lockIcon>
+  <i class="fas fa-lock mr-1.5"></i>
+</ng-template>
+<!-- Envelope Icon -->
+<ng-template #envelopeIcon>
+  <i class="fas fa-envelope mr-1.5"></i>
+</ng-template>
