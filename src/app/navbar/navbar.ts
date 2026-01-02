@@ -51,6 +51,11 @@ export class NavbarComp {
         routerLinkActive: 'bg-green-500 dark:bg-green-600 text-gray-50',
         useDefaultColorClass: 'bg',
       },
+      {
+        label: 'Add',
+        icon: 'fa-solid fa-user-plus',
+        colorClass: ''
+      },
     ]
   }
 
