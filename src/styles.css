@@ -5,6 +5,12 @@
 
 @custom-variant dark (&:where(.dark, .dark *)); /* Custom Variants */
 
+/* styles.css */
+body {
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+
 a, button {
   cursor: pointer; 
 }

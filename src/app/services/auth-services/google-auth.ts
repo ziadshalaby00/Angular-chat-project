@@ -31,7 +31,7 @@ export class GoogleAuth {
   startRequestCode() {
     const client = this.codeClient();
     if (!client) {
-      this.shared.alertService.addAlert({
+      this.shared.config.alertService.addAlert({
         message: 'Google authentication not initialized.',
         type: 'danger'
       });

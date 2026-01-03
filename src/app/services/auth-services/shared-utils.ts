@@ -25,10 +25,6 @@ export interface HttpOptions {
   providedIn: 'root',
 })
 export class SharedUtils {
-  readonly alertService: AlertService = inject(AlertService);
-  readonly extractorService: ExtractorService = inject(ExtractorService);
-
-  readonly http: HttpClient= inject(HttpClient);
   readonly config: ConfigService = inject(ConfigService);
   readonly router: Router = inject(Router);
 
@@ -36,7 +32,6 @@ export class SharedUtils {
 
   readonly userData = signal<UserDataType | null>(null);
   readonly isLoggedin = signal<boolean>(false);
-  readonly error = signal<string[]>([]);
 
   // Loading
   readonly signupLoading = signal<boolean>(false);
@@ -53,45 +48,4 @@ export class SharedUtils {
   readonly getUsersProfileLoading = signal<boolean>(false);
 
   readonly deleteAccLoading = signal<boolean>(false);
-
-  setErrors(errorObject: any) {
-    const errors = this.extractorService.extract(errorObject)
-    this.error.update((v: string[]) => [...v, ...errors]);
-    this.alertService.bulkAlert(errors, { type: 'danger' });
-  }
-
-  extractCSRFToken(): string | null {
-    const name = 'csrftoken=';
-    const decodedCookie = decodeURIComponent(document.cookie);
-    const cookies = decodedCookie.split(';');
-
-    for (let c of cookies) {
-      c = c.trim();
-      if (c.startsWith(name)) {
-        return c.substring(name.length);
-      }
-    }
-
-    return null;
-  }
-
-  CredAndCsrf(extraOptions: HttpOptions = {}): HttpOptions {
-    const csrfToken = this.extractCSRFToken();
-
-    const defaultOptions: HttpOptions = {
-      withCredentials: true,
-      headers: {
-        'X-CSRFToken': csrfToken ?? ''
-      }
-    };
-
-    return {
-      ...defaultOptions,
-      ...extraOptions,
-      headers: {
-        ...defaultOptions.headers,
-        ...extraOptions.headers
-      }
-    };
-  }
 }

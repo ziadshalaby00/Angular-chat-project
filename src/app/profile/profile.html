@@ -38,7 +38,7 @@
             "
           >
         }@else {
-          <div
+          <!-- <div
             class="
               size-32 rounded-full shadow-lg ring-4 ring-white/70 
               dark:ring-slate-800 flex items-center justify-center
@@ -46,6 +46,13 @@
             "
           >
             <i class="fa fa-user"></i>
+          </div> -->
+          <div
+            class="size-32 text-7xl rounded-full bg-blue-500 flex leading-none
+            items-center justify-center text-white font-semibold"
+            aria-hidden="true"
+          >
+            {{ profileData()?.fullname?.charAt(0)?.toUpperCase() }}
           </div>
         }
         @if(isProfileForUserLoggedIn()) {

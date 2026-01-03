@@ -34,12 +34,10 @@ export class Auth {
   private readonly deleteAccURL = `${this.shared.config.apiUrl}/api/auth/delete-user/`;
 
   signup(body: RegBody) {
-    this.shared.error.set([])
-
-    this.shared.http.post(this.signupURL, body).subscribe({
+    this.shared.config.http.post(this.signupURL, body).subscribe({
       next: (res: any) => {
         this.shared.signupLoading.set(false);
-        this.shared.alertService.addAlert({
+        this.shared.config.alertService.addAlert({
           message: res.message,
           type: 'success'
         })
@@ -47,20 +45,18 @@ export class Auth {
       },
       error: (err: any) => {
         this.shared.signupLoading.set(false);
-        this.shared.setErrors(err.error);
+        this.shared.config.setErrors(err.error);
       }
     })
   }
 
   login(body: logBody) {
-    this.shared.error.set([]);
-
-    this.shared.http.post(this.loginURL, body, { withCredentials: true }).subscribe({
+    this.shared.config.http.post(this.loginURL, body, { withCredentials: true }).subscribe({
       next: (res: any) => {
         this.user.me(
           () => {
             this.shared.loginLoading.set(false);
-            this.shared.alertService.addAlert({
+            this.shared.config.alertService.addAlert({
               message: res.message,
               type: 'success'
             })
@@ -73,20 +69,18 @@ export class Auth {
       },
       error: (err: any) => {
         this.shared.loginLoading.set(false);
-        this.shared.setErrors(err.error);
+        this.shared.config.setErrors(err.error);
       }
     })
   }
 
   googleExchange(code: string) {
-    this.shared.error.set([]);
-
-    this.shared.http.post(this.googleLoginURL, { code }, { withCredentials: true }).subscribe({
+    this.shared.config.http.post(this.googleLoginURL, { code }, { withCredentials: true }).subscribe({
       next: (res: any) => {
         this.user.me(
           () => {
             this.shared.googleLoading.set(false);
-            this.shared.alertService.addAlert({
+            this.shared.config.alertService.addAlert({
               message: res.message,
               type: 'success'
             })
@@ -99,7 +93,7 @@ export class Auth {
       },
       error: (err: any) => {
         this.shared.googleLoading.set(false);
-        this.shared.setErrors(err.error);
+        this.shared.config.setErrors(err.error);
       }
     })
   }
@@ -107,7 +101,7 @@ export class Auth {
   async getCsrfToken(): Promise<boolean> {
     try {
       const res = await firstValueFrom(
-        this.shared.http.get(this.csrfTokenURL, { withCredentials: true })
+        this.shared.config.http.get(this.csrfTokenURL, { withCredentials: true })
       );
       console.log('CSRF token fetched', res);
       return true;
@@ -118,12 +112,10 @@ export class Auth {
   }
 
   deleteAcc(password: string) {
-    this.shared.error.set([]);
-
-    this.shared.http.post(this.deleteAccURL, { password } ,this.shared.CredAndCsrf()).subscribe({
+    this.shared.config.http.post(this.deleteAccURL, { password } ,this.shared.config.CredAndCsrf()).subscribe({
       next: (res: any) => {
         this.shared.deleteAccLoading.set(false);
-        this.shared.alertService.addAlert({
+        this.shared.config.alertService.addAlert({
           message: res.message,
           type: 'success'
         })
@@ -132,7 +124,7 @@ export class Auth {
       },
       error: (err: any) => {
         this.shared.deleteAccLoading.set(false);
-        this.shared.setErrors(err.error);
+        this.shared.config.setErrors(err.error);
       }
     })
   }

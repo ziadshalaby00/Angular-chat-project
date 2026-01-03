@@ -27,9 +27,7 @@ export class User {
   private readonly deleteUserImageURL = `${this.shared.config.apiUrl}/api/auth/delete-user-image/`;
 
   me(successFn?: () => void, faildFn?: () => void) {
-    this.shared.error.set([]);
-
-    this.shared.http.get(this.meUrl, { withCredentials: true }).subscribe({
+    this.shared.config.http.get(this.meUrl, { withCredentials: true }).subscribe({
       next: (res: any) => {
         this.shared.userData.set(res)
         if(successFn) successFn();
@@ -37,7 +35,7 @@ export class User {
       error: (err: any) => {
         if(faildFn) faildFn();
 
-        this.shared.setErrors(err.error);
+        this.shared.config.setErrors(err.error);
         this.logout.logout();
       }
     })
@@ -46,22 +44,18 @@ export class User {
   getUsersProfile(user_id: number | null, successFn?: (res: any) => void, faildFn?: () => void) {
     if(!user_id) return;
 
-    this.shared.error.set([]);
-
-    this.shared.http.get(`${this.getUsersProfileURL}/${user_id}/`, { withCredentials: true }).subscribe({
+    this.shared.config.http.get(`${this.getUsersProfileURL}/${user_id}/`, { withCredentials: true }).subscribe({
       next: (res: any) => {
         if(successFn) successFn(res);
       },
       error: (err: any) => {
         if(faildFn) faildFn();
-        this.shared.setErrors(err.error);
+        this.shared.config.setErrors(err.error);
       }
     })
   }
 
   updateProfile(body: UpdateProfileBody, successFn?: () => void, faildFn?: () => void) {
-    this.shared.error.set([]);
-
     const formData = new FormData();
     Object.entries(body).forEach(([key, value]) => {
       if (value !== undefined && value !== null) {
@@ -69,11 +63,11 @@ export class User {
       }
     });
 
-    this.shared.http.patch(this.updateProfileURL, formData, this.shared.CredAndCsrf()).subscribe({
+    this.shared.config.http.patch(this.updateProfileURL, formData, this.shared.config.CredAndCsrf()).subscribe({
       next: (res: any) => {
         this.shared.userData.set(res.user);
 
-        this.shared.alertService.addAlert({
+        this.shared.config.alertService.addAlert({
           message: res.message,
           type: 'success'
         })
@@ -81,23 +75,21 @@ export class User {
         if(successFn) successFn();
       },
       error: (err: any) => {
-        this.shared.setErrors(err.error);
+        this.shared.config.setErrors(err.error);
         if(faildFn) faildFn();
       }
     })
   }
 
   deleteUserImage(successFn?: () => void, faildFn?: () => void) {
-    this.shared.error.set([]);
-
-    this.shared.http.delete(this.deleteUserImageURL, this.shared.CredAndCsrf()).subscribe({
+    this.shared.config.http.delete(this.deleteUserImageURL, this.shared.config.CredAndCsrf()).subscribe({
       next: (res: any) => {
         this.shared.userData.update((prev) => {
           if (!prev) return prev;
           return { ...prev, user_image: '' };
         });
 
-        this.shared.alertService.addAlert({
+        this.shared.config.alertService.addAlert({
           message: res.message,
           type: 'success'
         })
@@ -105,7 +97,7 @@ export class User {
         if(successFn) successFn();
       },
       error: (err: any) => {
-        this.shared.setErrors(err.error);
+        this.shared.config.setErrors(err.error);
         if(faildFn) faildFn();
       }
     })

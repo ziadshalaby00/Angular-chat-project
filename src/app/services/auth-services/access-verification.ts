@@ -16,11 +16,9 @@ export class AccessVerification {
   private readonly verifyURL = `${this.shared.config.apiUrl}/api/auth/token/verify/`
   
   async verifyAccess(): Promise<boolean> {
-    this.shared.error.set([]);
-
     try {
       await firstValueFrom(
-        this.shared.http.post(this.verifyURL, {}, { withCredentials: true })
+        this.shared.config.http.post(this.verifyURL, {}, { withCredentials: true })
       );
 
       await new Promise<void>((resolve) => {

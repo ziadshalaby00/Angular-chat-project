@@ -6,6 +6,7 @@ import { Logout } from './logout';
 import { GoogleAuth } from './google-auth';
 import { Auth } from './auth';
 import { AccessVerification } from './access-verification';
+import { ConfigService } from '../config-service';
 export type { UserDataType } from './shared-utils'
 
 @Injectable({
@@ -40,7 +41,6 @@ export class AuthApi {
   // ====== RE-EXPORT SIGNALS ======
   get userData() { return this.shared.userData; }
   get isLoggedin() { return this.shared.isLoggedin; }
-  get error() { return this.shared.error; }
 
   get signupLoading() { return this.shared.signupLoading; }
   get loginLoading() { return this.shared.loginLoading; }
@@ -79,6 +79,6 @@ export class AuthApi {
 
   verifyAccess(...args: Parameters<AccessVerification['verifyAccess']>) { return this.accessVerification.verifyAccess(...args); }
   
-  CredAndCsrf(...args: Parameters<SharedUtils['CredAndCsrf']>) { return this.shared.CredAndCsrf(...args); }
+  CredAndCsrf(...args: Parameters<ConfigService['CredAndCsrf']>) { return this.shared.config.CredAndCsrf(...args); }
 
 }

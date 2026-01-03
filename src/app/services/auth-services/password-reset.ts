@@ -12,9 +12,9 @@ export class PasswordReset {
   private readonly passwordResetConfirmURL = `${this.shared.config.apiUrl}/api/auth/password-reset-confirm/`;
 
   passwordReset(body: {email: string}, successFn: () => void) {
-    this.shared.http.post(this.passwordResetURL, body).subscribe({
+    this.shared.config.http.post(this.passwordResetURL, body).subscribe({
       next: (res: any) => {
-        this.shared.alertService.addAlert({
+        this.shared.config.alertService.addAlert({
           message: res.message,
           type: 'success'
         })
@@ -22,16 +22,16 @@ export class PasswordReset {
         if(successFn) successFn();
       },
       error: (err: any) => {
-        this.shared.setErrors(err.error);
+        this.shared.config.setErrors(err.error);
         this.shared.passwordResetLoading.set(false);
       }
     })
   }
 
   passwordResetConfirm(body: any) {
-    this.shared.http.post(this.passwordResetConfirmURL, body).subscribe({
+    this.shared.config.http.post(this.passwordResetConfirmURL, body).subscribe({
       next: (res: any) => {
-        this.shared.alertService.addAlert({
+        this.shared.config.alertService.addAlert({
           message: res.message,
           type: 'success'
         })
@@ -39,7 +39,7 @@ export class PasswordReset {
         this.shared.passwordResetConfirmLoading.set(false);
       },
       error: (err: any) => {
-        this.shared.setErrors(err.error);
+        this.shared.config.setErrors(err.error);
         this.shared.passwordResetConfirmLoading.set(false);
       }
     })

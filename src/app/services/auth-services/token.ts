@@ -16,11 +16,9 @@ export class Token {
   private readonly refreshTokenURL = `${this.shared.config.apiUrl}/api/auth/token/refresh/`;
 
   async refreshToken(): Promise<boolean> {
-    this.shared.error.set([]);
-
     try {
       await firstValueFrom(
-        this.shared.http.post(this.refreshTokenURL, {}, { withCredentials: true })
+        this.shared.config.http.post(this.refreshTokenURL, {}, { withCredentials: true })
       );
 
       await new Promise<void>((resolve) => {

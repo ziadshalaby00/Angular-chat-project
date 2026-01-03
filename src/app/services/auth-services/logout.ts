@@ -13,9 +13,7 @@ export class Logout {
   private readonly logoutURL = `${this.shared.config.apiUrl}/api/auth/logout/`;
 
   logout(logoutAction?: (message?: string) => void) {
-    this.shared.error.set([]);
-
-    this.shared.http.post(this.logoutURL, {}, { withCredentials: true }).subscribe({
+    this.shared.config.http.post(this.logoutURL, {}, { withCredentials: true }).subscribe({
       next: (res: any) => {
         if(logoutAction) logoutAction(res.message)
         this.resetDataLogout();
