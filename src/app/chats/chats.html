@@ -26,7 +26,7 @@
                     </ZS-spinner>
                 </div>
             }@else {
-                @for(item of chatsService.chats(); track item.id) {
+                @for(item of filteredChats(); track item.id) {
                     <!-- @if() {
                         <ZS-card
                         [clickable]="true"

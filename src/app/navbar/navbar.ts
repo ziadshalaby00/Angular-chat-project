@@ -1,19 +1,17 @@
-import { Component, computed, inject, model, TemplateRef, viewChild } from '@angular/core';
+import { Component, computed, effect, inject, model, signal, TemplateRef, viewChild, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
-import { AlertService, AuthButtonsType, Navbar, NavbarItemExport, NavItemsType, SiteNameConfigType, UserItemsType, UserProfile } from '@ziadshalaby/ngx-zs-component';
+import { AlertService, AuthButtonsType, Modal, Navbar, NavbarItem, NavbarItemExport, NavItemsType, SiteNameConfigType, UserItemsType, UserProfile, Input, Button } from '@ziadshalaby/ngx-zs-component';
 import { AuthApi } from '../services/auth-services/auth-api';
 
 @Component({
   selector: 'app-navbar',
-  imports: [Navbar],
+  imports: [Navbar, Modal, Input, Button],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })
 export class NavbarComp {
-  readonly isMobileMenuOpen = model<boolean>(false);
-
-  private readonly alertService: AlertService = inject(AlertService)
-  private readonly router: Router = inject(Router)
+  private readonly alertService: AlertService = inject(AlertService);
+  private readonly router: Router = inject(Router);
   readonly authApi: AuthApi = inject(AuthApi);
 
   siteNameConfig: SiteNameConfigType = {
@@ -35,37 +33,46 @@ export class NavbarComp {
 
   logoUrl: string = 'https://i.postimg.cc/MpzpyjF1/android-chrome-512x512-proton.png';
 
+  readonly isMobileMenuOpen = model<boolean>(false);
+  readonly isUserMenuOpen = signal<boolean>(false);
+  readonly isMoreOpen = signal<boolean>(false);
+
+  close(signals: WritableSignal<boolean>[]) {
+    signals.forEach((signal) => signal.set(false));
+  }
+
   readonly homeIconTpl = viewChild<TemplateRef<any>>('homeIcon');
   readonly chatsIconTpl = viewChild<TemplateRef<any>>('chatsIcon');
   readonly addIconTpl = viewChild<TemplateRef<any>>('addIcon');
 
-  navItems: NavItemsType = {
+  navItems = signal<NavItemsType>({
     routerLinkActive: 'bg-blue-500 dark:bg-blue-600 text-gray-50',
-    closeMobileMenu: true,
-    closeUserMenu: false,
-    closeMoreMenu: false,
     items: [
       {
+        id: 'home',
         label: 'Home',
         routerLink: '/home',
         iconTpl: this.homeIconTpl,
-        // routerLinkActive: 'bg-blue-500 dark:bg-blue-600 text-gray-50',
         useDefaultColorClass: 'bg',
       },
       {
+        id: 'chats',
         label: 'Chats',
         routerLink: '/chats',
         iconTpl: this.chatsIconTpl,
-        // routerLinkActive: 'bg-green-500 dark:bg-green-600 text-gray-50',
         useDefaultColorClass: 'bg',
       },
       {
+        id: 'new-chat',
         label: 'New Chat',
+        action: () => {
+          this.newChatModal.set(true);
+        },
         iconTpl: this.addIconTpl,
         colorClass: 'bg-teal-500 hover:bg-teal-600 dark:hover:bg-teal-500 dark:bg-teal-600 text-gray-100',
       },
     ]
-  }
+  });
 
   navUserProfile = computed<UserProfile | undefined>(() => {
     const userData = this.authApi.userData()
@@ -81,21 +88,20 @@ export class NavbarComp {
   readonly logoutIconTpl = viewChild<TemplateRef<any>>('logoutIcon');
 
   userMenuItems: UserItemsType = {
-    closeMobileMenu: true,
-    closeUserMenu: true,
-    closeMoreMenu: false,
     items: [
       { 
+        id: 'profile',
         label: 'Profile',
         iconTpl: this.profileIconTpl,
         useDefaultColorClass: 'text',
-        action: () => {
+        action: () => { 
           this.router.navigate(['/profile', this.authApi.userData()?.id]);
-        }
+        },
       },
-      { 
+      {
+        id: 'logout',
         label: 'Logout', 
-        action: () => this.logout(),
+        action: () => { this.logout(); },
         colorClass: 'text-red-600 hover:text-red-800 dark:text-red-700 dark:hover:text-red-500',
         iconTpl: this.logoutIconTpl,
       }
@@ -120,4 +126,18 @@ export class NavbarComp {
       }
     )
   }
+
+  anyItemClickedEv(event: NavbarItemExport) {
+    let signals: WritableSignal<boolean>[] = [this.isMobileMenuOpen, this.isMoreOpen];
+    const id = event.id
+
+    if(id === 'new-chat') 
+      signals = [];
+    else if(['profile', 'logout'].includes(id as string)) 
+      signals.push(this.isUserMenuOpen);
+
+    this.close(signals);
+  }
+
+  readonly newChatModal = signal<boolean>(true);
 }

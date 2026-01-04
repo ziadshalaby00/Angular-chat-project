@@ -1,9 +1,9 @@
-import { Component, effect, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { AuthApi } from '../services/auth-services/auth-api';
 import { Router } from '@angular/router';
 import { Sidebar, Input, Card, AlertService, Button, Spinner } from '@ziadshalaby/ngx-zs-component';
 import { Chat } from "../chat/chat";
-import { ChatsService } from '../services/chats-service';
+import { ChatsService, ChatsType } from '../services/chats-service';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -23,8 +23,7 @@ export class Chats {
   private readonly mediaQuery = window.matchMedia('(min-width: 768px)');
 
   constructor() {
-    this.chatsService.chatsLoading.set(true);
-    this.chatsService.getChats();
+    this.startingInitChats()
     
     effect(() => {
       const isLoggedin = this.authApi.isLoggedin()
@@ -50,7 +49,41 @@ export class Chats {
     this.mediaQuery.removeEventListener('change', this.onMediaChange);
   }
 
-  onSearchForChat(event: any) {
-    console.log(event);
+  startingInitChats() {
+    if(!this.chatsService.hasChats()) {
+      this.chatsService.chatsLoading.set(true);
+      this.chatsService.getChats();
+    }
+    if(!this.chatsService.isChatSocketConnected()) {
+      this.chatsService.connectChats();
+    }
   }
+
+  private readonly searchTerm = signal<string | null>(null);
+  onSearchForChat(value: string | null) {
+    this.searchTerm.set((value ?? '').toLowerCase().trim());
+  }
+
+  readonly filteredChats = computed<ChatsType[]>(() => {
+    const term = this.searchTerm();
+    const chats = this.chatsService.chats();
+    const myId = this.authApi.userData()?.id;
+
+    if (!term) return chats;
+
+    return chats.filter(chat => {
+      const otherParticipant = chat.participants.find(
+        p => p.user_info.id !== myId
+      );
+
+      if (!otherParticipant) return false;
+
+      const { fullname, username } = otherParticipant.user_info;
+
+      return (
+        fullname?.toLowerCase().includes(term) ||
+        username?.toLowerCase().includes(term)
+      );
+    });
+  });
 }
