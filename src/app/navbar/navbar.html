@@ -6,10 +6,11 @@
   [showUserSection]="true"
 
   [navItems]="navItems()"
+  [mobileMode]="'sm'"
 
   [isLoggedIn]="authApi.isLoggedin()"
   [userProfile]="navUserProfile()"
-  [userMenuItems]="userMenuItems"
+  [userMenuItems]="userMenuItems()"
 
   (loginClickedEv)="onLogin()"
   (signupClickedEv)="onSignup()"
@@ -21,44 +22,31 @@
   [(isMoreOpen)]="isMoreOpen"
 ></ZS-navbar>
 
-<!-- New Chat -->
-<ZS-modal
-[showFooter]="false"
-[showHeader]="true"
-
-[(open)]="newChatModal"
-(cancelEv)="newChatModal.set(false)"
-
-[showCancelIcon]="!authApi.updateProfileLoading()"
-[closeOnOverlay]="!authApi.updateProfileLoading()"
-
-[title]="'New Chat'"
-[modalStyle]="'violet'"
->
-  <div class="flex flex-col gap-4">
-    <div class="flex gap-2 items-end">
-      <ZS-input
-      [label]="'Enter the username you want to add.'"
-      [hint]="'Enter it exactly as is'"
-      [inputStyle]="'violet'"
+@if(bottomNavItems()) {
+  <!-- Bottom NavBar -->
+  <div class="fixed bottom-0 w-full px-6 py-3 
+  bg-white flex items-center
+  gap-2 dark:bg-[#18202F] left-0 right-0
+  z-1400 shadow-md dark:shadow-gray-400/30
+  ">
+    @for(item of bottomNavItems(); track item.id) {
+      <ZS-nav-item
+      class="w-full"
+      [collectionName]="'bottom-navbar'"
+      [item]="item"
       >
-      </ZS-input>
-
-      <ZS-button
-      [btnStyle]="'violet'"
-      [size]="'md'"
-      >
-        Search
-      </ZS-button>
-    </div>
-
-    <div>
-
-    </div>
+      </ZS-nav-item>
+    }
   </div>
-</ZS-modal>
+}
 
+<!-- Create New Chat -->
+<app-new-chat
+[(newChatModal)]="newChatModal"
+>
+</app-new-chat>
 
+<!-- Icons -->
 <!-- Home Icon -->
 <ng-template #homeIcon>
   <i class="fa-solid fa-house mr-1.5"></i>

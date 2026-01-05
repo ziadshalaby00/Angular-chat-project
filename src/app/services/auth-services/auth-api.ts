@@ -1,12 +1,12 @@
 import { PasswordReset } from './password-reset';
 import { inject, Injectable, Injector } from '@angular/core';
-import { SharedUtils } from './shared-utils';
+import { UserSharedUtils } from './user-shared-utils';
 import { User } from './user';
 import { Logout } from './logout';
 import { GoogleAuth } from './google-auth';
 import { Auth } from './auth';
 import { AccessVerification } from './access-verification';
-export type { UserDataType } from './shared-utils'
+export type { UserDataType } from './user-shared-utils'
 
 @Injectable({
   providedIn: 'root',
@@ -15,8 +15,8 @@ export class AuthApi {
   // ====== LAZY INJECTS ======
   private readonly injector = inject(Injector);
 
-  private get shared(): SharedUtils {
-    return this.injector.get(SharedUtils);
+  private get userShared(): UserSharedUtils {
+    return this.injector.get(UserSharedUtils);
   }
   private get passwordResetS(): PasswordReset {
     return this.injector.get(PasswordReset);
@@ -38,23 +38,23 @@ export class AuthApi {
   }
 
   // ====== RE-EXPORT SIGNALS ======
-  get userData() { return this.shared.userData; }
-  get isLoggedin() { return this.shared.isLoggedin; }
+  get userData() { return this.userShared.userData; }
+  get isLoggedin() { return this.userShared.isLoggedin; }
 
-  get signupLoading() { return this.shared.signupLoading; }
-  get loginLoading() { return this.shared.loginLoading; }
+  get signupLoading() { return this.userShared.signupLoading; }
+  get loginLoading() { return this.userShared.loginLoading; }
 
-  get googleLoading() { return this.shared.googleLoading; }
-  get verifyloading() { return this.shared.verifyloading; }
+  get googleLoading() { return this.userShared.googleLoading; }
+  get verifyloading() { return this.userShared.verifyloading; }
 
-  get passwordResetConfirmLoading() { return this.shared.passwordResetConfirmLoading; }
-  get passwordResetLoading() { return this.shared.passwordResetLoading; }
+  get passwordResetConfirmLoading() { return this.userShared.passwordResetConfirmLoading; }
+  get passwordResetLoading() { return this.userShared.passwordResetLoading; }
 
-  get updateProfileLoading() { return this.shared.updateProfileLoading; }
-  get remImgProfileLoading() { return this.shared.remImgProfileLoading; }
-  get getUsersProfileLoading() { return this.shared.getUsersProfileLoading; }
+  get updateProfileLoading() { return this.userShared.updateProfileLoading; }
+  get remImgProfileLoading() { return this.userShared.remImgProfileLoading; }
+  get getUsersProfileLoading() { return this.userShared.getUsersProfileLoading; }
 
-  get deleteAccLoading() { return this.shared.deleteAccLoading; }
+  get deleteAccLoading() { return this.userShared.deleteAccLoading; }
 
   // ====== RE-EXPORT METHODS ======
   me(...args: Parameters<User['me']>) { return this.user.me(...args); }

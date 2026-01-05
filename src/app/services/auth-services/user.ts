@@ -1,5 +1,5 @@
 import { inject, Injectable, Injector } from '@angular/core';
-import { SharedUtils, UserDataType } from './shared-utils';
+import { UserSharedUtils } from './user-shared-utils';
 import { Logout } from './logout';
 
 export interface UpdateProfileBody {
@@ -18,24 +18,24 @@ export interface UpdateProfileBody {
 })
 export class User {
   private readonly injector = inject(Injector);
-  private get shared(): SharedUtils { return this.injector.get(SharedUtils); }
+  private get userShared(): UserSharedUtils { return this.injector.get(UserSharedUtils); }
   private get logout(): Logout { return this.injector.get(Logout); }
 
-  private readonly meUrl = `${this.shared.config.apiUrl}/api/auth/me/`;
-  private readonly getUsersProfileURL = `${this.shared.config.apiUrl}/api/auth/users-profile`;
-  private readonly updateProfileURL = `${this.shared.config.apiUrl}/api/auth/update-profile/`;
-  private readonly deleteUserImageURL = `${this.shared.config.apiUrl}/api/auth/delete-user-image/`;
+  private readonly meUrl = `${this.userShared.config.apiUrl}/api/auth/me/`;
+  private readonly getUsersProfileURL = `${this.userShared.config.apiUrl}/api/auth/users-profile`;
+  private readonly updateProfileURL = `${this.userShared.config.apiUrl}/api/auth/update-profile/`;
+  private readonly deleteUserImageURL = `${this.userShared.config.apiUrl}/api/auth/delete-user-image/`;
 
   me(successFn?: () => void, faildFn?: () => void) {
-    this.shared.config.http.get(this.meUrl, { withCredentials: true }).subscribe({
+    this.userShared.shared.http.get(this.meUrl, { withCredentials: true }).subscribe({
       next: (res: any) => {
-        this.shared.userData.set(res)
+        this.userShared.userData.set(res)
         if(successFn) successFn();
       },
       error: (err: any) => {
         if(faildFn) faildFn();
 
-        this.shared.config.setErrors(err.error);
+        this.userShared.shared.setErrors(err.error);
         this.logout.logout();
       }
     })
@@ -44,13 +44,13 @@ export class User {
   getUsersProfile(user_id: number | null, successFn?: (res: any) => void, faildFn?: () => void) {
     if(!user_id) return;
 
-    this.shared.config.http.get(`${this.getUsersProfileURL}/${user_id}/`, { withCredentials: true }).subscribe({
+    this.userShared.shared.http.get(`${this.getUsersProfileURL}/${user_id}/`, { withCredentials: true }).subscribe({
       next: (res: any) => {
         if(successFn) successFn(res);
       },
       error: (err: any) => {
         if(faildFn) faildFn();
-        this.shared.config.setErrors(err.error);
+        this.userShared.shared.setErrors(err.error);
       }
     })
   }
@@ -63,11 +63,11 @@ export class User {
       }
     });
 
-    this.shared.config.http.patch(this.updateProfileURL, formData, this.shared.config.CredAndCsrf()).subscribe({
+    this.userShared.shared.http.patch(this.updateProfileURL, formData, this.userShared.shared.CredAndCsrf()).subscribe({
       next: (res: any) => {
-        this.shared.userData.set(res.user);
+        this.userShared.userData.set(res.user);
 
-        this.shared.config.alertService.addAlert({
+        this.userShared.shared.alertService.addAlert({
           message: res.message,
           type: 'success'
         })
@@ -75,21 +75,21 @@ export class User {
         if(successFn) successFn();
       },
       error: (err: any) => {
-        this.shared.config.setErrors(err.error);
+        this.userShared.shared.setErrors(err.error);
         if(faildFn) faildFn();
       }
     })
   }
 
   deleteUserImage(successFn?: () => void, faildFn?: () => void) {
-    this.shared.config.http.delete(this.deleteUserImageURL, this.shared.config.CredAndCsrf()).subscribe({
+    this.userShared.shared.http.delete(this.deleteUserImageURL, this.userShared.shared.CredAndCsrf()).subscribe({
       next: (res: any) => {
-        this.shared.userData.update((prev) => {
+        this.userShared.userData.update((prev) => {
           if (!prev) return prev;
           return { ...prev, user_image: '' };
         });
 
-        this.shared.config.alertService.addAlert({
+        this.userShared.shared.alertService.addAlert({
           message: res.message,
           type: 'success'
         })
@@ -97,7 +97,7 @@ export class User {
         if(successFn) successFn();
       },
       error: (err: any) => {
-        this.shared.config.setErrors(err.error);
+        this.userShared.shared.setErrors(err.error);
         if(faildFn) faildFn();
       }
     })

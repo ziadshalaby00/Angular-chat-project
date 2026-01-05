@@ -1,5 +1,5 @@
 import { inject, Injectable, Injector, signal } from '@angular/core';
-import { SharedUtils } from './shared-utils';
+import { UserSharedUtils } from './user-shared-utils';
 import { Auth } from './auth';
 
 declare const google: any;
@@ -11,7 +11,7 @@ export const googleClientId: string =
 })
 export class GoogleAuth {
   private readonly injector = inject(Injector);
-  private get shared(): SharedUtils { return this.injector.get(SharedUtils); }
+  private get userShared(): UserSharedUtils { return this.injector.get(UserSharedUtils); }
   private get auth(): Auth { return this.injector.get(Auth); }
 
   private codeClient = signal<any>(null);
@@ -31,11 +31,11 @@ export class GoogleAuth {
   startRequestCode() {
     const client = this.codeClient();
     if (!client) {
-      this.shared.config.alertService.addAlert({
+      this.userShared.shared.alertService.addAlert({
         message: 'Google authentication not initialized.',
         type: 'danger'
       });
-      this.shared.googleLoading.set(false);
+      this.userShared.googleLoading.set(false);
       return;
     }
     client.requestCode();
@@ -46,7 +46,7 @@ export class GoogleAuth {
     if (code) {
       this.auth.googleExchange(code);
     } else {
-      this.shared.googleLoading.set(false);
+      this.userShared.googleLoading.set(false);
     }
   }
 }

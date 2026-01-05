@@ -1,5 +1,5 @@
 import { inject, Injectable, Injector } from '@angular/core';
-import { SharedUtils } from './shared-utils';
+import { UserSharedUtils } from './user-shared-utils';
 import { User } from './user';
 import { Logout } from './logout';
 import { firstValueFrom } from 'rxjs';
@@ -9,23 +9,23 @@ import { firstValueFrom } from 'rxjs';
 })
 export class Token {
   private readonly injector = inject(Injector);
-  private get shared(): SharedUtils { return this.injector.get(SharedUtils); }
+  private get userShared(): UserSharedUtils { return this.injector.get(UserSharedUtils); }
   private get user(): User { return this.injector.get(User); }
   private get logout(): Logout { return this.injector.get(Logout); }
 
-  private readonly refreshTokenURL = `${this.shared.config.apiUrl}/api/auth/token/refresh/`;
+  private readonly refreshTokenURL = `${this.userShared.config.apiUrl}/api/auth/token/refresh/`;
 
   async refreshToken(): Promise<boolean> {
     try {
       await firstValueFrom(
-        this.shared.config.http.post(this.refreshTokenURL, {}, { withCredentials: true })
+        this.userShared.shared.http.post(this.refreshTokenURL, {}, { withCredentials: true })
       );
 
       await new Promise<void>((resolve) => {
         this.user.me(
           () => {
-            this.shared.isLoggedin.set(true);
-            this.refreshEventLoop(this.shared.accessTokenExpire);
+            this.userShared.isLoggedin.set(true);
+            this.refreshEventLoop(this.userShared.accessTokenExpire);
             resolve();
           },
           () => resolve()

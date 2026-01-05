@@ -3,6 +3,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { AlertService, ExtractorService } from '@ziadshalaby/ngx-zs-component';
 import { ConfigService } from '../config-service';
 import { Router } from '@angular/router';
+import { SharedUtils } from '../shared-utils';
 
 export interface UserDataType {
   date_joined : string;
@@ -24,8 +25,10 @@ export interface HttpOptions {
 @Injectable({
   providedIn: 'root',
 })
-export class SharedUtils {
+export class UserSharedUtils {
   readonly config: ConfigService = inject(ConfigService);
+  readonly shared: SharedUtils = inject(SharedUtils);
+
   readonly router: Router = inject(Router);
 
   readonly accessTokenExpire: number = 14.75; // Minutes

@@ -5,6 +5,7 @@ import { Sidebar, Input, Card, AlertService, Button, Spinner } from '@ziadshalab
 import { Chat } from "../chat/chat";
 import { ChatsService, ChatsType } from '../services/chats-service';
 import { CommonModule } from '@angular/common';
+import { SharedUtils } from '../services/shared-utils';
 
 @Component({
   selector: 'app-chats',
@@ -14,13 +15,13 @@ import { CommonModule } from '@angular/common';
 })
 export class Chats {
   readonly authApi: AuthApi = inject(AuthApi);
+  readonly shared: SharedUtils = inject(SharedUtils);
   readonly chatsService: ChatsService = inject(ChatsService);
   
   readonly router: Router = inject(Router);
   readonly alert: AlertService = inject(AlertService);
 
   readonly sideBarFloating = signal<boolean>(false);
-  private readonly mediaQuery = window.matchMedia('(min-width: 768px)');
 
   constructor() {
     this.startingInitChats()
@@ -37,16 +38,10 @@ export class Chats {
       }
     })
 
-    this.sideBarFloating.set(!this.mediaQuery.matches);
-    this.mediaQuery.addEventListener('change', this.onMediaChange);
-  }
-
-  private readonly onMediaChange = (event: MediaQueryListEvent) => {
-    this.sideBarFloating.set(!event.matches);
-  };
-
-  ngOnDestroy() {
-    this.mediaQuery.removeEventListener('change', this.onMediaChange);
+    effect(() => {
+      const min768px = this.shared.min768px()
+      this.sideBarFloating.set(!min768px);
+    })
   }
 
   startingInitChats() {

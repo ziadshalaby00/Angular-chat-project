@@ -1,5 +1,6 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { ConfigService } from './config-service';
+import { SharedUtils } from './shared-utils';
 
 export interface ParticipantType {
   "user_info": {
@@ -27,7 +28,8 @@ interface WebSocketMessageType {
   providedIn: 'root',
 })
 export class ChatsService {
-  private readonly config = inject(ConfigService)
+  private readonly config = inject(ConfigService);
+  readonly shared: SharedUtils = inject(SharedUtils);
 
   public readonly chats = signal<ChatsType[]>([]);
   public readonly chatsLoading = signal<boolean>(false);
@@ -35,7 +37,7 @@ export class ChatsService {
   private readonly chatsURL = `${this.config.apiUrl}/api/chat/chats/`;
 
   public getChats() {
-    this.config.http.get(this.chatsURL, this.config.CredAndCsrf()).subscribe({
+    this.shared.http.get(this.chatsURL, this.shared.CredAndCsrf()).subscribe({
       next: (res: any) => {
         console.log(res);
         this.chats.set(res.chats as ChatsType[]);
@@ -43,7 +45,7 @@ export class ChatsService {
       },
       error: (err) => {
         console.log(err);
-        this.config.setErrors(err.error);
+        this.shared.setErrors(err.error);
       },
     })
   }

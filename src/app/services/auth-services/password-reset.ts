@@ -1,46 +1,46 @@
 import { inject, Injectable, Injector } from '@angular/core';
-import { SharedUtils } from './shared-utils';
+import { UserSharedUtils } from './user-shared-utils';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PasswordReset {
   private readonly injector = inject(Injector);
-  private get shared(): SharedUtils { return this.injector.get(SharedUtils); }
+  private get userShared(): UserSharedUtils { return this.injector.get(UserSharedUtils); }
   
-  private readonly passwordResetURL = `${this.shared.config.apiUrl}/api/auth/password-reset-link/`;
-  private readonly passwordResetConfirmURL = `${this.shared.config.apiUrl}/api/auth/password-reset-confirm/`;
+  private readonly passwordResetURL = `${this.userShared.config.apiUrl}/api/auth/password-reset-link/`;
+  private readonly passwordResetConfirmURL = `${this.userShared.config.apiUrl}/api/auth/password-reset-confirm/`;
 
   passwordReset(body: {email: string}, successFn: () => void) {
-    this.shared.config.http.post(this.passwordResetURL, body).subscribe({
+    this.userShared.shared.http.post(this.passwordResetURL, body).subscribe({
       next: (res: any) => {
-        this.shared.config.alertService.addAlert({
+        this.userShared.shared.alertService.addAlert({
           message: res.message,
           type: 'success'
         })
-        this.shared.passwordResetLoading.set(false);
+        this.userShared.passwordResetLoading.set(false);
         if(successFn) successFn();
       },
       error: (err: any) => {
-        this.shared.config.setErrors(err.error);
-        this.shared.passwordResetLoading.set(false);
+        this.userShared.shared.setErrors(err.error);
+        this.userShared.passwordResetLoading.set(false);
       }
     })
   }
 
   passwordResetConfirm(body: any) {
-    this.shared.config.http.post(this.passwordResetConfirmURL, body).subscribe({
+    this.userShared.shared.http.post(this.passwordResetConfirmURL, body).subscribe({
       next: (res: any) => {
-        this.shared.config.alertService.addAlert({
+        this.userShared.shared.alertService.addAlert({
           message: res.message,
           type: 'success'
         })
-        this.shared.router.navigate(['/login']);
-        this.shared.passwordResetConfirmLoading.set(false);
+        this.userShared.router.navigate(['/login']);
+        this.userShared.passwordResetConfirmLoading.set(false);
       },
       error: (err: any) => {
-        this.shared.config.setErrors(err.error);
-        this.shared.passwordResetConfirmLoading.set(false);
+        this.userShared.shared.setErrors(err.error);
+        this.userShared.passwordResetConfirmLoading.set(false);
       }
     })
   }

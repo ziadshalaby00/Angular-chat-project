@@ -1,11 +1,13 @@
 import { Component, computed, effect, inject, model, signal, TemplateRef, viewChild, WritableSignal } from '@angular/core';
-import { Router } from '@angular/router';
-import { AlertService, AuthButtonsType, Modal, Navbar, NavbarItem, NavbarItemExport, NavItemsType, SiteNameConfigType, UserItemsType, UserProfile, Input, Button } from '@ziadshalaby/ngx-zs-component';
+import { Router, RouterModule } from '@angular/router';
+import { AlertService, AuthButtonsType, Navbar, NavbarItemExport, NavItemsType, SiteNameConfigType, UserItemsType, UserProfile, NavItem } from '@ziadshalaby/ngx-zs-component';
 import { AuthApi } from '../services/auth-services/auth-api';
+import { SharedUtils } from '../services/shared-utils';
+import { NewChat } from '../new-chat/new-chat';
 
 @Component({
   selector: 'app-navbar',
-  imports: [Navbar, Modal, Input, Button],
+  imports: [Navbar, NewChat, RouterModule, NavItem],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })
@@ -13,6 +15,7 @@ export class NavbarComp {
   private readonly alertService: AlertService = inject(AlertService);
   private readonly router: Router = inject(Router);
   readonly authApi: AuthApi = inject(AuthApi);
+  readonly shared: SharedUtils = inject(SharedUtils);
 
   siteNameConfig: SiteNameConfigType = {
     siteName: 'Proton',
@@ -23,11 +26,9 @@ export class NavbarComp {
     showAuthButtons: true,
     signup: {
       btnStyle: 'violet',
-      // size: 'sm'
     },
     login: {
       btnStyle: 'primary',
-      // size: 'sm'
     }
   }
 
@@ -45,7 +46,7 @@ export class NavbarComp {
   readonly chatsIconTpl = viewChild<TemplateRef<any>>('chatsIcon');
   readonly addIconTpl = viewChild<TemplateRef<any>>('addIcon');
 
-  navItems = signal<NavItemsType>({
+  readonly navItemsValue: NavItemsType = {
     routerLinkActive: 'bg-blue-500 dark:bg-blue-600 text-gray-50',
     items: [
       {
@@ -64,7 +65,7 @@ export class NavbarComp {
       },
       {
         id: 'new-chat',
-        label: 'New Chat',
+        label: 'NewChat',
         action: () => {
           this.newChatModal.set(true);
         },
@@ -72,9 +73,18 @@ export class NavbarComp {
         colorClass: 'bg-teal-500 hover:bg-teal-600 dark:hover:bg-teal-500 dark:bg-teal-600 text-gray-100',
       },
     ]
-  });
+  }
+  readonly navItems = signal<NavItemsType | undefined>(this.navItemsValue);
+  readonly bottomNavItemsComputed = computed<NavbarItemExport[] | undefined>(() =>
+    this.navItemsValue.items.map(item => ({
+      ...item,
+      routerLinkActive: this.navItemsValue.routerLinkActive,
+    }))
+  );
+  readonly bottomNavItems = signal<NavbarItemExport[] | undefined>(this.bottomNavItemsComputed());
 
-  navUserProfile = computed<UserProfile | undefined>(() => {
+
+  readonly navUserProfile = computed<UserProfile | undefined>(() => {
     const userData = this.authApi.userData()
     return userData ? {
       name: userData.fullname,
@@ -87,7 +97,7 @@ export class NavbarComp {
   readonly profileIconTpl = viewChild<TemplateRef<any>>('profileIcon');
   readonly logoutIconTpl = viewChild<TemplateRef<any>>('logoutIcon');
 
-  userMenuItems: UserItemsType = {
+  readonly userMenuItems = signal<UserItemsType>({
     items: [
       { 
         id: 'profile',
@@ -106,7 +116,7 @@ export class NavbarComp {
         iconTpl: this.logoutIconTpl,
       }
     ]
-  }
+  })
 
   onLogin() {
     this.router.navigate(['/login'])
@@ -139,5 +149,19 @@ export class NavbarComp {
     this.close(signals);
   }
 
-  readonly newChatModal = signal<boolean>(true);
+  readonly newChatModal = model<boolean>(false);
+
+  // constructor() {
+  //   effect(() => {
+  //     const min40rem = this.shared.min40rem();
+  //     if(!min40rem) {
+  //       this.navItems.set(undefined);
+  //       this.bottomNavItems.set(this.bottomNavItemsComputed());
+  //     }
+  //     else {
+  //       this.navItems.set(this.navItemsValue);
+  //       this.bottomNavItems.set(undefined)
+  //     }
+  //   })
+  // }
 }

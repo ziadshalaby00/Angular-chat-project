@@ -8,6 +8,7 @@ import { ProfileUpdateAccount } from '../profile-update-account/profile-update-a
 import { ProfileEditUserImg } from '../profile-edit-user-img/profile-edit-user-img';
 import { ProfileChangePassword } from '../profile-change-password/profile-change-password';
 import { ProfileDeleteUserAccount } from '../profile-delete-user-account/profile-delete-user-account';
+import { SharedUtils } from '../services/shared-utils';
 
 @Component({
   selector: 'app-profile',
@@ -26,6 +27,7 @@ export class Profile {
   readonly router: Router = inject(Router);
   readonly authApi: AuthApi = inject(AuthApi);
   readonly config = inject(ConfigService);
+  readonly shared: SharedUtils = inject(SharedUtils);
   readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 
   readonly profileData = signal<UserDataType | null>(null);

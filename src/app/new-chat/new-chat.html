@@ -1,0 +1,33 @@
+<!-- New Chat -->
+<ZS-modal
+[showFooter]="false"
+[showHeader]="true"
+
+[(open)]="newChatModal"
+(cancelEv)="newChatModal.set(false)"
+
+[title]="'New Chat'"
+[modalStyle]="'violet'"
+>
+  <div class="flex flex-col gap-4">
+    <div class="flex gap-2 items-end">
+      <ZS-input
+      [label]="'Enter the username you want to add.'"
+      [hint]="'Enter it exactly as is'"
+      [inputStyle]="'violet'"
+      >
+      </ZS-input>
+
+      <ZS-button
+      [btnStyle]="'violet'"
+      [size]="'md'"
+      >
+        Search
+      </ZS-button>
+    </div>
+
+    <div>
+
+    </div>
+  </div>
+</ZS-modal>

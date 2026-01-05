@@ -1,5 +1,5 @@
 import { inject, Injectable, Injector } from '@angular/core';
-import { SharedUtils } from './shared-utils';
+import { UserSharedUtils } from './user-shared-utils';
 import { User } from './user';
 import { Token } from './token';
 import { firstValueFrom } from 'rxjs';
@@ -9,7 +9,7 @@ import { firstValueFrom } from 'rxjs';
 })
 export class AccessVerification {
   private readonly injector = inject(Injector);
-  private get shared(): SharedUtils { return this.injector.get(SharedUtils); }
+  private get shared(): UserSharedUtils { return this.injector.get(UserSharedUtils); }
   private get user(): User { return this.injector.get(User); }
   private get token(): Token { return this.injector.get(Token); }
 
@@ -18,7 +18,7 @@ export class AccessVerification {
   async verifyAccess(): Promise<boolean> {
     try {
       await firstValueFrom(
-        this.shared.config.http.post(this.verifyURL, {}, { withCredentials: true })
+        this.shared.shared.http.post(this.verifyURL, {}, { withCredentials: true })
       );
 
       await new Promise<void>((resolve) => {
