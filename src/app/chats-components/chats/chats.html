@@ -1,0 +1,162 @@
+<div class="h-[calc(100vh-4rem)] overflow-hidden flex dark:text-gray-50 bg-blue-300/80 dark:bg-blue-800/50">
+    <ZS-sidebar
+    header="Chats"
+    [floating]="sideBarFloating()"
+    [openSide]="true"
+    >
+        <div main class="flex flex-col h-full gap-4 pt-4 pb-5 pl-1.5 pr-3">
+            <div class="px-3">
+                <ZS-input
+                placeholder="Search for chat..."
+                type="search"
+                inputStyle="primary"
+                [showLoaderIconOnSearchInput]="true"
+                (searchEv)="onSearchForChat($event)"
+                >
+                </ZS-input>
+            </div>
+            <div class='flex flex-col gap-4 h-full p-3 overflow-y-auto scroll scroll-success'>
+                @if(chatsService.chatsLoading()) {
+                    <div class="flex flex-col h-[75%] items-center justify-center">
+                        <ZS-spinner
+                        [loading]="true"
+                        [type]="'double'"
+                        >
+                        </ZS-spinner>
+                    </div>
+                }@else {
+                    @for(item of filteredChats(); track item.id) {
+                        <!-- @if() {
+                            <ZS-card
+                            [clickable]="true"
+                            cardStyle="success"
+                            bodyClass="bg-green-300 dark:bg-green-700"
+                            >
+                                <div class="py-4 px-6">
+                                    {{ item }}
+                                </div>
+                            </ZS-card> -->
+                        <!-- }@else { -->
+                        @for(participant of item.participants; track participant.user_info.id) {
+                            @if(participant.user_info.id !== authApi.userData()?.id) {
+                                <ZS-card
+                                [clickable]="true"
+                                cardStyle="success"
+                                >
+                                    <div class="py-3 px-4 flex justify-start items-center gap-3 relative">
+                                        @if(participant.user_info.user_image) {
+                                            <img
+                                                [src]="participant.user_info.user_image"
+                                                alt="User image"
+                                                class="
+                                                size-12 min-w-12 rounded-full shadow-lg ring-1 
+                                                ring-slate-800/70 
+                                                dark:ring-slate-300 object-cover
+                                                "
+                                            >
+                                        }@else if(participant.user_info.is_deleted) {
+                                            <div
+                                                class="size-12 min-w-12 text-[22px] rounded-full shadow-lg 
+                                                bg-red-500 dark:bg-red-700
+                                                flex leading-none ring-slate-800/70 dark:ring-slate-300
+                                                items-center justify-center text-white font-semibold ring-1"
+                                                aria-hidden="true"
+                                            >
+                                                <i class="fa-solid fa-user-minus"></i>
+                                            </div>
+                                        }@else {
+                                            <div
+                                                class="size-12 min-w-12 text-2xl rounded-full shadow-lg 
+                                                bg-blue-500 dark:bg-blue-600
+                                                flex leading-none ring-slate-800/70 dark:ring-slate-300
+                                                items-center justify-center text-white font-semibold ring-1"
+                                                aria-hidden="true"
+                                            >
+                                                {{ participant.user_info.fullname.charAt(0).toUpperCase() }}
+                                            </div>
+                                        }
+
+                                        <div class="flex flex-col">
+                                            <p class="font-semibold leading-tight
+                                            line-clamp-1 wrap-anywhere text-sm">
+                                                {{ participant.user_info.fullname }}
+                                            </p>
+                                            <p class="text-xs text-gray-600 dark:text-gray-400 
+                                            wrap-anywhere leading-tight"
+                                            [ngClass]="[participant.user_info.is_deleted ? 'line-clamp-2' : 'line-clamp-1']"
+                                            >
+                                                @if(participant.user_info.is_deleted) {
+                                                    This user is no longer available.
+                                                }@else {
+                                                    @{{ participant.user_info.username }}
+                                                }
+                                            </p>
+                                        </div>
+
+                                        <!-- Notfications -->
+                                        @if(item.unread_count) {
+                                            <div class="absolute -top-2.5 -right-2.5 
+                                            flex items-center justify-center
+                                            text-gray-100 min-w-8 h-8 p-1.5 rounded-full
+                                            bg-red-500 dark:bg-red-700">
+                                                {{ item.unread_count }}
+                                            </div>
+                                        }
+                                    </div>
+                                </ZS-card>
+                            }
+                        }
+                    }@empty {
+                        <div class="flex flex-col h-[75%] text-center items-center justify-center gap-2 text-slate-600 dark:text-slate-300">
+                            <span class="text-3xl">You haven’t had any conversations yet.</span>
+                            <span class="text-2xl">Start one now!</span>
+                            <ZS-button
+                            (clickedEv)="this.newChatModal.set(true)"
+                            [iconTpl]="newChatIcon"
+                            [size]="'lg'"
+                            [btnStyle]="'teal'"
+                            >
+                            </ZS-button>
+                        </div>
+                    }
+                }
+            </div>
+
+            @if(!chatsService.chatsLoading() && filteredChats().length) {
+                <div class="px-3">
+                    <ZS-button
+                    (clickedEv)="this.newChatModal.set(true)"
+                    [iconTpl]="newChatIcon2"
+                    [btnStyle]="'teal'"
+                    >
+                        New Chat
+                    </ZS-button>
+                </div>
+            }
+        </div>
+    </ZS-sidebar>
+
+    <!-- Chating -->
+    <div class="w-full h-full">
+        <app-chat></app-chat>
+    </div>
+</div>
+
+<!-- New Chat Icon -->
+<ng-template #newChatIcon>
+  <div class="size-9">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>Chat-add SVG Icon</title><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path fill="currentColor" d="M12 8v3m0 0v3m0-3h3m-3 0H9"/><path stroke-linejoin="round" d="M14 19c3.771 0 5.657 0 6.828-1.172C22 16.657 22 14.771 22 11c0-3.771 0-5.657-1.172-6.828C19.657 3 17.771 3 14 3h-4C6.229 3 4.343 3 3.172 4.172C2 5.343 2 7.229 2 11c0 3.771 0 5.657 1.172 6.828c.653.654 1.528.943 2.828 1.07"/><path d="M14 19c-1.236 0-2.598.5-3.841 1.145c-1.998 1.037-2.997 1.556-3.489 1.225c-.492-.33-.399-1.355-.212-3.404L6.5 17.5"/></g></svg>
+  </div>
+</ng-template>
+<!-- New Chat Icon 2 -->
+<ng-template #newChatIcon2>
+  <div class="size-6">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>Chat-add SVG Icon</title><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path fill="currentColor" d="M12 8v3m0 0v3m0-3h3m-3 0H9"/><path stroke-linejoin="round" d="M14 19c3.771 0 5.657 0 6.828-1.172C22 16.657 22 14.771 22 11c0-3.771 0-5.657-1.172-6.828C19.657 3 17.771 3 14 3h-4C6.229 3 4.343 3 3.172 4.172C2 5.343 2 7.229 2 11c0 3.771 0 5.657 1.172 6.828c.653.654 1.528.943 2.828 1.07"/><path d="M14 19c-1.236 0-2.598.5-3.841 1.145c-1.998 1.037-2.997 1.556-3.489 1.225c-.492-.33-.399-1.355-.212-3.404L6.5 17.5"/></g></svg>
+  </div>
+</ng-template>
+
+<!-- Create New Chat -->
+<app-new-chat
+[(newChatModal)]="newChatModal"
+>
+</app-new-chat>

@@ -1,0 +1,156 @@
+<div class="min-h-[calc(100vh-10.25rem)] flex justify-center items-center m-4">
+  <ZS-card 
+  class="w-full max-w-120"
+  bodyClass="bg-white dark:bg-slate-900"
+  cardStyle='primary'
+  >
+    <form (submit)="submit($event)" class="p-6 flex flex-col gap-4 text-slate-800 dark:text-slate-300" novalidate>
+        <h2 class="text-2xl text-center font-bold mb-4 text-blue-800 dark:text-blue-300">Login</h2>
+      
+        <ZS-input
+          [label]="'Username'"
+          [placeholder]="'Enter your username'"
+          [iconTpl]="userIcon"
+  
+          (changedEv)="changeValues($event, 'username')"
+          [(touched)]="form.fields.username().touched"
+  
+          [type]="'text'"
+          [required]="true"
+          [inputStyle]="'primary'"
+        ></ZS-input>
+      
+        <ZS-input
+          [label]="'Password'"
+          [placeholder]="'Enter password'"
+          [iconTpl]="lockIcon"
+  
+          (changedEv)="changeValues($event, 'password')"
+          [(touched)]="form.fields.password().touched"
+  
+          [type]="'password'"
+          [required]="true"
+          [inputStyle]="'primary'"
+        ></ZS-input>
+      
+        <div class="mt-4 flex flex-col gap-2">
+          <ZS-button
+          size="lg"
+          btnStyle="primary"
+          [type]="'submit'"
+          [disabled]="authApi.googleLoading() || authApi.loginLoading()"
+          [iconTpl]="authApi.loginLoading() ? loaderIcon : undefined"
+          >
+            Login
+          </ZS-button>
+  
+          <!-- or -->
+          <app-or></app-or>
+
+          <ZS-button
+          size="lg"
+          btnStyle="secondary"
+          variant="outline"
+          (clickedEv)="google()"
+          [type]="'button'"
+          [disabled]="authApi.googleLoading() || authApi.loginLoading()"
+          [iconTpl]="authApi.googleLoading() ? loaderIcon : googleIcon"
+          >
+            Login With Google
+          </ZS-button>
+        </div>
+    
+        <div class="flex flex-col gap-1.5  text-sm">
+          <div class="flex flex-wrap justify-center items-center gap-1.5">
+              <span class="text-gray-700 dark:text-gray-300">
+                Forgot
+              </span>
+              <button
+              type="button"
+              class="text-sky-600 hover:text-sky-500 dark:text-sky-400"
+              (click)="passwordResetModal.set(true)"
+              >
+              Passowrd?
+              </button>
+          </div>
+  
+          <div class="flex flex-wrap justify-center items-center gap-1.5">
+              <span class="text-gray-700 dark:text-gray-300">
+                Don’t have an account?
+              </span>
+              <button
+              type="button"
+              class="text-violet-600 hover:text-violet-500 dark:text-violet-400"
+              (click)="router.navigate(['/signup'])"
+              >
+              Sign Up
+              </button>
+          </div>
+        </div>
+  
+    </form>
+  </ZS-card>
+</div>
+
+<!-- Forgot Password Modal -->
+<ZS-modal
+title="Forgot Password"
+modalStyle="info"
+[showFooter]="true"
+position="center"
+(cancelEv)="passwordResetModal.set(false)"
+(confirmEv)="confirmPasswordReset()"
+
+[confirmConfig]="{
+  btnStyle: 'info',
+  iconTpl: authApi.passwordResetLoading() ? loaderIconTpl : null,
+  disabled: authApi.passwordResetLoading() ? true : false
+}"
+[cancelConfig]="{
+  disabled: authApi.passwordResetLoading() ? true : false
+}"
+[showCancelIcon]="authApi.passwordResetLoading() ? false : true"
+
+[(open)]="passwordResetModal"
+[closeOnOverlay]="authApi.passwordResetLoading() ? false : true"
+>
+  <p class="text-sm dark:text-gray-100 mb-2">
+    Enter your 
+    <span class="font-semibold">email address</span> 
+    and we’ll send you a link to 
+    <span class="font-semibold">reset your password.</span>
+  </p>
+  <ZS-input
+  inputStyle="info"
+  type="email"
+  [placeholder]="'Enter your email'"
+  [iconTpl]="envelopeIcon"
+  [required]="true"
+
+  [(touched)]="passwordResetForm.fields.email().touched"
+  (changedEv)="chanegEmailValue($event)"
+  >
+  </ZS-input>
+</ZS-modal>
+
+<!-- Loader Icon -->
+<ng-template #loaderIcon>
+  <i class="fa fa-spinner fa-spin"></i>
+</ng-template>
+<!-- Google Icon -->
+<ng-template #googleIcon>
+  <i class="fa-brands fa-google"></i>
+</ng-template>
+
+<!-- User Icon -->
+<ng-template #userIcon>
+  <i class="fas fa-user mr-1.5"></i>
+</ng-template>
+<!-- Lock Icon -->
+<ng-template #lockIcon>
+  <i class="fas fa-lock mr-1.5"></i>
+</ng-template>
+<!-- Envelope Icon -->
+<ng-template #envelopeIcon>
+  <i class="fas fa-envelope mr-1.5"></i>
+</ng-template>

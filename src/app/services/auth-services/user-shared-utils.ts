@@ -1,9 +1,7 @@
-import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
-import { AlertService, ExtractorService } from '@ziadshalaby/ngx-zs-component';
-import { ConfigService } from '../config-service';
+import { ConfigService } from '../config-service/config-service';
 import { Router } from '@angular/router';
-import { SharedUtils } from '../shared-utils';
+import { SharedUtils } from '../shared-service/shared-utils';
 
 export interface UserDataType {
   date_joined : string;

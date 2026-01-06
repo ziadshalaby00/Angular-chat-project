@@ -1,7 +1,7 @@
 import { inject, Injectable, Injector } from '@angular/core';
 import { UserSharedUtils } from './user-shared-utils';
 import { Token } from './token';
-import { ChatsService } from '../chats-service';
+import { ChatsService } from '../chats-service/chats-service';
 
 @Injectable({
   providedIn: 'root',

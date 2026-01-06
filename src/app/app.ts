@@ -1,10 +1,11 @@
 import { AuthApi } from './services/auth-services/auth-api';
 import { Component, effect, inject, signal } from '@angular/core';
 import { ActivatedRoute, NavigationStart, Router, RouterOutlet } from '@angular/router';
-import { NavbarComp } from './navbar/navbar';
-import { Alert, Footer, Spinner, ThemeToggle } from '@ziadshalaby/ngx-zs-component'
-import { InitAppService } from './services/init-app-service';
+import { NavbarComp } from './other-components/navbar/navbar';
+import { Alert, Footer, ThemeToggle } from '@ziadshalaby/ngx-zs-component'
+import { InitAppService } from './services/init-app-service/init-app-service';
 import { filter, take } from 'rxjs';
+import { SharedUtils } from './services/shared-service/shared-utils';
 
 @Component({
   selector: 'app-root',
@@ -35,16 +36,16 @@ export class App {
       take(1)
     )
     .subscribe((event: NavigationStart) => {
-      this.router.navigate(['/init-app']);
-      const reRouting = event.url === '/init-app' ? '/home' : event.url
+      this.router.navigate(['/init-page']);
+      const reRouting = event.url === '/init-page' ? '/home' : event.url
       console.log('Actual URL:', event.url);
       console.log('Re routing URL:', reRouting);
       this.initAppService.initApp(reRouting);
     });
 
     effect(() => {
-      console.log('userData: ', this.authApi.userData())
-      console.log('isLoggedin: ',this.authApi.isLoggedin())
+      console.log('userData: ', this.authApi.userData());
+      console.log('isLoggedin: ',this.authApi.isLoggedin());
     })
   }
 }
