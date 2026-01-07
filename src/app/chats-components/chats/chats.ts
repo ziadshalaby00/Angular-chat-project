@@ -83,5 +83,6 @@ export class Chats {
     });
   });
 
-  readonly newChatModal = model<boolean>(true);
+  readonly newChatModal = model<boolean>(false);
+  readonly openSide = model<boolean>(true);
 }

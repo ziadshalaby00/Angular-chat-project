@@ -10,11 +10,17 @@ import { Button, Card, Input, Modal, FormStyle } from '@ziadshalaby/ngx-zs-compo
 })
 export class NewChat {
   readonly chatsService: ChatsService = inject(ChatsService);
-  readonly newChatModal = model<boolean>(true);
-  readonly usernameValue = model<string>('ahmed123');
+  readonly newChatModal = model<boolean>(false);
+  readonly usernameValue = model<string>('');
 
   findUser() {
     this.chatsService.userFetchedLoading.set(true)
     this.chatsService.getUserByUserName(this.usernameValue())
+  }
+
+  addChat() {
+    this.chatsService.chatAddedLoading.set(true);
+    const id = this.chatsService.userFetched()?.id;
+    this.chatsService.addChat(id, () => this.newChatModal.set(false));
   }
 }

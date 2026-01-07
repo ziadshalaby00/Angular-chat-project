@@ -4,20 +4,21 @@
 [showHeader]="true"
 
 [(open)]="newChatModal"
-(cancelEv)="newChatModal.set(false)"
+[closeOnOverlay]="!(chatsService.userFetchedLoading() || chatsService.chatAddedLoading())"
+[showCancelIcon]="!(chatsService.userFetchedLoading() || chatsService.chatAddedLoading())"
 
 [title]="'New Chat'"
 [modalStyle]="'violet'"
 >
-  <div class="flex flex-col gap-4">
-    <div class="flex flex-col gap-1">
-      <label for="search-for-new-chat-id" class="font-semibold text-sm leading-none"
+  <div class="flex flex-col gap-2">
+    <div class="flex flex-col gap-0.5">
+      <label for="find-user-id" class="font-semibold text-sm leading-none"
       >Add a user by username</label>
-      <label for="search-for-new-chat-id" class="text-slate-500 dark:text-slate-400 text-xs leading-none mb-0.5"
+      <label for="find-user-id" class="text-slate-500 dark:text-slate-400 text-xs leading-none"
       >Usernames are case-sensitive</label>
-      <div class="flex gap-2">
+      <div class="flex gap-2 items-stretch mt-0.75">
         <ZS-input
-        [Id]="'search-for-new-chat-id'"
+        [Id]="'find-user-id'"
         class="w-full"
         placeholder="username..."
         [inputStyle]="'violet'"
@@ -27,7 +28,7 @@
 
         <ZS-button
         [btnStyle]="'violet'"
-        [disabled]="chatsService.userFetchedLoading()"
+        [disabled]="chatsService.userFetchedLoading() || chatsService.chatAddedLoading()"
         [iconTpl]="chatsService.userFetchedLoading() ? loaderIcon : undefined"
         [size]="'md'"
         (clickedEv)="findUser()"
@@ -88,8 +89,11 @@
               {{ chatsService.userFetched()?.notice }}
             </span>
           }@else {
-            <!-- add Button -->
+            <!-- Add Button -->
             <ZS-button
+            [disabled]="chatsService.chatAddedLoading()"
+            [iconTpl]="chatsService.chatAddedLoading() ? loaderIcon : undefined"
+            (clickedEv)="addChat()"
             [size]="'md'"
             btnStyle="teal"
             [iconTpl]="addIcon"

@@ -37,6 +37,7 @@ export class ChatsService {
 
   public readonly userFetched = signal<UserFetchedType | null>(null);
   public readonly userFetchedLoading = signal<boolean>(false);
+  public readonly chatAddedLoading = signal<boolean>(false);
 
   private readonly chatsURL = `${this.config.apiUrl}/api/chat/chats/`;
   private readonly getUserByUserNameURL = `${this.config.apiUrl}/api/chat/get-user-by-username/`;
@@ -55,11 +56,7 @@ export class ChatsService {
     })
   }
 
-  public async getUserByUserName(username: string) {
-    // await new Promise((r, j) => setTimeout(() => {
-    //   return r(true)
-    // }, 3000))
-
+  public getUserByUserName(username: string) {
     this.shared.http.get(
       `${this.getUserByUserNameURL}?username=${username}`,
       this.shared.CredAndCsrf()
@@ -98,7 +95,7 @@ export class ChatsService {
 
       if(!data) return;
       if(data.type === 'chat_created') {
-        this.chats.update((prev) => [...prev, data.chat])
+        this.chats.update((prev) => [data.chat, ...prev])
       }
     };
 
@@ -133,5 +130,27 @@ export class ChatsService {
 
   public hasChats(): boolean {
     return this.chats().length > 0;
+  }
+
+  public async addChat(user: number | undefined, sf?: () => void) {
+    if (!user) return;
+
+    // await new Promise((r, j) => setTimeout(() => {
+    //   return r(true)
+    // }, 3000))
+
+    this.shared.http.post(this.chatsURL, { user }, this.shared.CredAndCsrf()).subscribe({
+      next: (res: any) => {
+        console.log(res);
+        this.chatAddedLoading.set(false);
+        this.userFetched.set(null);
+        if(sf) sf();
+      },
+      error: (err) => {
+        console.log(err);
+        this.chatAddedLoading.set(false);
+        this.shared.setErrors(err.error);
+      },
+    })
   }
 }

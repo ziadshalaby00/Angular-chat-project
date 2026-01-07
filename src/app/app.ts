@@ -5,7 +5,7 @@ import { NavbarComp } from './other-components/navbar/navbar';
 import { Alert, Footer, ThemeToggle } from '@ziadshalaby/ngx-zs-component'
 import { InitAppService } from './services/init-app-service/init-app-service';
 import { filter, take } from 'rxjs';
-import { SharedUtils } from './services/shared-service/shared-utils';
+import { ThemeService } from './services/theme-service/theme-service';
 
 @Component({
   selector: 'app-root',
@@ -27,6 +27,7 @@ export class App {
   readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 
   private readonly authApi: AuthApi = inject(AuthApi);
+  public readonly themeService: ThemeService = inject(ThemeService);
   private readonly initAppService: InitAppService = inject(InitAppService);
 
   constructor() {

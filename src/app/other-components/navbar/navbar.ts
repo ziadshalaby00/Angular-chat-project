@@ -3,10 +3,12 @@ import { Router, RouterModule } from '@angular/router';
 import { AlertService, AuthButtonsType, Navbar, NavbarItemExport, NavItemsType, SiteNameConfigType, UserItemsType, UserProfile } from '@ziadshalaby/ngx-zs-component';
 import { AuthApi } from '../../services/auth-services/auth-api';
 import { SharedUtils } from '../../services/shared-service/shared-utils';
+import { ThemeService } from '../../services/theme-service/theme-service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-navbar',
-  imports: [Navbar, RouterModule],
+  imports: [Navbar, RouterModule, CommonModule],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })
@@ -75,6 +77,16 @@ export class NavbarComp {
 
   readonly profileIconTpl = viewChild<TemplateRef<any>>('profileIcon');
   readonly logoutIconTpl = viewChild<TemplateRef<any>>('logoutIcon');
+
+  readonly themeIconTPl = viewChild<TemplateRef<any>>('themeIcon');
+  readonly lightIconTPl = viewChild<TemplateRef<any>>('lightIcon');
+  readonly darkIconTPl = viewChild<TemplateRef<any>>('darkIcon');
+  readonly quickThemeIconTPl = viewChild<TemplateRef<any>>('quickThemeIcon');
+
+  public readonly themeService: ThemeService = inject(ThemeService);
+
+  private readonly themeSharedClasses = 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100'
+
   readonly userMenuItems = signal<UserItemsType>({
     items: [
       { 
@@ -85,6 +97,35 @@ export class NavbarComp {
         action: () => { 
           this.router.navigate(['/profile', this.authApi.userData()?.id]);
         },
+      },
+      { 
+        id: 'theme',
+        label: 'Theme',
+        iconTpl: this.themeIconTPl,
+        children: [
+          { 
+            id: 'light',
+            label: 'Light',
+            iconTpl: this.lightIconTPl,
+            action: () => this.themeService.setTheme('light'),
+            colorClass: `select-none group ${this.themeSharedClasses}`
+          },
+          { 
+            id: 'dark',
+            label: 'Dark',
+            iconTpl: this.darkIconTPl,
+            action: () => this.themeService.setTheme('dark'),
+            colorClass: `select-none  ${this.themeSharedClasses}`
+          },
+          { 
+            id: 'quick-theme-control',
+            label: 'Quick Theme Control',
+            action:() => this.themeService.toggleQuickTheme(),
+            iconTpl: this.quickThemeIconTPl,
+            colorClass: `text-sm! select-none  ${this.themeSharedClasses}`
+          },
+        ],
+        useDefaultColorClass: 'text',
       },
       {
         id: 'logout',

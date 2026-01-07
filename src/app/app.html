@@ -5,7 +5,12 @@
 </div>
 
 @if(!isMobileMenuOpen()) {
-  <ZS-theme-toggle bodyClass="bg-slate-100 dark:bg-slate-800"></ZS-theme-toggle>
+  <ZS-theme-toggle 
+  [showDefaultUI]="themeService.quickTheme()"
+  [setManualTheme]="themeService.theme()" 
+  (themeChangeEv)="themeService.setTheme($event)"
+  bodyClass="bg-slate-100 dark:bg-slate-800">
+  </ZS-theme-toggle>
 }
 
 <ZS-alert
