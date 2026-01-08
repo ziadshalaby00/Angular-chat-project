@@ -1,7 +1,7 @@
-import { Component, computed, effect, inject, model, signal } from '@angular/core';
+import { Component, computed, effect, inject, model, signal, TemplateRef, viewChild } from '@angular/core';
 import { AuthApi } from '../../services/auth-services/auth-api';
 import { Router } from '@angular/router';
-import { Sidebar, Input, Card, AlertService, Button, Spinner } from '@ziadshalaby/ngx-zs-component';
+import { Sidebar, Input, Card, AlertService, Button, Spinner, NavItem, NavbarItem } from '@ziadshalaby/ngx-zs-component';
 import { Chat } from "../../chat-components/chat/chat";
 import { ChatsService, ChatsType } from '../../services/chats-service/chats-service';
 import { CommonModule } from '@angular/common';
@@ -10,7 +10,7 @@ import { NewChat } from '../new-chat/new-chat';
 
 @Component({
   selector: 'app-chats',
-  imports: [Sidebar, Input, Card, Chat, Button, Spinner, CommonModule, NewChat],
+  imports: [Sidebar, Input, Card, Chat, Button, Spinner, CommonModule, NewChat, NavItem],
   templateUrl: './chats.html',
   styleUrl: './chats.css',
 })
@@ -85,4 +85,26 @@ export class Chats {
 
   readonly newChatModal = model<boolean>(false);
   readonly openSide = model<boolean>(true);
+
+  readonly chatSettingsIconTpl = viewChild<TemplateRef<any>>('chatSettingsIcon')
+  readonly chatSettings = signal<NavbarItem>({
+    id: 'chat-settings',
+    label: '',
+    iconTpl: this.chatSettingsIconTpl,
+    children: [
+      {
+        id: 'view-profile',
+        label: 'View Profile',
+      },
+      {
+        id: 'mark-as-read',
+        label: 'Mark As Read',
+      },
+      {
+        id: 'delete-chat',
+        label: 'Delete Chat',
+      },
+    ],
+    childrenOpenWindow: true
+  })
 }
