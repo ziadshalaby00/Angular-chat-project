@@ -18,7 +18,7 @@
 >
   <div class="flex flex-col gap-4">
     <ZS-file
-    [disabled]="authApi.updateProfileLoading()"
+    [isReadonly]="authApi.updateProfileLoading()"
     [(touched)]="EditImgForm.fields.user_image().touched"
 
     [required]="true"
@@ -50,10 +50,6 @@
   disabled: authApi.remImgProfileLoading(),
   iconTpl: authApi.remImgProfileLoading() ? loaderIconTpl : null
 }"
-[cancelConfig]="{
-  disabled: authApi.remImgProfileLoading(),
-}"
-[closeOnOverlay]="!authApi.remImgProfileLoading()"
 [modalStyle]="'danger'"
 
 (cancelEv)="confRemUserImg.set(false)"

@@ -133,12 +133,12 @@ export class ChatsService {
     return this.chats().length > 0;
   }
 
-  public async addChat(user: number | undefined, sf?: () => void) {
+  public addChat(user: number | undefined, sf?: () => void) {
     if (!user) return;
 
     // await new Promise((r, j) => setTimeout(() => {
     //   return r(true)
-    // }, 3000))
+    // }, 10000))
 
     this.shared.http.post(this.chatsURL, { user }, this.shared.CredAndCsrf()).subscribe({
       next: (res: any) => {

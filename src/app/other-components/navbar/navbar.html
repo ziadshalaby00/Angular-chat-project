@@ -61,8 +61,12 @@
 <!-- Light Icon -->
 <ng-template #lightIcon>
   <div class="flex items-center justify-center gap-2.5 mr-1.5">
-    <i class="fa-regular text-lg"
-    [ngClass]="[themeService.theme() === 'light' ? 'fa-circle-check' : 'fa-circle']"
+    <i class="text-lg"
+    [ngClass]="[
+      themeService.theme() === 'light' 
+      ? 'fa-solid fa-circle-check' 
+      : 'fa-regular fa-circle'
+    ]"
     ></i>
     <i class="fas fa-sun text-yellow-500 
     group-hover:text-yellow-600 
@@ -73,16 +77,20 @@
 <ng-template #darkIcon>
   <div class="flex items-center justify-center gap-2.5 mr-1.5">
     <i class="fa-regular text-lg"
-    [ngClass]="[themeService.theme() === 'dark' ? 'fa-circle-check' : 'fa-circle']"
+    [ngClass]="[
+      themeService.theme() === 'dark' 
+      ? 'fa-solid fa-circle-check' 
+      : 'fa-regular fa-circle'
+    ]"
     ></i>
     <i class="fas fa-moon ml-0.5"></i>
   </div>
 </ng-template>
 <!-- Quick Theme -->
 <ng-template #quickThemeIcon>
-  <div class="flex items-center justify-center text-lg mr-2.5">
+  <div class="flex items-center justify-center text-xl mr-2">
     <i
-    [ngClass]="[themeService.quickTheme() ? 'fa-solid fa-square-check' : 'fa-regular fa-square']"
+    [ngClass]="[themeService.quickTheme() ? 'fa-regular fa-square-check' : 'fa-regular fa-square']"
     ></i>
   </div>
 </ng-template>

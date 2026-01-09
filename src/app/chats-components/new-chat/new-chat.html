@@ -4,8 +4,8 @@
 [showHeader]="true"
 
 [(open)]="newChatModal"
-[closeOnOverlay]="!(chatsService.userFetchedLoading() || chatsService.chatAddedLoading())"
-[showCancelIcon]="!(chatsService.userFetchedLoading() || chatsService.chatAddedLoading())"
+[closeOnOverlay]="!chatsService.userFetchedLoading()"
+[showCancelIcon]="!chatsService.userFetchedLoading()"
 
 [title]="'New Chat'"
 [modalStyle]="'violet'"

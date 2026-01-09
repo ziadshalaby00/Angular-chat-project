@@ -63,7 +63,10 @@ export class ProfileChangePassword {
       this.authApi.updateProfileLoading.set(true);
       this.authApi.updateProfile(
         values,
-          () => this.handleCloseSuccess()?.(this.openChangePassModal),
+          () => {
+            this.handleCloseSuccess()?.(this.openChangePassModal);
+            this.authApi.logout();
+          },
           this.handleCloseFail()
       );
     });
