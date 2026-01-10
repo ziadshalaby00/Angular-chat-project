@@ -103,8 +103,20 @@ export class Chats {
       {
         id: 'delete-chat',
         label: 'Delete Chat',
+        colorClass: 'text-red-600 hover:text-red-800 dark:text-red-700 dark:hover:text-red-500'
       },
     ],
-    childrenOpenWindow: true
+    childrenOpenWindow: true,
+    childrenWindowDir: 'left',
+    showChevronDownIcon: false,
+    closeOnPointerOutside: true
   })
+
+  readonly isSettingsHover = signal(false);
+  itemClicked(event: NavbarItem, user_id: number) {
+    console.log(event);
+    console.log(user_id);
+    if(event.id === 'view-profile') 
+      this.router.navigate([`/profile/${user_id}`]);
+  }
 }
