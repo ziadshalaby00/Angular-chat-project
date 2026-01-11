@@ -1,10 +1,10 @@
 import { ChatsService } from './../../services/chats-service/chats-service';
 import { Component, inject, model } from '@angular/core';
-import { Button, Card, Input, Modal, FormStyle } from '@ziadshalaby/ngx-zs-component';
+import { Button, Card, Input, Modal, FormStyle, Spinner } from '@ziadshalaby/ngx-zs-component';
 
 @Component({
   selector: 'app-new-chat',
-  imports: [Modal, Input, Button, Card],
+  imports: [Modal, Input, Button, Card, Spinner],
   templateUrl: './new-chat.html',
   styleUrl: './new-chat.css',
 })

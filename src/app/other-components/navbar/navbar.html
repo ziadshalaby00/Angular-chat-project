@@ -88,9 +88,13 @@
 </ng-template>
 <!-- Quick Theme -->
 <ng-template #quickThemeIcon>
-  <div class="flex items-center justify-center text-xl mr-2">
+  <div class="flex items-center justify-center text-2xl mr-2">
     <i
-    [ngClass]="[themeService.quickTheme() ? 'fa-regular fa-square-check' : 'fa-regular fa-square']"
+    [ngClass]="[
+      themeService.quickTheme() 
+      ? 'fa-solid fa-toggle-on' 
+      : 'fa-solid fa-toggle-off'
+    ]"
     ></i>
   </div>
 </ng-template>

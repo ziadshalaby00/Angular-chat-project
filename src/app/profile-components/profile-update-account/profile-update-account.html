@@ -1,87 +1,112 @@
+<!-- Edit Account Modal -->
 <ZS-modal
-[title]="'Edit Account'"
-[(open)]="openUpdateAccModal"
-(cancelEv)="openUpdateAccModal.set(false)"
-(confirmEv)="updateAccProfile()"
-[confirmConfig]="{
-  text: 'Edit',
-  btnStyle: 'primary',
-  disabled: authApi.updateProfileLoading(),
-  iconTpl: authApi.updateProfileLoading() ? loaderIconTpl : null
-}"
-[cancelConfig]="{
-  disabled: authApi.updateProfileLoading(),
-}"
-[showCancelIcon]="!authApi.updateProfileLoading()"
-[closeOnOverlay]="!authApi.updateProfileLoading()"
-[modalStyle]="'primary'"
+  [title]="'Edit Account Information'"
+  [(open)]="openUpdateAccModal"
+  (cancelEv)="openUpdateAccModal.set(false)"
+  (confirmEv)="updateAccProfile()"
+  [confirmConfig]="{
+    text: 'Save Changes',
+    btnStyle: 'primary',
+    disabled: authApi.updateProfileLoading(),
+    iconTpl: authApi.updateProfileLoading() ? loaderIconTpl : null
+  }"
+  [cancelConfig]="{
+    disabled: authApi.updateProfileLoading()
+  }"
+  [showCancelIcon]="!authApi.updateProfileLoading()"
+  [closeOnOverlay]="!authApi.updateProfileLoading()"
+  [modalStyle]="'primary'"
 >
-  <div class="flex flex-col gap-4 text-gray-800 dark:text-gray-300">
-    <ZS-input
-    [label]="'Full Name'"
-    [iconTpl]="userIcon"
-    [type]="'text'"
-    [inputStyle]="'secondary'"
-
-    [required]="true"
-    [(value)]="updateAccForm.fields.fullname().value"
-    (changedEv)="changeUpdateAccValues($event, 'fullname')"
-    >
-    </ZS-input>
+  <div class="flex flex-col gap-5 text-gray-800 dark:text-gray-300">
     
+    <!-- Full Name Field -->
     <ZS-input
-    [label]="'Username'"
-    [iconTpl]="userIcon"
-    [type]="'text'"
-    [inputStyle]="'secondary'"
-
-    [required]="true"
-    [(value)]="updateAccForm.fields.username().value"
-    (changedEv)="changeUpdateAccValues($event, 'username')"
+      [label]="'Full Name'"
+      [placeholder]="'Enter your full name'"
+      [iconTpl]="userIcon"
+      [type]="'text'"
+      [inputStyle]="'secondary'"
+      [required]="true"
+      [(value)]="updateAccForm.fields.fullname().value"
+      (changedEv)="changeUpdateAccValues($event, 'fullname')"
+      class="w-full"
     >
     </ZS-input>
-    
-    <ZS-input
-    [label]="'Email'"
-    [hint]="'Enter a unique email.'"
-    [iconTpl]="envelopeIcon"
-    [type]="'email'"
-    [inputStyle]="'secondary'"
 
-    [required]="true"
-    [(value)]="updateAccForm.fields.email().value"
-    (changedEv)="changeUpdateAccValues($event, 'email')"
+    <!-- Username Field -->
+    <ZS-input
+      [label]="'Username'"
+      [placeholder]="'Choose a username'"
+      [iconTpl]="userIcon"
+      [type]="'text'"
+      [inputStyle]="'secondary'"
+      [required]="true"
+      [(value)]="updateAccForm.fields.username().value"
+      (changedEv)="changeUpdateAccValues($event, 'username')"
+      class="w-full"
     >
     </ZS-input>
-    
-    <ZS-input
-    [label]="'Bio'"
-    [hint]="'Write a short bio about yourself'"
-    [iconTpl]="messageIcon"
-    [type]="'text'"
-    [inputStyle]="'secondary'"
 
-    [(value)]="updateAccForm.fields.bio().value"
-    (changedEv)="changeUpdateAccValues($event, 'bio')"
+    <!-- Email Field -->
+    <ZS-input
+      [label]="'Email Address'"
+      [placeholder]="'your.email@example.com'"
+      [hint]="'Enter a unique email address'"
+      [iconTpl]="envelopeIcon"
+      [type]="'email'"
+      [inputStyle]="'secondary'"
+      [required]="true"
+      [(value)]="updateAccForm.fields.email().value"
+      (changedEv)="changeUpdateAccValues($event, 'email')"
+      class="w-full"
     >
     </ZS-input>
+
+    <!-- Bio Field -->
+    <div class="flex flex-col gap-2">
+      <ZS-input
+        [label]="'Bio'"
+        [placeholder]="'Tell us a bit about yourself...'"
+        [hint]="'Write a short bio about yourself (optional)'"
+        [iconTpl]="messageIcon"
+        [type]="'text'"
+        [inputStyle]="'secondary'"
+        [(value)]="updateAccForm.fields.bio().value"
+        (changedEv)="changeUpdateAccValues($event, 'bio')"
+        class="w-full"
+      >
+      </ZS-input>
+      <div class="flex justify-between items-center">
+        <p class="text-xs text-gray-500 dark:text-gray-400">
+          Maximum 450 characters
+        </p>
+        <span class="text-xs text-gray-500 dark:text-gray-400">
+          {{ updateAccForm.fields.bio().value?.length || 0 }}/450
+        </span>
+      </div>
+    </div>
   </div>
 </ZS-modal>
 
-<!-- Loader Icon -->
-<ng-template #loaderIcon>
-  <i class="fa fa-spinner fa-spin"></i>
-</ng-template>
+<!-- Icons Templates -->
+<ng-container>
+  <!-- Loader Icon Template -->
+  <ng-template #loaderIcon>
+    <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+  </ng-template>
 
-<!-- User Icon -->
-<ng-template #userIcon>
-  <i class="fas fa-user mr-1.5"></i>
-</ng-template>
-<!-- Envelope Icon -->
-<ng-template #envelopeIcon>
-  <i class="fas fa-envelope mr-1.5"></i>
-</ng-template>
-<!-- Message Icon -->
-<ng-template #messageIcon>
-  <i class="fa-solid fa-message mr-1.5"></i>
-</ng-template>
+  <!-- User Icon Template -->
+  <ng-template #userIcon>
+    <i class="fas fa-user mr-2" aria-hidden="true"></i>
+  </ng-template>
+
+  <!-- Envelope Icon Template -->
+  <ng-template #envelopeIcon>
+    <i class="fas fa-envelope mr-2" aria-hidden="true"></i>
+  </ng-template>
+
+  <!-- Message Icon Template -->
+  <ng-template #messageIcon>
+    <i class="fa-solid fa-message mr-2" aria-hidden="true"></i>
+  </ng-template>
+</ng-container>

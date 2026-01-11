@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, model, signal, untracked, WritableSignal } from '@angular/core';
+import { Component, computed, effect, HostListener, inject, model, signal, untracked, WritableSignal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Button, Spinner } from '@ziadshalaby/ngx-zs-component';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -117,4 +117,19 @@ export class Profile {
   readonly openEditImgModal = model<boolean>(false);
   readonly openChangePassModal = model<boolean>(false);
   readonly openDelUserAccModal = model<boolean>(false);
+
+  readonly isImageZoomOpen = signal(false);
+
+  openImageZoom() {
+    this.isImageZoomOpen.set(true);
+  }
+
+  closeImageZoom() {
+    this.isImageZoomOpen.set(false);
+  }
+
+  @HostListener('document:keydown.escape')
+  onEsc() {
+    this.closeImageZoom();
+  }
 }

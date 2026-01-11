@@ -1,68 +1,91 @@
+<!-- Edit Image Modal -->
 <ZS-modal
-[title]="'Edit Image'"
-[(open)]="openEditImgModal"
-(cancelEv)="openEditImgModal.set(false)"
-(confirmEv)="editImgProfile()"
-[confirmConfig]="{
-  text: 'Edit',
-  btnStyle: 'primary',
-  disabled: authApi.updateProfileLoading(),
-  iconTpl: authApi.updateProfileLoading() ? loaderIconTpl : null
-}"
-[cancelConfig]="{
-  disabled: authApi.updateProfileLoading(),
-}"
-[showCancelIcon]="!authApi.updateProfileLoading()"
-[closeOnOverlay]="!authApi.updateProfileLoading()"
-[modalStyle]="'primary'"
+  [title]="'Edit Profile Image'"
+  [(open)]="openEditImgModal"
+  (cancelEv)="openEditImgModal.set(false)"
+  (confirmEv)="editImgProfile()"
+  [confirmConfig]="{
+    text: 'Save Changes',
+    btnStyle: 'primary',
+    disabled: authApi.updateProfileLoading(),
+    iconTpl: authApi.updateProfileLoading() ? loaderIconTpl : null
+  }"
+  [cancelConfig]="{
+    disabled: authApi.updateProfileLoading()
+  }"
+  [showCancelIcon]="!authApi.updateProfileLoading()"
+  [closeOnOverlay]="!authApi.updateProfileLoading()"
+  [modalStyle]="'primary'"
 >
-  <div class="flex flex-col gap-4">
+  <div class="flex flex-col gap-2">
     <ZS-file
-    [isReadonly]="authApi.updateProfileLoading()"
-    [(touched)]="EditImgForm.fields.user_image().touched"
-
-    [required]="true"
-    [inputStyle]="'primary'"
-    (changeEv)="changeEditImgcValues($event, 'user_image')"
-
-    [(files)]="filesType"
+      label="Upload New Image"
+      [isReadonly]="authApi.updateProfileLoading()"
+      [(touched)]="EditImgForm.fields.user_image().touched"
+      [required]="true"
+      [inputStyle]="'primary'"
+      (changeEv)="changeEditImgValues($event, 'user_image')"
+      [(files)]="filesType"
+      class="w-full"
     >
     </ZS-file>
 
-    <!-- or -->
+    <!-- Divider -->
     <app-or></app-or>
 
+    <!-- Remove Picture Button -->
     <ZS-button
-    [disabled]="authApi.updateProfileLoading()"
-    btnStyle="danger"
-    (clickedEv)="confRemUserImg.set(true)"
+      [disabled]="authApi.updateProfileLoading()"
+      btnStyle="danger"
+      variant="outline"
+      (clickedEv)="confRemUserImg.set(true)"
+      class="w-full"
     >
-      Remove Picture
+      <i class="fas fa-trash-alt" aria-hidden="true"></i>
+      Remove Current Picture
     </ZS-button>
   </div>
 </ZS-modal>
 
+<!-- Confirm Removal Modal -->
 <ZS-modal
-[(open)]="confRemUserImg"
-[confirmConfig]="{
-  text: 'Remove',
-  btnStyle: 'danger',
-  disabled: authApi.remImgProfileLoading(),
-  iconTpl: authApi.remImgProfileLoading() ? loaderIconTpl : null
-}"
-[modalStyle]="'danger'"
-
-(cancelEv)="confRemUserImg.set(false)"
-(confirmEv)="removeUserImg()"
-
-[showHeader]="false"
+  [(open)]="confRemUserImg"
+  [confirmConfig]="{
+    text: 'Remove Picture',
+    btnStyle: 'danger',
+    disabled: authApi.remImgProfileLoading(),
+    iconTpl: authApi.remImgProfileLoading() ? loaderIconTpl : null
+  }"
+  [modalStyle]="'danger'"
+  (cancelEv)="confRemUserImg.set(false)"
+  (confirmEv)="removeUserImg()"
+  [showHeader]="false"
+  [title]="'Remove Profile Picture'"
 >
-  <p>
-    Do you really want to remove your profile picture?
-  </p>
+  <div class="text-center space-y-3">
+    <div class="mx-auto w-12 h-12 flex items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30 mb-2">
+      <i class="fas fa-exclamation-triangle text-red-600 dark:text-red-400 text-xl"></i>
+    </div>
+    
+    <p class="text-lg font-medium text-gray-900 dark:text-gray-100">
+      Remove Profile Picture?
+    </p>
+    
+    <p class="text-gray-600 dark:text-gray-300">
+      Are you sure you want to remove your profile picture? 
+      This action cannot be undone.
+    </p>
+    
+    <p class="text-sm text-gray-500 dark:text-gray-400">
+      Your profile will display the default avatar instead.
+    </p>
+  </div>
 </ZS-modal>
 
-<!-- Loader Icon -->
-<ng-template #loaderIcon>
-  <i class="fa fa-spinner fa-spin"></i>
-</ng-template>
+<!-- Icons Templates -->
+<ng-container>
+  <!-- Loader Icon Template -->
+  <ng-template #loaderIcon>
+    <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+  </ng-template>
+</ng-container>

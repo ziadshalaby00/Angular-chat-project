@@ -37,7 +37,7 @@ export class ProfileEditUserImg {
     user_image: null,
   })
 
-  async changeEditImgcValues(event: ChangeEventType<FileData[]>, key: keyof typeof this.EditImgForm.fields) {
+  async changeEditImgValues(event: ChangeEventType<FileData[]>, key: keyof typeof this.EditImgForm.fields) {
     const fileData = event.value.length ? event.value[0] : null;
     if (!fileData || !fileData?.url) {
       this.EditImgForm.set(key, null, event.valid);

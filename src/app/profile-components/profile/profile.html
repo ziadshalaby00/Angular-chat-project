@@ -8,127 +8,248 @@
       </ZS-spinner>
     </div>
   }@else if (!profileData()) {
-    <div class="flex flex-col items-center gap-2 text-slate-600 dark:text-slate-300">
-      <i class="fa-solid fa-user-xmark text-4xl text-red-500 dark:text-red-700 animate-pulse"></i>
-      <span class="text-3xl">No User Found</span>
+    <div class="flex flex-col items-center gap-3 text-slate-600 dark:text-slate-300">
+      <i class="fa-solid fa-user-xmark text-5xl text-red-500 dark:text-red-400 animate-pulse mb-2"></i>
+      <span class="text-2xl font-medium">No User Found</span>
+      <p class="text-sm opacity-75">User profile could not be loaded</p>
     </div>
   } @else {
     <div
       class="
-        w-95 bg-white/80 dark:bg-slate-900/70 backdrop-blur-xl rounded-3xl 
-        shadow-xl border border-slate-200/50 dark:border-slate-700/40
-        overflow-hidden floating-card transition-all
+        w-full max-w-md bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl rounded-3xl 
+        shadow-2xl shadow-blue-500/10 dark:shadow-blue-900/20 border border-slate-300/30 
+        dark:border-slate-700/50 overflow-hidden transition-all duration-300 hover:shadow-3xl
+        hover:shadow-blue-500/20 dark:hover:shadow-blue-900/30
       "
     >
-      <!-- Header -->
+      <!-- Header with Gradient Background -->
       <div
         class="
-          flex flex-col items-center p-7 bg-linear-to-b from-sky-400/90 to-sky-200/60 
-          dark:from-sky-700/90 dark:to-sky-800/70 text-center
+          relative p-8 bg-linear-to-br from-blue-500 via-sky-500 to-cyan-400 
+          dark:from-blue-800 dark:via-sky-700 dark:to-cyan-600 text-center
+          overflow-hidden
         "
       >
-      <div class="w-full flex items-center justify-center relative">
-        @if(profileData()?.user_image) {
-          <img
-            [src]="profileData()?.user_image"
-            alt="User image"
-            class="
-              size-32 rounded-full shadow-lg ring-4 ring-white/70 
-              dark:ring-slate-800 object-cover
-            "
-          >
-        }@else {
-          <div
-            class="size-32 text-7xl rounded-full bg-blue-500 flex leading-none
-            items-center justify-center text-white font-semibold"
-            aria-hidden="true"
-          >
-            {{ profileData()?.fullname?.charAt(0)?.toUpperCase() }}
+        <!-- Decorative Elements -->
+        <div class="absolute top-0 left-0 w-full h-full overflow-hidden opacity-40 dark:opacity-30">
+          <div class="absolute -top-20 -left-20 w-40 h-40 rounded-full bg-white/30"></div>
+          <div class="absolute top-10 -right-10 w-32 h-32 rounded-full bg-white/20"></div>
+          <div class="absolute -bottom-10 left-1/3 w-24 h-24 rounded-full bg-white/25"></div>
+        </div>
+        
+        <div class="relative z-10">
+          <!-- Profile Image -->
+          <div class="relative inline-block">
+            <div class="relative">
+              @if(profileData()?.user_image) {
+                <div class="relative group cursor-pointer" 
+                (click)="openImageZoom()">
+                  <img
+                    [src]="profileData()?.user_image"
+                    alt="User profile"
+                    class="
+                      size-36 rounded-full shadow-2xl 
+                      ring-4 ring-white/80 
+                      dark:ring-slate-900/80 
+                      object-cover
+                      transition-all duration-300
+                    "
+                  />
+
+                  <!-- أيقونة التكبير -->
+                  <div class="
+                    absolute inset-0 rounded-full bg-black/40 opacity-0 
+                    group-hover:opacity-100 transition-opacity duration-300 
+                    flex items-center justify-center
+                  ">
+                    <i class="fa-solid fa-magnifying-glass-plus text-2xl text-white/90"></i>
+                  </div>
+              </div>
+              }@else {
+                <div
+                  class="
+                    size-36 text-7xl rounded-full bg-linear-to-b from-blue-600 to-sky-500 
+                    flex items-center justify-center text-white font-bold shadow-2xl
+                    ring-4 ring-white/80 dark:ring-slate-900/80
+                    transition-all duration-300 select-none
+                  "
+                  aria-hidden="true"
+                >
+                  {{ profileData()?.fullname?.charAt(0)?.toUpperCase() }}
+                </div>
+              }
+              
+              @if(isProfileForUserLoggedIn()) {
+                <button 
+                  (click)="openEditImgModal.set(true)"
+                  class="
+                    absolute bottom-2 right-2 size-10 rounded-full bg-white/90 
+                    dark:bg-slate-800/90 backdrop-blur-sm shadow-lg
+                    flex items-center justify-center text-slate-700 dark:text-slate-300
+                    border border-slate-300/50 dark:border-slate-600/50
+                    transition-all duration-200 hover:scale-110 hover:bg-white
+                    dark:hover:bg-slate-700 hover:shadow-xl active:scale-95
+                    group
+                  "
+                  aria-label="Edit profile picture"
+                >
+                  <i class="fa-solid fa-pen-to-square text-sm group-hover:text-sky-600 
+                  dark:group-hover:text-sky-400 transition-colors"></i>
+                </button>
+              }
+            </div>
           </div>
-        }
-        @if(isProfileForUserLoggedIn()) {
-          <button (click)="openEditImgModal.set(true)"
-          class="absolute top-2 right-1/5 
-          text-slate-800 dark:text-slate-300
-          hover:scale-[1.05] active:scale-[0.97] hover:opacity-75
-          ">
-            <i class="fa-solid fa-pen-to-square"></i>
-          </button>
-        }
 
-      </div>
-
-        <h2 class="mt-4 text-2xl font-semibold text-slate-900 dark:text-white">
-          {{ profileData()?.fullname }}
-        </h2>
-
-        <h3 class="text-sky-700 dark:text-sky-300 text-lg font-medium">
-          @{{ profileData()?.username }}
-        </h3>
-
-        @if (profileData()?.bio) {
-          <p class="mt-3 text-slate-800 dark:text-slate-200/80 text-sm max-w-xs leading-snug">
-            "{{ profileData()?.bio }}"
-          </p>
-        }
-      </div>
-
-      <!-- Info Section -->
-      <div class="p-6 space-y-4 text-slate-700 dark:text-slate-200">
-
-        @if(isProfileForUserLoggedIn()) {
-            <div class="flex flex-col">
-                <span class="text-sm font-semibold text-slate-500 dark:text-slate-400">
-                    Email
-                </span>
-                <span>{{ profileData()?.email }}</span>
+          <!-- User Information -->
+          <div class="mt-6 space-y-2">
+            <h2 class="text-2xl font-bold text-white drop-shadow-sm">
+              {{ profileData()?.fullname }}
+            </h2>
+            
+            <div class="inline-flex items-center gap-2 bg-white/20 dark:bg-slate-900/30 
+            backdrop-blur-sm rounded-full px-4 py-1.5">
+              <i class="fa-solid fa-at text-sm text-white/80"></i>
+              <h3 class="text-white/95 font-medium">
+                {{ profileData()?.username }}
+              </h3>
             </div>
 
-            <div class="flex flex-col">
-              <span class="text-sm font-semibold text-slate-500 dark:text-slate-400">
-                Last Login
-              </span>
-              <span class="text-sm">{{ shared.formatDate(profileData()?.last_login ?? '', true) }}</span>
-            </div>
-        }
-
-        <div class="flex flex-col">
-          <span class="text-sm font-semibold text-slate-500 dark:text-slate-400">
-            Date Joined
-          </span>
-          <span class="text-sm">{{ shared.formatDate(profileData()?.date_joined ?? '', true) }}</span>
+            @if (profileData()?.bio) {
+              <div class="mt-4 px-6 py-3 bg-white/15 dark:bg-slate-900/25 
+              backdrop-blur-sm rounded-2xl border border-white/30 
+              dark:border-slate-700/40">
+                <i class="fa-solid fa-quote-left text-xs text-white/50 mr-1"></i>
+                <p class="text-white/90 text-sm italic inline">
+                  {{ profileData()?.bio }}
+                </p>
+                <i class="fa-solid fa-quote-right text-xs text-white/50 ml-1"></i>
+              </div>
+            }
+          </div>
         </div>
       </div>
 
-      <!-- Optional Buttons -->
       @if(isProfileForUserLoggedIn()) {
-        <hr class="border-slate-300 dark:border-slate-700">
+        <!-- Info Section -->
+        <div class="p-7 space-y-6 bg-linear-to-b from-white/95 to-slate-50/95 
+        dark:from-slate-900/95 dark:to-slate-800/95">
+          <div class="space-y-1">
+            <div class="flex items-center gap-2 text-slate-600 dark:text-slate-400">
+              <i class="fa-solid fa-envelope text-sm"></i>
+              <span class="text-sm font-medium">Email</span>
+            </div>
+            <div class="ml-6 pl-4 py-2 border-l-2 border-sky-400/50 
+            dark:border-sky-600/50 bg-slate-100/50 dark:bg-slate-800/30 
+            rounded-r-lg">
+              <span class="text-slate-800 dark:text-slate-200 font-medium">
+                {{ profileData()?.email }}
+              </span>
+            </div>
+          </div>
 
-        <div class="p-6 flex flex-col gap-4">
-          <ZS-button btnStyle="secondary" class="grow" 
-          [iconTpl]="userPenIcon"
-          (clickedEv)="openUpdateAccModal.set(true)">
-            Edit Account
-          </ZS-button>
+          <div class="space-y-1">
+            <div class="flex items-center gap-2 text-slate-600 dark:text-slate-400">
+              <i class="fa-solid fa-clock-rotate-left text-sm"></i>
+              <span class="text-sm font-medium">Last Login</span>
+            </div>
+            <div class="ml-6 pl-4 py-2 border-l-2 border-emerald-400/50 
+            dark:border-emerald-600/50 bg-slate-100/50 dark:bg-slate-800/30 
+            rounded-r-lg">
+              <span class="text-slate-700 dark:text-slate-300 text-sm font-medium">
+                {{ shared.formatDate(profileData()?.last_login ?? '', true) }}
+              </span>
+            </div>
+          </div>
 
-          <ZS-button btnStyle="secondary" 
-          (clickedEv)="openChangePassModal.set(true)"
-          [iconTpl]="keyIcon"
-          class="grow whitespace-nowrap">
-            Change Password
-          </ZS-button>
+          <div class="space-y-1">
+            <div class="flex items-center gap-2 text-slate-600 dark:text-slate-400">
+              <i class="fa-solid fa-calendar-plus text-sm"></i>
+              <span class="text-sm font-medium">Date Joined</span>
+            </div>
+            <div class="ml-6 pl-4 py-2 border-l-2 border-amber-400/50 
+            dark:border-amber-600/50 bg-slate-100/50 dark:bg-slate-800/30 
+            rounded-r-lg">
+              <span class="text-slate-700 dark:text-slate-300 text-sm font-medium">
+                {{ shared.formatDate(profileData()?.date_joined ?? '', true) }}
+              </span>
+            </div>
+          </div>
+        </div>
 
-          <ZS-button btnStyle="danger" variant="outline"
-          (clickedEv)="openDelUserAccModal.set(true)"
-          [iconTpl]="banIcon"
+        <!-- Action Buttons -->
+        <div class="p-7 bg-linear-to-t from-white/95 to-slate-50/95 
+        dark:from-slate-900/95 dark:to-slate-800/95 border-t border-slate-300/30 
+        dark:border-slate-700/30 space-y-4">
+          <ZS-button 
+            btnStyle="secondary" 
+            class="w-full group"
+            [iconTpl]="userPenIcon"
+            (clickedEv)="openUpdateAccModal.set(true)"
+
           >
-            Delete Account
+            <span class="group-hover:translate-x-1 transition-transform">
+              Edit Account
+            </span>
+          </ZS-button>
+
+          <ZS-button 
+            btnStyle="secondary" 
+            class="w-full group"
+            (clickedEv)="openChangePassModal.set(true)"
+            [iconTpl]="keyIcon"
+          >
+            <span class="group-hover:translate-x-1 transition-transform">
+              Change Password
+            </span>
+          </ZS-button>
+
+          <ZS-button 
+            btnStyle="danger" 
+            class="w-full group mt-2"
+            (clickedEv)="openDelUserAccModal.set(true)"
+            [iconTpl]="banIcon"
+            variant="outline"
+          >
+            <span class="group-hover:translate-x-1 transition-transform">
+              Delete Account
+            </span>
           </ZS-button>
         </div>
       }
     </div>
   }
 </div>
+
+<!-- ------------------------- Image Zoom ------------------------- -->
+@if (isImageZoomOpen()) {
+  <div
+    class="fixed inset-0 z-9999 bg-black/80 backdrop-blur-sm
+           flex items-center justify-center p-4 cursor-zoom-out"
+    (click)="closeImageZoom()"
+  >
+    <!-- Close Button -->
+    <button
+      class="absolute top-6 right-6 text-white/80 hover:text-white
+             transition text-3xl"
+      aria-label="Close image"
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+
+    <!-- Image -->
+    <img
+      [src]="profileData()?.user_image"
+      alt="Zoomed profile image"
+      class="
+        max-h-[90vh] max-w-[90vw]
+        rounded-2xl shadow-2xl
+        object-contain cursor-auto
+        animate-[zoomIn_0.25s_ease-out]
+      "
+      (click)="$event.stopPropagation()"
+    />
+  </div>
+}
 
 <!-- ------------------------- Update Account ------------------------- -->
 <app-profile-update-account
@@ -168,13 +289,13 @@
 
 <!-- User-pen Icon -->
 <ng-template #userPenIcon>
-  <i class="fa-solid fa-user-pen"></i>
+  <i class="fa-solid fa-user-pen group-hover:rotate-12 transition-transform"></i>
 </ng-template>
 <!-- Key Icon -->
 <ng-template #keyIcon>
-  <i class="fa-solid fa-key"></i>
+  <i class="fa-solid fa-key group-hover:rotate-12 transition-transform"></i>
 </ng-template>
 <!-- Ban Icon -->
 <ng-template #banIcon>
-  <i class="fa-solid fa-ban"></i>
+  <i class="fa-solid fa-ban group-hover:rotate-45 transition-transform"></i>
 </ng-template>

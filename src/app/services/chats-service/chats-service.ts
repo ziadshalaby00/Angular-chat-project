@@ -58,6 +58,10 @@ export class ChatsService {
   }
 
   public getUserByUserName(username: string) {
+    // await new Promise((r, j) => setTimeout(() => {
+    //   return r(true)
+    // }, 3000))
+
     this.shared.http.get(
       `${this.getUserByUserNameURL}?username=${username}`,
       this.shared.CredAndCsrf()

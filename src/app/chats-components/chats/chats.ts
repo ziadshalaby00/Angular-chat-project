@@ -97,12 +97,12 @@ export class Chats {
         label: 'View Profile',
       },
       {
-        id: 'mark-as-read',
-        label: 'Mark As Read',
+        id: 'dismiss-unread',
+        label: 'Dismiss Unread',
       },
       {
-        id: 'delete-chat',
-        label: 'Delete Chat',
+        id: 'remove-chat',
+        label: 'Remove Chat',
         colorClass: 'text-red-600 hover:text-red-800 dark:text-red-700 dark:hover:text-red-500'
       },
     ],

@@ -6,7 +6,18 @@
   cardStyle='violet'
   >
     <form (submit)="submit($event)" class="p-6 flex flex-col gap-4 text-slate-800 dark:text-slate-300" novalidate>
-        <h2 class="text-2xl text-center font-bold mb-4 text-violet-800 dark:text-violet-300">Sign Up</h2>
+        <!-- Header with Logo/Icon -->
+        <div class="flex flex-col items-center mb-2">
+          <div class="w-16 h-16 mb-4 rounded-full bg-linear-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-lg">
+            <i class="fas fa-user-plus text-2xl text-white"></i>
+          </div>
+          <h2 class="text-3xl font-bold bg-linear-to-r from-violet-700 to-purple-600 dark:from-violet-400 dark:to-purple-300 bg-clip-text text-transparent">
+            Create Account
+          </h2>
+          <p class="text-slate-600 dark:text-slate-400 text-center mt-2 text-sm">
+            Join our community and start your journey
+          </p>
+        </div>
   
         <ZS-input
           [label]="'Full Name'"
@@ -76,6 +87,25 @@
           [inputStyle]="'violet'"
         ></ZS-input>
     
+        <!-- Terms and Conditions -->
+        <div class="flex items-start gap-3 p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+          <input 
+            type="checkbox" 
+            id="terms"
+            class="mt-1 w-4 h-4 bg-gray-100 border-gray-300 rounded 
+            dark:ring-offset-gray-800  dark:bg-gray-700 dark:border-gray-600"
+          >
+          <label for="terms" class="text-sm text-slate-600 dark:text-slate-400">
+            I agree to the 
+            <a class="text-violet-600 hover:text-violet-700 dark:text-violet-400 dark:hover:text-violet-300 font-medium">
+              Terms of Service
+            </a> 
+            and 
+            <a class="text-violet-600 hover:text-violet-700 dark:text-violet-400 dark:hover:text-violet-300 font-medium">
+              Privacy Policy
+            </a>
+          </label>
+        </div>
         
         <div class="mt-4 flex flex-col gap-2">
           <ZS-button

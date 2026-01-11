@@ -1,119 +1,171 @@
-<!-- New Chat -->
+<!-- New Chat Modal - Enhanced Design -->
 <ZS-modal
-[showFooter]="false"
-[showHeader]="true"
-
-[(open)]="newChatModal"
-[closeOnOverlay]="!chatsService.userFetchedLoading()"
-[showCancelIcon]="!chatsService.userFetchedLoading()"
-
-[title]="'New Chat'"
-[modalStyle]="'violet'"
+    [showFooter]="false"
+    [showHeader]="true"
+    [(open)]="newChatModal"
+    [closeOnOverlay]="!chatsService.userFetchedLoading()"
+    [showCancelIcon]="!chatsService.userFetchedLoading()"
+    [title]="'Start New Chat'"
+    [modalStyle]="'violet'"
+    modalSize="lg"
+    headerClass="border-b border-violet-200 dark:border-violet-700"
 >
-  <div class="flex flex-col gap-2">
-    <div class="flex flex-col gap-0.5">
-      <label for="find-user-id" class="font-semibold text-sm leading-none"
-      >Add a user by username</label>
-      <label for="find-user-id" class="text-slate-500 dark:text-slate-400 text-xs leading-none"
-      >Usernames are case-sensitive</label>
-      <div class="flex gap-2 items-stretch mt-0.75">
-        <ZS-input
-        [Id]="'find-user-id'"
-        class="w-full"
-        placeholder="username..."
-        [inputStyle]="'violet'"
-        [(value)]="usernameValue"
-        >
-        </ZS-input>
+    <div class="flex flex-col gap-4 p-1">
+      <!-- Search Section -->
+      <div class="flex flex-col gap-2">
+        <div class="space-y-1">
+          <label for="find-user-id" class="font-semibold text-sm text-gray-800 dark:text-gray-200">
+            Find User by Username
+          </label>
+          <p class="text-xs text-gray-500 dark:text-gray-400 italic">
+            Enter the exact username (case-sensitive)
+          </p>
+        </div>
+          
+        <div class="flex gap-3 items-center">
+          <div class="flex-1">
+            <ZS-input
+            [Id]="'find-user-id'"
+            class="w-full"
+            placeholder="e.g., john_doe"
+            [inputStyle]="'violet'"
+            [(value)]="usernameValue"
+            ></ZS-input>
+          </div>
 
-        <ZS-button
-        [btnStyle]="'violet'"
-        [disabled]="chatsService.userFetchedLoading() || chatsService.chatAddedLoading()"
-        [iconTpl]="chatsService.userFetchedLoading() ? loaderIcon : undefined"
-        [size]="'md'"
-        (clickedEv)="findUser()"
-        >
-          Find
-        </ZS-button>
+          <ZS-button
+            [btnStyle]="'violet'"
+            [disabled]="chatsService.userFetchedLoading() || chatsService.chatAddedLoading() || !usernameValue()"
+            [iconTpl]="chatsService.userFetchedLoading() ? loaderIcon : searchIcon"
+            [size]="'md'"
+            (clickedEv)="findUser()"
+          >
+            <span class="font-medium">Find</span>
+          </ZS-button>
+        </div>
       </div>
-    </div>
 
-    @if(chatsService.userFetched()) {
-      <ZS-card
-      [variant]="{
-        border: false,
-        border_hover: false,
-        shadow: false
-      }"
-      bodyClass=""
-      cardStyle="violet"
-      >
-        <div class="p-3 px-0 flex justify-between gap-6 items-center">
-          <div class="flex justify-start items-center gap-3">
-            @if(chatsService.userFetched()?.user_image) {
-              <img
-              [src]="chatsService.userFetched()?.user_image"
-              alt="User image"
-              class="
-              size-12 min-w-12 rounded-full shadow-lg ring-1 
-              ring-slate-800/70 
-              dark:ring-slate-300 object-cover
-              "
-              >
-            }@else {
-              <div  
-              class="size-12 min-w-12 text-2xl rounded-full shadow-lg 
-              bg-blue-500 dark:bg-blue-600
-              flex leading-none ring-slate-800/70 dark:ring-slate-300
-              items-center justify-center text-white font-semibold ring-1"
-              aria-hidden="true"
-              >
-                {{ chatsService.userFetched()?.fullname?.charAt(0)?.toUpperCase() }}
+      <!-- User Result Section -->
+      @if(chatsService.userFetched()) {
+        <div class="mt-2 space-y-3">
+          <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-300">
+            Found User
+          </h3>
+            
+          <div>
+            <div class="flex justify-between items-center">
+              <!-- User Info -->
+              <div class="flex items-center gap-3 flex-1">
+                <!-- User Avatar with Status -->
+                <div class="relative">
+                  @if(chatsService.userFetched()?.user_image) {
+                    <img
+                      [src]="chatsService.userFetched()?.user_image"
+                      alt="User image"
+                      class="size-14 min-w-14 rounded-full border-2 border-white dark:border-gray-800
+                        shadow-lg object-cover"
+                    >
+                  }
+                  @else {
+                    <div class="size-14 min-w-14 rounded-full bg-linear-to-br from-violet-500 
+                    to-purple-600 border-2 border-white 
+                    dark:border-gray-800 shadow-lg flex items-center justify-center">
+                      <span class="text-xl font-bold text-white">
+                        {{ chatsService.userFetched()?.fullname?.charAt(0)?.toUpperCase() }}
+                      </span>
+                    </div>
+                  }
+                </div>
+
+                <!-- User Details -->
+                <div class="flex flex-col min-w-0">
+                  <p class="font-semibold text-gray-900 dark:text-white text-sm line-clamp-1">
+                    {{ chatsService.userFetched()?.fullname }}
+                    {{ chatsService.userFetched()?.fullname }}
+                    {{ chatsService.userFetched()?.fullname }}
+                    {{ chatsService.userFetched()?.fullname }}
+                    {{ chatsService.userFetched()?.fullname }}
+                    {{ chatsService.userFetched()?.fullname }}
+                    {{ chatsService.userFetched()?.fullname }}
+                    {{ chatsService.userFetched()?.fullname }}
+                  </p>
+                  <p class="text-xs text-gray-600 dark:text-gray-400 line-clamp-1">
+                    @{{ chatsService.userFetched()?.username }}
+                  </p>
+                </div>
               </div>
-            }
-  
-            <div class="flex flex-col">
-              <p class="font-semibold leading-tight
-              line-clamp-1 wrap-anywhere text-sm">
-                {{ chatsService.userFetched()?.fullname }}
-              </p>
-              <p class="text-xs text-gray-600 dark:text-gray-400 
-              wrap-anywhere line-clamp-2 leading-tight"
-              >
-                @{{ chatsService.userFetched()?.username }}
-              </p>
+
+              <!-- Action Button or Notice -->
+              <div class="flex items-center justify-end max-w-2/3 ml-4">
+                @if(chatsService.userFetched()?.notice) {
+                  <div class="bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-700 rounded-lg p-3 max-w-xs">
+                    <div class="flex items-center gap-2 text-amber-700 dark:text-amber-300">
+                      <i class="fa-solid fa-exclamation-circle"></i>
+                      <p class="text-xs font-medium">{{ chatsService.userFetched()?.notice }}</p>
+                    </div>
+                  </div>
+                }
+                @else {
+                  <ZS-button
+                    [disabled]="chatsService.chatAddedLoading()"
+                    [iconTpl]="chatsService.chatAddedLoading() ? loaderIcon : addIcon"
+                    (clickedEv)="addChat()"
+                    [size]="'md'"
+                    btnStyle="teal"
+                  >
+                    <span class="hidden sm:block font-semibold truncate">Start Chat</span>
+                  </ZS-button>
+                }
+              </div>
             </div>
           </div>
-          @if(chatsService.userFetched()?.notice) {
-            <span class="w-[35%] text-center text-xs sm:text-sm">
-              {{ chatsService.userFetched()?.notice }}
-            </span>
-          }@else {
-            <!-- Add Button -->
-            <ZS-button
-            [disabled]="chatsService.chatAddedLoading()"
-            [iconTpl]="chatsService.chatAddedLoading() ? loaderIcon : undefined"
-            (clickedEv)="addChat()"
-            [size]="'md'"
-            btnStyle="teal"
-            [iconTpl]="addIcon"
-            >
-              <span class="text-sm">
-                Add
-              </span>
-            </ZS-button>
-          }
         </div>
-      </ZS-card>
-    }
-  </div>
+      }
+
+      <!-- Empty State / Search Tips -->
+      @if(!chatsService.userFetched() && !chatsService.userFetchedLoading()) {
+        <div class="flex flex-col items-center justify-center py-6 text-center">
+          <div class="size-20 mb-2 text-gray-300 dark:text-gray-600">
+            <i class="fa-solid fa-users text-5xl"></i>
+          </div>
+          <h4 class="font-medium text-gray-700 dark:text-gray-300 mb-2">
+            Find and Connect
+          </h4>
+          <p class="text-sm text-gray-500 dark:text-gray-400 max-w-xs">
+            Enter a username above to find users and start new conversations
+          </p>
+        </div>
+      }
+
+      <!-- Loading State -->
+      @if(chatsService.userFetchedLoading()) {
+        <div class="flex flex-col items-center justify-center py-10">
+          <div class="size-12 mb-4">
+            <ZS-spinner 
+            [loading]="true" 
+            [type]="'pulse'"
+            [color]="'violet'"
+            ></ZS-spinner>
+          </div>
+          <p class="text-sm text-gray-600 dark:text-gray-400">
+            Searching for user...
+          </p>
+        </div>
+      }
+    </div>
 </ZS-modal>
 
-<!-- Add Icon -->
+<!-- Icons Templates -->
 <ng-template #addIcon>
-  <i class="text-xl sm:text-2xl fa-solid fa-circle-plus"></i>
+  <i class="fa-solid fa-circle-plus text-lg"></i>
 </ng-template>
-<!-- Loader Icon -->
+
+<ng-template #searchIcon>
+    <i class="fa-solid fa-magnifying-glass"></i>
+</ng-template>
+
 <ng-template #loaderIcon>
-  <i class="fa fa-spinner fa-spin"></i>
+  <div class="flex items-center justify-center">
+    <i class="fa fa-spinner fa-spin"></i>
+  </div>
 </ng-template>

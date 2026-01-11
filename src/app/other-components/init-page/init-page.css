@@ -1,0 +1,26 @@
+@keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+  
+@keyframes pulse-subtle {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.8; }
+}
+  
+@keyframes progress {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(400%); }
+}
+  
+.animate-fade-in {
+    animation: fade-in 0.5s ease-out;
+}
+  
+.animate-pulse-subtle {
+    animation: pulse-subtle 2s ease-in-out infinite;
+}
+  
+.animate-progress {
+    animation: progress 2s ease-in-out infinite;
+}

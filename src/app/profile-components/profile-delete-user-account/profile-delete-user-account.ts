@@ -30,7 +30,7 @@ export class ProfileDeleteUserAccount {
   // ================================= Delete User Account ================================= //
   readonly step = signal<1 | 2>(1);
 
-  readonly del_UsernameValdate = (value: string | null) => {
+  readonly del_UsernameValidate = (value: string | null) => {
     if(value !== `Delete ${this.authApi.userData()?.username}`) {
       return ['Pls enter `Delete + username`'];
     }

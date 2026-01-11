@@ -18,12 +18,12 @@ export class NavbarComp {
   readonly authApi: AuthApi = inject(AuthApi);
   readonly shared: SharedUtils = inject(SharedUtils);
 
-  siteNameConfig: SiteNameConfigType = {
+  readonly siteNameConfig: SiteNameConfigType = {
     siteName: 'Proton',
     siteNameColorClass: 'text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300'
   }
 
-  authButtons: AuthButtonsType = {
+  readonly authButtons: AuthButtonsType = {
     showAuthButtons: true,
     signup: {
       btnStyle: 'violet',
@@ -33,7 +33,7 @@ export class NavbarComp {
     }
   }
 
-  logoUrl: string = 'https://i.postimg.cc/MpzpyjF1/android-chrome-512x512-proton.png';
+  readonly logoUrl: string = 'https://i.postimg.cc/MpzpyjF1/android-chrome-512x512-proton.png';
 
   readonly isMobileMenuOpen = model<boolean>(false);
   readonly isUserMenuOpen = signal<boolean>(false);
@@ -46,21 +46,21 @@ export class NavbarComp {
   readonly homeIconTpl = viewChild<TemplateRef<any>>('homeIcon');
   readonly chatsIconTpl = viewChild<TemplateRef<any>>('chatsIcon');
   readonly navItems = signal<NavItemsType>({
-    routerLinkActive: 'bg-blue-500 dark:bg-blue-600 text-gray-50',
+    routerLinkActive: 'bg-gradient-to-r from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 text-gray-50 shadow-md',
     items: [
       {
         id: 'home',
         label: 'Home',
         routerLink: '/home',
         iconTpl: this.homeIconTpl,
-        useDefaultColorClass: 'bg',
+        colorClass: 'text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400'
       },
       {
         id: 'chats',
         label: 'Chats',
         routerLink: '/chats',
         iconTpl: this.chatsIconTpl,
-        useDefaultColorClass: 'bg',
+        colorClass: 'text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400'
       },
     ]
   })
@@ -85,8 +85,7 @@ export class NavbarComp {
 
   public readonly themeService: ThemeService = inject(ThemeService);
 
-  private readonly themeSharedClasses = 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100'
-
+  private readonly themeSharedClasses = 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg'
   readonly userMenuItems = signal<UserItemsType>({
     items: [
       { 
@@ -115,14 +114,14 @@ export class NavbarComp {
             label: 'Dark',
             iconTpl: this.darkIconTPl,
             action: () => this.themeService.setTheme('dark'),
-            colorClass: `select-none  ${this.themeSharedClasses}`
+            colorClass: `select-none group ${this.themeSharedClasses}`
           },
           { 
             id: 'quick-theme-control',
             label: 'Quick Theme Control',
             action:() => this.themeService.toggleQuickTheme(),
             iconTpl: this.quickThemeIconTPl,
-            colorClass: `text-sm! select-none  ${this.themeSharedClasses}`
+            colorClass: `text-[13px]! select-none ${this.themeSharedClasses}`
           },
         ],
         useDefaultColorClass: 'text',
@@ -131,7 +130,7 @@ export class NavbarComp {
         id: 'logout',
         label: 'Logout', 
         action: () => { this.logout(); },
-        colorClass: 'text-red-600 hover:text-red-800 dark:text-red-700 dark:hover:text-red-500',
+        colorClass: 'mt-1 text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 font-medium',
         iconTpl: this.logoutIconTpl,
       }
     ]
