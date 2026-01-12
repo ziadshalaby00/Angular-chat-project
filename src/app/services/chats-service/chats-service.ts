@@ -13,7 +13,7 @@ export interface ParticipantType {
 interface UserFetchedType extends ParticipantType {
   "notice": string | null
 }
-export interface ChatsType {
+export interface ChatType {
   "id": number;
   "participants": { "user_info": ParticipantType }[];
   "created_at": string;
@@ -22,7 +22,7 @@ export interface ChatsType {
 
 interface WebSocketMessageType {
   "type": 'chat_created' | 'new_message_notification';
-  "chat": ChatsType
+  "chat": ChatType
 }
 
 @Injectable({
@@ -32,12 +32,13 @@ export class ChatsService {
   private readonly config = inject(ConfigService);
   readonly shared: SharedUtils = inject(SharedUtils);
 
-  public readonly chats = signal<ChatsType[]>([]);
+  public readonly chats = signal<ChatType[]>([]);
   public readonly chatsLoading = signal<boolean>(false);
 
   public readonly userFetched = signal<UserFetchedType | null>(null);
   public readonly userFetchedLoading = signal<boolean>(false);
   public readonly chatAddedLoading = signal<boolean>(false);
+  public readonly removeChatLoading = signal<boolean>(false);
 
   private readonly chatsURL = `${this.config.apiUrl}/api/chat/chats/`;
   private readonly deleteChatURL = `${this.config.apiUrl}/api/chat/chats/delete/`;
@@ -47,7 +48,7 @@ export class ChatsService {
     this.shared.http.get(this.chatsURL, this.shared.CredAndCsrf()).subscribe({
       next: (res: any) => {
         console.log(res);
-        this.chats.set(res.chats as ChatsType[]);
+        this.chats.set(res.chats as ChatType[]);
         this.chatsLoading.set(false);
       },
       error: (err) => {
@@ -58,14 +59,7 @@ export class ChatsService {
   }
 
   public getUserByUserName(username: string) {
-    // await new Promise((r, j) => setTimeout(() => {
-    //   return r(true)
-    // }, 3000))
-
-    this.shared.http.get(
-      `${this.getUserByUserNameURL}?username=${username}`,
-      this.shared.CredAndCsrf()
-    ).subscribe({
+    this.shared.http.get(`${this.getUserByUserNameURL}?username=${username}`, this.shared.CredAndCsrf()).subscribe({
       next: (res: any) => {
         console.log(res);
         this.userFetchedLoading.set(false);
@@ -160,14 +154,21 @@ export class ChatsService {
     })
   }
 
-  deleteChat(chat_id: number) {
-    this.shared.http.post(`${this.chatsURL}${chat_id}/`, this.shared.CredAndCsrf()).subscribe({
+  removeChat(chat_id: number, sc?: () => void, fd?: () => void) {
+    this.shared.http.delete(`${this.deleteChatURL}${chat_id}/`, this.shared.CredAndCsrf()).subscribe({
       next: (res: any) => {
         console.log(res);
+        this.chats.update(prev => 
+          prev.filter(chat => chat.id !== res.chat_id)
+        );
+        this.removeChatLoading.set(false);
+        if(sc) sc();
       },
       error: (err) => {
         console.log(err);
         this.shared.setErrors(err.error);
+        this.removeChatLoading.set(false);
+        if(fd) fd();
       },
     })
   }

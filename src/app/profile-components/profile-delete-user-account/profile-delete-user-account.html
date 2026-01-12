@@ -1,93 +1,122 @@
 <!-- Delete Account Modal -->
 <ZS-modal
-  [title]="'Delete Account'"
   [(open)]="openDelUserAccModal"
   (cancelEv)="openDelUserAccModal.set(false)"
+  [showHeader]="false"
   [showFooter]="false"
   [modalStyle]="'danger'"
   [showCancelIcon]="!authApi.deleteAccLoading()"
   [closeOnOverlay]="!authApi.deleteAccLoading()"
+  bodyClass="p-6"
 >
-  <div class="flex flex-col gap-4">
-    
-    <!-- Step 1: Confirmation -->
+  <div class="flex flex-col gap-2 items-center text-center">
+    <!-- Warning Icon -->
+    <div class="relative mb-2">
+      <div class="size-20 rounded-full bg-linear-to-br from-red-500/10 to-rose-600/10 dark:from-red-500/20 dark:to-rose-600/20 flex items-center justify-center">
+        <div class="size-16 rounded-full bg-linear-to-br from-red-100 to-rose-200 dark:from-red-900/40 dark:to-rose-900/40 flex items-center justify-center">
+          <i class="fa-solid fa-user-slash text-3xl text-red-600 dark:text-red-400"></i>
+        </div>
+      </div>
+      <div class="absolute -top-1 -right-1 size-8 rounded-full bg-red-500 border-2 border-white dark:border-gray-900 flex items-center justify-center animate-pulse">
+        <i class="fa-solid fa-exclamation text-xs text-white"></i>
+      </div>
+    </div>
+
     @if(step() === 1) {
-      <div class="space-y-4">
-        <!-- Warning Note -->
-        <p class="text-sm font-medium text-red-700 dark:text-red-400">
-          Deleting your account will:
-        </p>
+      <!-- Title -->
+      <h3 class="text-xl font-bold text-gray-900 dark:text-white">
+        Delete Account Permanently?
+      </h3>
 
-        <!-- Consequences List -->
-        <ul class="list-disc list-inside text-sm text-red-600 dark:text-red-300 space-y-2">
-          <li>Deactivate your profile and show it as "Deleted User" to others.</li>
-          <li>Your chats and messages will remain visible to other users, but you will no longer be able to access them.</li>
-          <li>Your email will be removed, allowing you to create a new account with the same email in the future.</li>
-          <li>Nothing associated with you will appear on the site anymore.</li>
-          <li>Prevent you from logging in again. This action cannot be undone.</li>
-        </ul>
+      <!-- Description -->
+      <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-3">
+        This action will permanently delete your account and cannot be undone.
+      </p>
 
-        <!-- Confirmation Input Section -->
-        <div class="flex flex-col gap-4">
-          <ZS-input
-            [label]="'To confirm, please enter: `Delete + username`'"
-            [placeholder]="'Delete ' + profileData()?.username"
-            [type]="'text'"
-            [inputStyle]="'danger'"
-            [required]="true"
-            [validateFns]="[del_UsernameValidate]"
-            [(value)]="del_Username().value"
-            (changedEv)="setDel_Username($event)"
-            [(touched)]="ddToCnSTouch"
-          >
-          </ZS-input>
-
-          <ZS-button
-            (clickedEv)="continueDelete()"
-            variant="outline"
-            btnStyle="secondary"
-            class="w-full"
-          >
-            Continue
-          </ZS-button>
+      <!-- Info Box -->
+      <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 
+      dark:border-red-800/50 rounded-lg p-3 text-left w-full mb-3">
+        <div class="flex items-start gap-2">
+          <i class="fa-solid fa-circle-info text-red-500 dark:text-red-400"></i>
+          <div>
+            <p class="text-xs text-red-700 dark:text-red-300 font-medium">
+              What will happen:
+            </p>
+            <ul class="text-xs text-red-600 dark:text-red-400 mt-1 space-y-1 pl-4 list-disc">
+              <li>Your profile will appear as <strong>Deleted User</strong> to others</li>
+              <li>Your chats and messages will remain visible to other users</li>
+              <li>You will no longer be able to access your account</li>
+              <li>You can create a new account later using the same email</li>
+            </ul>
+          </div>
         </div>
       </div>
-    }
+  
+      <!-- Confirmation Input -->
+      <div class="w-full flex flex-col gap-4">
+        <ZS-input
+          [label]="'To confirm, type: Delete ' + profileData()?.username"
+          [placeholder]="'Delete ' + profileData()?.username"
+          [type]="'text'"
+          [inputStyle]="'danger'"
+          [required]="true"
+          [validateFns]="[del_UsernameValidate]"
+          [(value)]="del_Username().value"
+          (changedEv)="setDel_Username($event)"
+          [(touched)]="ddToCnSTouch"
+        >
+        </ZS-input>
+  
+        <ZS-button
+          (clickedEv)="continueDelete()"
+          variant="outline"
+          btnStyle="secondary"
+          class="w-full"
+        >
+          Continue
+        </ZS-button>
+      </div>
+    }@else {
+      <!-- Title -->
+      <h3 class="text-xl font-bold text-gray-900 dark:text-white">
+        Confirm Account Deletion
+      </h3>
 
-    <!-- Step 2: Password Verification -->
-    @else if(step() === 2) {
-      <div class="space-y-4">
-        <!-- Password Input Section -->
-        <div class="flex flex-col gap-4">
-          <ZS-input
-            [label]="'Please enter your password to delete your account'"
-            [placeholder]="'Enter password'"
-            [type]="'password'"
-            [inputStyle]="'secondary'"
-            [required]="true"
-            [iconTpl]="lockIcon"
-            [(value)]="passForDA().value"
-            (changedEv)="setPassForDA($event)"
-            [(touched)]="passForDATouch"
-          >
-          </ZS-input>
+      <!-- Description -->
+      <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-3">
+        Please enter your password to permanently delete your account.
+      </p>
 
-          <!-- Delete Account Button -->
-          <ZS-button
-            (clickedEv)="DeleteAcc()"
-            [btnStyle]="'danger'"
-            [iconTpl]="authApi.deleteAccLoading() ? loaderIcon : undefined"
-            [disabled]="authApi.deleteAccLoading()"
-            class="w-full"
-          >
-            Delete Account
-          </ZS-button>
-        </div>
+      <!-- Password Input -->
+      <div class="w-full flex flex-col gap-4">
+        <ZS-input
+          [label]="'Account password'"
+          [placeholder]="'Enter your password'"
+          [type]="'password'"
+          [inputStyle]="'danger'"
+          [required]="true"
+          [iconTpl]="lockIcon"
+          [(value)]="passForDA().value"
+          (changedEv)="setPassForDA($event)"
+          [(touched)]="passForDATouch"
+        >
+        </ZS-input>
+
+        <!-- Delete Button -->
+        <ZS-button
+          (clickedEv)="DeleteAcc()"
+          [btnStyle]="'danger'"
+          [iconTpl]="authApi.deleteAccLoading() ? loaderIcon : undefined"
+          [disabled]="authApi.deleteAccLoading()"
+          class="w-full"
+        >
+          Delete Account
+        </ZS-button>
       </div>
     }
-    
   </div>
 </ZS-modal>
+
 
 <!-- Icons Templates -->
 <ng-container>

@@ -53,6 +53,7 @@ export class NavbarComp {
         label: 'Home',
         routerLink: '/home',
         iconTpl: this.homeIconTpl,
+        iconClasses: 'text-blue-600 dark:text-blue-400',
         colorClass: 'text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400'
       },
       {
@@ -60,7 +61,8 @@ export class NavbarComp {
         label: 'Chats',
         routerLink: '/chats',
         iconTpl: this.chatsIconTpl,
-        colorClass: 'text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400'
+        iconClasses: 'text-emerald-600 dark:text-emerald-400 transition-colors duration-300',
+        colorClass: 'text-gray-700 dark:text-gray-200 hover:text-emerald-600 dark:hover:text-emerald-400'
       },
     ]
   })
@@ -85,7 +87,7 @@ export class NavbarComp {
 
   public readonly themeService: ThemeService = inject(ThemeService);
 
-  private readonly themeSharedClasses = 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg'
+  private readonly themeSharedClasses = 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg group'
   readonly userMenuItems = signal<UserItemsType>({
     items: [
       { 
@@ -93,6 +95,7 @@ export class NavbarComp {
         label: 'Profile',
         iconTpl: this.profileIconTpl,
         useDefaultColorClass: 'text',
+        colorClass: 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 group',
         action: () => { 
           this.router.navigate(['/profile', this.authApi.userData()?.id]);
         },
@@ -101,20 +104,21 @@ export class NavbarComp {
         id: 'theme',
         label: 'Theme',
         iconTpl: this.themeIconTPl,
+        colorClass: 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 group',
         children: [
           { 
             id: 'light',
             label: 'Light',
             iconTpl: this.lightIconTPl,
             action: () => this.themeService.setTheme('light'),
-            colorClass: `select-none group ${this.themeSharedClasses}`
+            colorClass: `select-none ${this.themeSharedClasses}`
           },
           { 
             id: 'dark',
             label: 'Dark',
             iconTpl: this.darkIconTPl,
             action: () => this.themeService.setTheme('dark'),
-            colorClass: `select-none group ${this.themeSharedClasses}`
+            colorClass: `select-none ${this.themeSharedClasses}`
           },
           { 
             id: 'quick-theme-control',
@@ -130,7 +134,7 @@ export class NavbarComp {
         id: 'logout',
         label: 'Logout', 
         action: () => { this.logout(); },
-        colorClass: 'mt-1 text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 font-medium',
+        colorClass: 'mt-1 group text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 font-medium',
         iconTpl: this.logoutIconTpl,
       }
     ]

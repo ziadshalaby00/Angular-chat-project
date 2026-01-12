@@ -14,7 +14,8 @@
       <!-- Search Section -->
       <div class="flex flex-col gap-2">
         <div class="space-y-1">
-          <label for="find-user-id" class="font-semibold text-sm text-gray-800 dark:text-gray-200">
+          <label for="find-user-id" class="font-semibold text-sm text-gray-800 
+          dark:text-gray-200">
             Find User by Username
           </label>
           <p class="text-xs text-gray-500 dark:text-gray-400 italic">
@@ -35,7 +36,8 @@
 
           <ZS-button
             [btnStyle]="'violet'"
-            [disabled]="chatsService.userFetchedLoading() || chatsService.chatAddedLoading() || !usernameValue()"
+            [disabled]="chatsService.userFetchedLoading() || chatsService.chatAddedLoading() 
+              || !usernameValue()"
             [iconTpl]="chatsService.userFetchedLoading() ? loaderIcon : searchIcon"
             [size]="'md'"
             (clickedEv)="findUser()"
@@ -62,8 +64,8 @@
                     <img
                       [src]="chatsService.userFetched()?.user_image"
                       alt="User image"
-                      class="size-14 min-w-14 rounded-full border-2 border-white dark:border-gray-800
-                        shadow-lg object-cover"
+                      class="size-14 min-w-14 rounded-full border-2 border-white 
+                      dark:border-gray-800 shadow-lg object-cover"
                     >
                   }
                   @else {
@@ -81,13 +83,6 @@
                 <div class="flex flex-col min-w-0">
                   <p class="font-semibold text-gray-900 dark:text-white text-sm line-clamp-1">
                     {{ chatsService.userFetched()?.fullname }}
-                    {{ chatsService.userFetched()?.fullname }}
-                    {{ chatsService.userFetched()?.fullname }}
-                    {{ chatsService.userFetched()?.fullname }}
-                    {{ chatsService.userFetched()?.fullname }}
-                    {{ chatsService.userFetched()?.fullname }}
-                    {{ chatsService.userFetched()?.fullname }}
-                    {{ chatsService.userFetched()?.fullname }}
                   </p>
                   <p class="text-xs text-gray-600 dark:text-gray-400 line-clamp-1">
                     @{{ chatsService.userFetched()?.username }}
@@ -98,8 +93,9 @@
               <!-- Action Button or Notice -->
               <div class="flex items-center justify-end max-w-2/3 ml-4">
                 @if(chatsService.userFetched()?.notice) {
-                  <div class="bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-700 rounded-lg p-3 max-w-xs">
-                    <div class="flex items-center gap-2 text-amber-700 dark:text-amber-300">
+                  <div class="bg-amber-50 dark:bg-amber-900/30 border border-amber-200 
+                  dark:border-amber-700 rounded-lg p-3 max-w-xs">
+                    <div class="flex items-start gap-2 text-amber-700 dark:text-amber-300">
                       <i class="fa-solid fa-exclamation-circle"></i>
                       <p class="text-xs font-medium">{{ chatsService.userFetched()?.notice }}</p>
                     </div>
@@ -139,16 +135,21 @@
 
       <!-- Loading State -->
       @if(chatsService.userFetchedLoading()) {
-        <div class="flex flex-col items-center justify-center py-10">
-          <div class="size-12 mb-4">
-            <ZS-spinner 
-            [loading]="true" 
+        <div class="flex flex-col items-center justify-center">
+          <div class="relative">
+            <ZS-spinner
+            [loading]="true"
             [type]="'pulse'"
             [color]="'violet'"
             ></ZS-spinner>
+            <div class="absolute inset-0 flex items-center justify-center">
+              <div class="size-10 rounded-full bg-violet-500/10 dark:bg-violet-500/20
+              animate-pulse"></div>
+            </div>
           </div>
-          <p class="text-sm text-gray-600 dark:text-gray-400">
-            Searching for user...
+          <p class="mt-4 text-sm text-violet-600 dark:text-violet-400 font-medium 
+          animate-pulse">
+              Searching for user...
           </p>
         </div>
       }
@@ -157,7 +158,7 @@
 
 <!-- Icons Templates -->
 <ng-template #addIcon>
-  <i class="fa-solid fa-circle-plus text-lg"></i>
+  <i class="fa-solid fa-circle-plus text-xl"></i>
 </ng-template>
 
 <ng-template #searchIcon>

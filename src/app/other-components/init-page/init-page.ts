@@ -1,6 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { Spinner } from '@ziadshalaby/ngx-zs-component';
 import { AuthApi } from '../../services/auth-services/auth-api';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-init-page',

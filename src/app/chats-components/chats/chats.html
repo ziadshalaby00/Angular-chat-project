@@ -1,4 +1,5 @@
-<div class="h-[calc(100vh-4rem)] overflow-hidden flex dark:text-gray-50 bg-blue-300/80 dark:bg-blue-800/50">
+<div class="h-[calc(100vh-4rem)] overflow-hidden flex dark:text-gray-50 bg-blue-300/80 
+dark:bg-blue-800/50">
     <!-- Sidebar -->
     <ZS-sidebar
         header="Chats"
@@ -12,20 +13,33 @@
                     placeholder="Search conversations..."
                     type="search"
                     inputStyle="primary"
-                    [showLoaderIconOnSearchInput]="true"
-                    (searchEv)="onSearchForChat($event)"
+                    [showLoaderIconOnSearchInput]="false"
+                    (valueChange)="onSearchForChat($event)"
                 ></ZS-input>
             </div>
 
             <!-- Chats List -->
-            <div class="flex flex-col gap-4 h-full p-3 overflow-x-hidden overflow-y-auto scroll scroll-success">
+            <div class="flex flex-col gap-4 h-full p-3 overflow-x-hidden overflow-y-auto 
+            scroll scroll-primary">
                 <!-- Loading State -->
                 @if(chatsService.chatsLoading()) {
                     <div class="flex flex-col h-[75%] items-center justify-center">
-                        <ZS-spinner
-                            [loading]="true"
-                            [type]="'double'"
-                        ></ZS-spinner>
+                        <div class="relative">
+                            <ZS-spinner
+                                [loading]="true"
+                                [type]="'pulse'"
+                                [color]="'blue'"
+                                size="lg"
+                            ></ZS-spinner>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="size-16 rounded-full bg-blue-500/10 
+                                dark:bg-blue-500/20 animate-pulse"></div>
+                            </div>
+                        </div>
+                        <p class="mt-4 text-sm text-blue-600 dark:text-blue-400 
+                        font-medium animate-pulse">
+                            Loading conversations...
+                        </p>
                     </div>
                 }
                 <!-- Chats Content -->
@@ -36,29 +50,40 @@
                                 <!-- Chat Card -->
                                 <ZS-card
                                     [clickable]="!isSettingsHover()"
-                                    cardStyle="success"
+                                    cardStyle="primary"
                                     [style]="'z-index: ' + (filteredChats().length-i)"
+                                    class="group"
                                 >
-                                    <div class="py-3 px-4 flex justify-start items-center gap-3 relative">
+                                    <div class="py-3 px-4 flex justify-start items-center 
+                                    gap-3 relative">
                                         <!-- User Avatar -->
                                         @if(participant.user_info.user_image) {
                                             <img
                                                 [src]="participant.user_info.user_image"
                                                 alt="User image"
-                                                class="size-12 min-w-12 rounded-full shadow-lg ring-1 ring-slate-800/70 dark:ring-slate-300 object-cover"
+                                                class="size-14 min-w-14 rounded-full shadow-lg border-2 border-white 
+                                                dark:border-gray-800 object-cover group-hover:border-blue-600 
+                                                dark:group-hover:border-blue-500 transition-colors duration-300"
                                             >
                                         }
                                         @else if(participant.user_info.is_deleted) {
                                             <div
-                                                class="size-12 min-w-12 text-[22px] rounded-full shadow-lg bg-red-500 dark:bg-red-700 flex leading-none ring-slate-800/70 dark:ring-slate-300 items-center justify-center text-white font-semibold ring-1"
+                                                class="size-14 min-w-14 text-2xl rounded-full shadow-lg bg-linear-to-br 
+                                                from-red-500 to-rose-600 flex items-center justify-center text-white 
+                                                border-2 border-white dark:border-gray-800 relative"
                                                 aria-hidden="true"
                                             >
-                                                <i class="fa-solid fa-user-minus"></i>
+                                                <i class="fa-solid fa-user-slash"></i>
+                                                <div class="absolute -bottom-1 -right-1 size-3.5 bg-red-600 rounded-full 
+                                                border-2 border-white dark:border-gray-800"></div>
                                             </div>
                                         }
                                         @else {
                                             <div
-                                                class="size-12 min-w-12 text-2xl rounded-full shadow-lg bg-blue-500 dark:bg-blue-600 flex leading-none ring-slate-800/70 dark:ring-slate-300 items-center justify-center text-white font-semibold ring-1"
+                                                class="size-14 min-w-14 text-2xl rounded-full shadow-lg bg-linear-to-br from-blue-500 
+                                                to-indigo-600 flex items-center justify-center text-white border-2 border-white 
+                                                dark:border-gray-800 font-bold group-hover:from-blue-600 group-hover:to-indigo-700 
+                                                transition-all duration-300"
                                                 aria-hidden="true"
                                             >
                                                 {{ participant.user_info.fullname.charAt(0).toUpperCase() }}
@@ -66,45 +91,53 @@
                                         }
 
                                         <!-- User Info -->
-                                        <div class="flex flex-col">
-                                            <p class="font-semibold leading-tight line-clamp-1 wrap-anywhere text-sm">
+                                        <div class="flex flex-col flex-1 min-w-0">
+                                            <p class="font-semibold leading-tight line-clamp-1 wrap-anywhere text-sm 
+                                            text-gray-800 dark:text-white group-hover:text-blue-600 
+                                            dark:group-hover:text-blue-400 transition-colors duration-300">
                                                 {{ participant.user_info.fullname }}
                                             </p>
                                             <p 
-                                                class="text-xs text-gray-600 dark:text-gray-400 wrap-anywhere leading-tight"
-                                                [ngClass]="[participant.user_info.is_deleted ? 'line-clamp-2' : 'line-clamp-1']"
+                                                class="text-xs text-gray-600 dark:text-gray-400 wrap-anywhere leading-tight mt-0.5"
+                                                [ngClass]="[participant.user_info.is_deleted ? 'line-clamp-2 italic' : 'line-clamp-1']"
                                             >
                                                 @if(participant.user_info.is_deleted) {
-                                                    This user is no longer available.
+                                                    <span class="text-rose-600 dark:text-rose-400">
+                                                        <i class="fa-solid fa-circle-exclamation"></i>
+                                                        This user is no longer available.
+                                                    </span>
                                                 }
                                                 @else {
-                                                    @{{ participant.user_info.username }}
+                                                    <span class="text-gray-500 dark:text-gray-400">
+                                                        @{{ participant.user_info.username }}
+                                                    </span>
                                                 }
                                             </p>
                                         </div>
 
                                         <!-- Unread Count Badge -->
                                         @if(item.unread_count) {
-                                            <div class="absolute -top-2.5 -right-2.5 flex items-center justify-center text-gray-100 min-w-8 h-8 p-1.5 rounded-full bg-red-500 dark:bg-red-700">
-                                                {{ item.unread_count }}
+                                            <div class="absolute -top-2 -right-2 flex items-center justify-center min-w-7 h-7 
+                                            rounded-full bg-linear-to-r from-red-500 to-rose-600 text-white font-bold 
+                                            text-xs shadow-lg animate-bounce-subtle">
+                                                {{ item.unread_count > 99 ? '99+' : item.unread_count }}
                                             </div>
                                         }
 
                                         <!-- Chat Settings Menu -->
-                                        @if(!participant.user_info.is_deleted) {
-                                            <div
-                                                (click)="$event.stopPropagation()"
-                                                (mouseenter)="isSettingsHover.set(true)"
-                                                (mouseleave)="isSettingsHover.set(false)"
-                                                class="zs:absolute zs:top-1/2 zs:h-full zs:flex zs:items-center zs:justify-center zs:-translate-y-1/2 zs:right-0"
-                                            >
-                                                <ZS-nav-item
-                                                    (anyItemClickedEv)="itemClicked($event, participant.user_info.id)"
-                                                    [collectionName]="''+item.id"
-                                                    [item]="chatSettings()"
-                                                ></ZS-nav-item>
-                                            </div>
-                                        }
+                                        <div
+                                            (click)="$event.stopPropagation()"
+                                            (mouseenter)="isSettingsHover.set(true)"
+                                            (mouseleave)="isSettingsHover.set(false)"
+                                            class="zs:absolute zs:top-1/2 zs:h-full zs:flex zs:items-center 
+                                            zs:justify-center zs:-translate-y-1/2 zs:right-0"
+                                        >
+                                            <ZS-nav-item
+                                                (anyItemClickedEv)="itemClicked($event, item, participant.user_info.id)"
+                                                [collectionName]="''+item.id"
+                                                [item]="getChatSettings(participant.user_info.is_deleted)"
+                                            ></ZS-nav-item>
+                                        </div>
                                     </div>
                                 </ZS-card>
                             }
@@ -112,15 +145,25 @@
                     }
                     <!-- Empty State -->
                     @empty {
-                        <div class="flex flex-col h-[75%] text-center items-center justify-center gap-2 text-slate-600 dark:text-slate-300">
-                            <span class="text-3xl">You haven't had any conversations yet.</span>
-                            <span class="text-2xl">Start one now!</span>
+                        <div class="flex flex-col min-h-[75%] items-center justify-center text-center px-4">
+                            <div class="size-32 mb-6 text-blue-400/60 dark:text-blue-500/40">
+                                <i class="fa-solid fa-comments text-8xl"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold text-gray-700 dark:text-gray-300 mb-2">
+                                No Conversations Yet
+                            </h3>
+                            <p class="text-gray-500 dark:text-gray-400 mb-6 max-w-md">
+                                Start your first conversation! Connect with friends, colleagues, or find new people to chat with.
+                            </p>
                             <ZS-button
                                 (clickedEv)="this.newChatModal.set(true)"
                                 [iconTpl]="newChatIcon"
-                                [size]="'lg'"
-                                [btnStyle]="'teal'"
-                            ></ZS-button>
+                                [size]="'md'"
+                                [btnStyle]="'primary'"
+                                class="shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
+                            >
+                                <span class="font-semibold">Start New Chat</span>
+                            </ZS-button>
                         </div>
                     }
                 }
@@ -128,13 +171,14 @@
 
             <!-- New Chat Button -->
             @if(!chatsService.chatsLoading() && filteredChats().length) {
-                <div class="px-3">
+                <div class="px-3 pt-2">
                     <ZS-button
                         (clickedEv)="this.newChatModal.set(true)"
                         [iconTpl]="newChatIcon2"
-                        [btnStyle]="'teal'"
+                        [btnStyle]="'primary'"
+                        class="w-full shadow-md hover:shadow-lg transition-all duration-300 group"
                     >
-                        New Chat
+                        <span class="font-medium">New Chat</span>
                     </ZS-button>
                 </div>
             }
@@ -162,7 +206,7 @@
 </ng-template>
 
 <ng-template #newChatIcon2>
-    <div class="size-6">
+    <div class="size-6 group-hover:scale-110 transition-transform duration-300">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
             <title>Chat-add SVG Icon</title>
             <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2">
@@ -180,5 +224,97 @@
     </div>
 </ng-template>
 
+<!-- Chat Setting Icons -->
+<ng-template #viewProfileIcon>
+    <div class="size-8 rounded-full bg-linear-to-br from-blue-100 to-blue-200 
+    dark:from-blue-900/30 dark:to-blue-800/30 mr-2.5 flex items-center justify-center">
+        <i class="fa-solid fa-user text-blue-600 dark:text-blue-400"></i>
+    </div>
+</ng-template>
+
+<ng-template #dismissUnreadIcon>
+    <div class="size-8 rounded-full bg-linear-to-br from-green-100 
+    to-emerald-200 dark:from-green-900/30 dark:to-emerald-800/30 
+    flex items-center justify-center mr-2.5">
+        <i class="fa-solid fa-envelope-open text-green-600 dark:text-green-400"></i>
+    </div>
+</ng-template>
+
+<ng-template #removeChatIcon>
+    <div class="size-8 rounded-full bg-linear-to-br from-red-100 to-rose-200 
+    dark:from-red-900/30 dark:to-rose-800/30 flex items-center justify-center mr-2.5">
+        <i class="fa-solid fa-trash-can text-red-600 dark:text-red-400"></i>
+    </div>
+</ng-template>
+
+
 <!-- New Chat Modal -->
 <app-new-chat [(newChatModal)]="newChatModal"></app-new-chat>
+
+<!-- Remove Chat Modal -->
+<ZS-modal
+  [(open)]="removeChatModal"
+  [showHeader]="false"
+  (cancelEv)="removeChatModal.set(false)"
+  [confirmConfig]="{
+    text: 'Remove Chat',
+    btnStyle: 'danger',
+    disabled: chatsService.removeChatLoading(),
+    iconTpl: chatsService.removeChatLoading() ? loaderIconTpl : null,
+  }"
+  (confirmEv)="RemoveChat()"
+  [modalStyle]="'danger'"
+  modalSize="md"
+  modalClass="border-2 border-red-200 dark:border-red-800/50"
+  bodyClass="p-6"
+>
+  <div class="flex flex-col gap-3 items-center text-center">
+    <!-- Warning Icon -->
+    <div class="relative">
+      <div class="size-20 rounded-full bg-linear-to-br from-red-500/10 to-rose-600/10 dark:from-red-500/20 dark:to-rose-600/20 flex items-center justify-center">
+        <div class="size-16 rounded-full bg-linear-to-br from-red-100 to-rose-200 dark:from-red-900/40 dark:to-rose-900/40 flex items-center justify-center">
+          <i class="fa-solid fa-trash-can text-3xl text-red-600 dark:text-red-400"></i>
+        </div>
+      </div>
+      <div class="absolute -top-1 -right-1 size-8 rounded-full bg-red-500 border-2 border-white dark:border-gray-900 flex items-center justify-center animate-pulse">
+        <i class="fa-solid fa-exclamation text-xs text-white"></i>
+      </div>
+    </div>
+
+    <!-- Warning Message -->
+    <div class="space-y-2">
+      <h3 class="text-xl font-bold text-gray-900 dark:text-white">
+        Remove Chat from Your List?
+      </h3>
+      
+      <div class="space-y-2">
+        <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-3">
+            This will remove the conversation from <span class="font-semibold">your chat list only</span>.
+            The other participant will still be able to see the chat and its messages.
+        </p>
+        
+        <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/50 rounded-lg p-3 mt-2">
+          <div class="flex items-start gap-2">
+            <i class="fa-solid fa-circle-info text-red-500 dark:text-red-400"></i>
+            <div class="text-left">
+              <p class="text-xs text-red-700 dark:text-red-300 font-medium">
+                What happens when you remove this chat:
+              </p>
+              <ul class="text-xs text-red-600 dark:text-red-400 mt-1 space-y-1 pl-4 list-disc">
+                    <li>The chat and all its messages will be removed <strong>only for you</strong></li>
+                    <li>The other person will <strong>not be notified</strong></li>
+                    <li>You can start the chat again anytime by adding the user again</li>
+                    <li>You will not receive notifications for new messages sent to this chat</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ZS-modal>
+
+<!-- Loader Icon Template -->
+<ng-template #loaderIcon>
+<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+</ng-template>
