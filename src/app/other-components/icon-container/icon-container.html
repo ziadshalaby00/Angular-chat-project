@@ -1,0 +1,17 @@
+<div class="relative mr-2.5 flex items-center justify-center group"
+[ngClass]="[sizeOuter()]"
+>
+  <!-- outer glow -->
+  <div
+    class="absolute inset-0 rounded-full transition-transform duration-200 group-hover:scale-110"
+    [ngClass]="['bg-linear-to-br ' + gradientBg()]">
+  </div>
+
+  <!-- inner circle -->
+  <div
+    class="relative z-10 rounded-full bg-linear-to-br
+           flex items-center justify-center transition-all duration-300"
+    [ngClass]="[innerBg(), sizeInner()]">
+    <ng-content select="[icon]"></ng-content>
+  </div>
+</div>

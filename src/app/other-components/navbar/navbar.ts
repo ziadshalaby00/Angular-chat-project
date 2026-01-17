@@ -5,10 +5,11 @@ import { AuthApi } from '../../services/auth-services/auth-api';
 import { SharedUtils } from '../../services/shared-service/shared-utils';
 import { ThemeService } from '../../services/theme-service/theme-service';
 import { CommonModule } from '@angular/common';
+import { IconContainer } from '../icon-container/icon-container';
 
 @Component({
   selector: 'app-navbar',
-  imports: [Navbar, RouterModule, CommonModule],
+  imports: [Navbar, RouterModule, CommonModule, IconContainer],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })
