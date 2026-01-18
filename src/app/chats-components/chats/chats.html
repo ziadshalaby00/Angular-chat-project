@@ -52,7 +52,7 @@ dark:bg-blue-800/50">
                                     [clickable]="!isSettingsHover()"
                                     cardStyle="primary"
                                     [style]="'z-index: ' + (filteredChats().length-i)"
-                                    class="group"
+                                    class="group/card"
                                 >
                                     <div class="py-3 px-4 flex justify-start items-center 
                                     gap-3 relative">
@@ -62,8 +62,8 @@ dark:bg-blue-800/50">
                                                 [src]="participant.user_info.user_image"
                                                 alt="User image"
                                                 class="size-14 min-w-14 rounded-full shadow-lg border-2 border-white 
-                                                dark:border-gray-800 object-cover group-hover:border-blue-600 
-                                                dark:group-hover:border-blue-500 transition-colors duration-300"
+                                                dark:border-gray-800 object-cover group-hover/card:border-blue-600 
+                                                dark:group-hover/card:border-blue-500 transition-colors duration-300"
                                             >
                                         }
                                         @else if(participant.user_info.is_deleted) {
@@ -82,7 +82,7 @@ dark:bg-blue-800/50">
                                             <div
                                                 class="size-14 min-w-14 text-2xl rounded-full shadow-lg bg-linear-to-br from-blue-500 
                                                 to-indigo-600 flex items-center justify-center text-white border-2 border-white 
-                                                dark:border-gray-800 font-bold group-hover:from-blue-600 group-hover:to-indigo-700 
+                                                dark:border-gray-800 font-bold group-hover/card:from-blue-600 group-hover/card:to-indigo-700 
                                                 transition-all duration-300"
                                                 aria-hidden="true"
                                             >
@@ -93,8 +93,8 @@ dark:bg-blue-800/50">
                                         <!-- User Info -->
                                         <div class="flex flex-col flex-1 min-w-0">
                                             <p class="font-semibold leading-tight line-clamp-1 wrap-anywhere text-sm 
-                                            text-gray-800 dark:text-white group-hover:text-blue-600 
-                                            dark:group-hover:text-blue-400 transition-colors duration-300">
+                                            text-gray-800 dark:text-white group-hover/card:text-blue-600 
+                                            dark:group-hover/card:text-blue-400 transition-colors duration-300">
                                                 {{ participant.user_info.fullname }}
                                             </p>
                                             <p 
@@ -226,27 +226,22 @@ dark:bg-blue-800/50">
 
 <!-- Chat Setting Icons -->
 <ng-template #viewProfileIcon>
-    <div class="size-8 rounded-full bg-linear-to-br from-blue-100 to-blue-200 
-    dark:from-blue-900/30 dark:to-blue-800/30 mr-2.5 flex items-center justify-center">
-        <i class="fa-solid fa-user text-blue-600 dark:text-blue-400"></i>
-    </div>
+    <app-icon-container color="blue">
+        <i icon class="fa-solid fa-user text-blue-600 dark:text-blue-400"></i>
+    </app-icon-container>
 </ng-template>
 
 <ng-template #dismissUnreadIcon>
-    <div class="size-8 rounded-full bg-linear-to-br from-green-100 
-    to-emerald-200 dark:from-green-900/30 dark:to-emerald-800/30 
-    flex items-center justify-center mr-2.5">
-        <i class="fa-solid fa-envelope-open text-green-600 dark:text-green-400"></i>
-    </div>
+    <app-icon-container color="green">
+        <i icon class="fa-solid fa-envelope-open text-green-600 dark:text-green-400"></i>
+    </app-icon-container>
 </ng-template>
 
 <ng-template #removeChatIcon>
-    <div class="size-8 rounded-full bg-linear-to-br from-red-100 to-rose-200 
-    dark:from-red-900/30 dark:to-rose-800/30 flex items-center justify-center mr-2.5">
-        <i class="fa-solid fa-trash-can text-red-600 dark:text-red-400"></i>
-    </div>
+    <app-icon-container color="red">
+        <i icon class="fa-solid fa-trash-can text-red-600 dark:text-red-400"></i>
+    </app-icon-container>
 </ng-template>
-
 
 <!-- New Chat Modal -->
 <app-new-chat [(newChatModal)]="newChatModal"></app-new-chat>
@@ -316,5 +311,5 @@ dark:bg-blue-800/50">
 
 <!-- Loader Icon Template -->
 <ng-template #loaderIcon>
-<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+    <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
 </ng-template>

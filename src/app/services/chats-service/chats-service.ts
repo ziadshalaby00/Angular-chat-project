@@ -42,17 +42,16 @@ export class ChatsService {
 
   private readonly chatsURL = `${this.config.apiUrl}/api/chat/chats/`;
   private readonly deleteChatURL = `${this.config.apiUrl}/api/chat/chats/delete/`;
+  private readonly markAsReadURL = `${this.config.apiUrl}/api/chat/mark-read/`;
   private readonly getUserByUserNameURL = `${this.config.apiUrl}/api/chat/get-user-by-username/`;
 
   public getChats() {
     this.shared.http.get(this.chatsURL, this.shared.CredAndCsrf()).subscribe({
       next: (res: any) => {
-        console.log(res);
         this.chats.set(res.chats as ChatType[]);
         this.chatsLoading.set(false);
       },
       error: (err) => {
-        console.log(err);
         this.shared.setErrors(err.error);
       },
     })
@@ -61,12 +60,10 @@ export class ChatsService {
   public getUserByUserName(username: string) {
     this.shared.http.get(`${this.getUserByUserNameURL}?username=${username}`, this.shared.CredAndCsrf()).subscribe({
       next: (res: any) => {
-        console.log(res);
         this.userFetchedLoading.set(false);
         this.userFetched.set(res.user as UserFetchedType);
       },
       error: (err) => {
-        console.log(err);
         this.userFetchedLoading.set(false);
         this.userFetched.set(null);
         this.shared.setErrors(err.error);
@@ -90,9 +87,8 @@ export class ChatsService {
 
     this.chatSocket()!.onmessage = (event) => {
       const data: WebSocketMessageType = JSON.parse(event.data);
-      console.log(data);
-
       if(!data) return;
+
       if(data.type === 'chat_created') {
         this.chats.update((prev) => [...prev, data.chat])
       }
@@ -140,14 +136,12 @@ export class ChatsService {
 
     this.shared.http.post(this.chatsURL, { user }, this.shared.CredAndCsrf()).subscribe({
       next: (res: any) => {
-        console.log(res);
-        this.chats.update((prev) => [res.chat, ...prev])
+        this.chats.update(prev => [res.chat, ...prev])
         this.chatAddedLoading.set(false);
         this.userFetched.set(null);
         if(sf) sf();
       },
       error: (err) => {
-        console.log(err);
         this.chatAddedLoading.set(false);
         this.shared.setErrors(err.error);
       },
@@ -157,7 +151,6 @@ export class ChatsService {
   removeChat(chat_id: number, sc?: () => void, fd?: () => void) {
     this.shared.http.delete(`${this.deleteChatURL}${chat_id}/`, this.shared.CredAndCsrf()).subscribe({
       next: (res: any) => {
-        console.log(res);
         this.chats.update(prev => 
           prev.filter(chat => chat.id !== res.chat_id)
         );
@@ -165,9 +158,32 @@ export class ChatsService {
         if(sc) sc();
       },
       error: (err) => {
-        console.log(err);
         this.shared.setErrors(err.error);
         this.removeChatLoading.set(false);
+        if(fd) fd();
+      },
+    })
+  }
+
+  markAsRead(chat_id: number, sc?: () => void, fd?: () => void) {
+    this.shared.http.post(`${this.markAsReadURL}${chat_id}/`, {}, this.shared.CredAndCsrf()).subscribe({
+      next: (res: any) => {
+        this.shared.alertService.addAlert({
+          message: res.detail,
+          type: 'success'
+        });
+
+        this.chats.update(prev =>
+          prev.map(chat =>
+            chat.id === chat_id
+              ? { ...chat, unread_count: 0 }
+              : chat
+          )
+        );
+        if(sc) sc();
+      },
+      error: (err) => {
+        this.shared.setErrors(err.error);
         if(fd) fd();
       },
     })

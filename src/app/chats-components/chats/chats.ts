@@ -7,10 +7,13 @@ import { ChatsService, ChatType } from '../../services/chats-service/chats-servi
 import { CommonModule } from '@angular/common';
 import { SharedUtils } from '../../services/shared-service/shared-utils';
 import { NewChat } from '../new-chat/new-chat';
+import { IconContainer } from '../../other-components/icon-container/icon-container';
 
 @Component({
   selector: 'app-chats',
-  imports: [Sidebar, Input, Card, Chat, Button, Spinner, CommonModule, NewChat, NavItem, Modal],
+  imports: [Sidebar, Input, Card, Chat, Button, 
+    Spinner, CommonModule, NewChat, NavItem, 
+    Modal, IconContainer],
   templateUrl: './chats.html',
   styleUrl: './chats.css',
 })
@@ -25,24 +28,26 @@ export class Chats {
   readonly sideBarFloating = signal<boolean>(false);
 
   constructor() {
-    this.startingInitChats()
-    
     effect(() => {
-      const isLoggedin = this.authApi.isLoggedin()
+      const isLoggedin = this.authApi.isLoggedin();
 
       if(!isLoggedin) {
-        // this.router.navigate(['/login']);
+        this.router.navigate(['/login']);
         this.alert.addAlert({
           message: 'You need to log in first.',
           type: 'info'
         })
       }
-    })
-
+    });
+    
     effect(() => {
       const min768px = this.shared.min768px()
       this.sideBarFloating.set(!min768px);
-    })
+    });
+
+    if(this.authApi.isLoggedin()) {
+      this.startingInitChats();
+    }
   }
 
   startingInitChats() {
@@ -100,17 +105,20 @@ export class Chats {
       {
         id: 'view-profile',
         label: 'View Profile',
+        colorClass: 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 group',
         iconTpl: this.viewProfileIconTpl,
       },
       {
         id: 'dismiss-unread',
         label: 'Dismiss Unread',
+        colorClass: 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 group',
+        closeMenuAfterClick: true,
         iconTpl: this.dismissUnreadIconTpl
       },
       {
         id: 'remove-chat',
         label: 'Remove Chat',
-        colorClass: 'text-red-600 hover:text-red-800 dark:text-red-700 dark:hover:text-red-500',
+        colorClass: 'text-red-600 hover:text-red-800 dark:text-red-700 dark:hover:text-red-500 group',
         iconTpl: this.removeChatIconTpl
       },
     ],
@@ -137,15 +145,12 @@ export class Chats {
 
   readonly isSettingsHover = signal(false);
   itemClicked(event: NavbarItem, chat: ChatType, user_id: number) {
-    console.log(event);
-    console.log(chat);
-    console.log(user_id);
-
     switch(event.id) {
       case 'view-profile': 
         this.router.navigate([`/profile/${user_id}`]);
         break;
       case 'dismiss-unread': 
+        this.chatsService.markAsRead(chat.id);
         break;
       case 'remove-chat': 
         this.removeChatModal.set(true);

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, input } from '@angular/core';
 
-export type ColorsType = 'blue' | 'red' | 'purple' | 'yellow' | 'indigo'
+export type ColorsType = 'blue' | 'red' | 'purple' | 'yellow' | 'indigo' | 'green'
 
 @Component({
   selector: 'app-icon-container',
@@ -14,30 +14,25 @@ export class IconContainer {
   readonly sizeOuter = input<`size-${number}`>('size-8');
   readonly sizeInner = input<`size-${number}`>('size-7');
 
-  readonly gradientBg = computed(() => {
-    const map = {
+  readonly gradientBg = computed<string>(() => {
+    const map: Record<ColorsType, string> = {
       blue: 'from-blue-500/20 to-indigo-500/20 dark:from-blue-500/30 dark:to-indigo-500/30',
-      green: 'from-green-500/20 to-emerald-500/20 dark:from-green-500/30 dark:to-emerald-500/30',
       red: 'from-red-500/20 to-rose-500/20 dark:from-red-500/30 dark:to-rose-500/30',
       purple: 'from-purple-500/20 to-fuchsia-500/20 dark:from-purple-500/30 dark:to-fuchsia-500/30',
       yellow: 'from-yellow-400/20 to-amber-500/20 dark:from-yellow-400/30 dark:to-amber-500/30',
+      indigo: 'from-indigo-500/20 to-violet-500/20 dark:from-indigo-500/30 dark:to-violet-500/30',
+      green: 'from-green-500/20 to-emerald-500/20 dark:from-green-500/30 dark:to-emerald-500/30',
     };
     return map[this.color()];
   });
 
-  readonly innerBg = computed(() => {
-    const map = {
+  readonly innerBg = computed<string>(() => {
+    const map: Record<ColorsType, string> = {
       blue: `
         from-blue-100 to-blue-200
         dark:from-blue-900/40 dark:to-blue-800/40
         group-hover:from-blue-200 group-hover:to-blue-300
         dark:group-hover:from-blue-800/60 dark:group-hover:to-blue-700/60
-      `,
-      green: `
-        from-green-100 to-green-200
-        dark:from-green-900/40 dark:to-green-800/40
-        group-hover:from-green-200 group-hover:to-green-300
-        dark:group-hover:from-green-800/60 dark:group-hover:to-green-700/60
       `,
       red: `
         from-red-100 to-red-200
@@ -57,6 +52,17 @@ export class IconContainer {
         group-hover:from-yellow-200 group-hover:to-yellow-300
         dark:group-hover:from-yellow-800/60 dark:group-hover:to-yellow-700/60
       `,
+      indigo: `
+        from-indigo-100 to-indigo-200
+        dark:from-indigo-900/40 dark:to-indigo-800/40
+        group-hover:from-indigo-200 group-hover:to-indigo-300
+        dark:group-hover:from-indigo-800/60 dark:group-hover:to-indigo-700/60
+      `,
+      green: `from-green-100 to-green-200 
+        dark:from-green-900/40 dark:to-green-800/40 
+        group-hover:from-green-200 group-hover:to-green-300
+        dark:group-hover:from-green-800/60 dark:group-hover:to-green-700/60`
+      ,
     };
     return map[this.color()];
   });
