@@ -90,7 +90,10 @@ export class ChatsService {
       if(!data) return;
 
       if(data.type === 'chat_created') {
-        this.chats.update((prev) => [...prev, data.chat])
+        this.chats.update((prev) => [...prev, data.chat]);
+      }
+      else if(data.type === 'new_message_notification') {
+        console.log(data);
       }
     };
 
@@ -165,14 +168,9 @@ export class ChatsService {
     })
   }
 
-  markAsRead(chat_id: number, sc?: () => void, fd?: () => void) {
+  markAsRead(chat_id: number, sc?: (message: string) => void, fd?: () => void) {
     this.shared.http.post(`${this.markAsReadURL}${chat_id}/`, {}, this.shared.CredAndCsrf()).subscribe({
       next: (res: any) => {
-        this.shared.alertService.addAlert({
-          message: res.detail,
-          type: 'success'
-        });
-
         this.chats.update(prev =>
           prev.map(chat =>
             chat.id === chat_id
@@ -180,7 +178,7 @@ export class ChatsService {
               : chat
           )
         );
-        if(sc) sc();
+        if(sc) sc(res.detail);
       },
       error: (err) => {
         this.shared.setErrors(err.error);

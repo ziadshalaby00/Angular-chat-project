@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { SharedUtils } from '../../services/shared-service/shared-utils';
 import { NewChat } from '../new-chat/new-chat';
 import { IconContainer } from '../../other-components/icon-container/icon-container';
+import { ChatService } from '../../services/chat-service/chat-service';
 
 @Component({
   selector: 'app-chats',
@@ -21,6 +22,7 @@ export class Chats {
   readonly authApi: AuthApi = inject(AuthApi);
   readonly shared: SharedUtils = inject(SharedUtils);
   readonly chatsService: ChatsService = inject(ChatsService);
+  readonly chatService: ChatService = inject(ChatService);
   
   readonly router: Router = inject(Router);
   readonly alert: AlertService = inject(AlertService);
@@ -150,7 +152,15 @@ export class Chats {
         this.router.navigate([`/profile/${user_id}`]);
         break;
       case 'dismiss-unread': 
-        this.chatsService.markAsRead(chat.id);
+        this.chatsService.markAsRead(
+          chat.id,
+          (message: string) => {
+            this.shared.alertService.addAlert({
+              message: message,
+              type: 'success'
+            });
+          }
+        );
         break;
       case 'remove-chat': 
         this.removeChatModal.set(true);
@@ -175,5 +185,9 @@ export class Chats {
       },
       () => this.removeChatId.set(null)
     );
+  }
+
+  isCurrentChat(chat_id: number): boolean {
+    return this.chatService.currentChat() === chat_id;
   }
 }

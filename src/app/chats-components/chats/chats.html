@@ -50,9 +50,12 @@ dark:bg-blue-800/50">
                                 <!-- Chat Card -->
                                 <ZS-card
                                     [clickable]="!isSettingsHover()"
-                                    cardStyle="primary"
-                                    [style]="'z-index: ' + (filteredChats().length-i)"
-                                    class="group/card"
+                                    (click)="chatService.currentChat.set(item.id)"
+                                    [cardStyle]="isCurrentChat(item.id) ? 'success' : 'primary'"
+                                    [style.zIndex]="filteredChats().length - i"
+                                    bodyClass="group/card 
+                                    {{ isCurrentChat(item.id) ? 'bg-green-300/60 dark:bg-green-700/60' : '' }}
+                                    "
                                 >
                                     <div class="py-3 px-4 flex justify-start items-center 
                                     gap-3 relative">
@@ -61,9 +64,13 @@ dark:bg-blue-800/50">
                                             <img
                                                 [src]="participant.user_info.user_image"
                                                 alt="User image"
+                                                [ngClass]="[
+                                                    isCurrentChat(item.id) 
+                                                        ? 'group-hover/card:border-green-600 dark:group-hover/card:border-green-500' 
+                                                        : 'group-hover/card:border-blue-600 dark:group-hover/card:border-blue-500',
+                                                ]"
                                                 class="size-14 min-w-14 rounded-full shadow-lg border-2 border-white 
-                                                dark:border-gray-800 object-cover group-hover/card:border-blue-600 
-                                                dark:group-hover/card:border-blue-500 transition-colors duration-300"
+                                                dark:border-gray-800 object-cover transition-colors duration-300"
                                             >
                                         }
                                         @else if(participant.user_info.is_deleted) {
@@ -80,10 +87,14 @@ dark:bg-blue-800/50">
                                         }
                                         @else {
                                             <div
-                                                class="size-14 min-w-14 text-2xl rounded-full shadow-lg bg-linear-to-br from-blue-500 
-                                                to-indigo-600 flex items-center justify-center text-white border-2 border-white 
-                                                dark:border-gray-800 font-bold group-hover/card:from-blue-600 group-hover/card:to-indigo-700 
-                                                transition-all duration-300"
+                                                [ngClass]="[
+                                                    isCurrentChat(item.id) 
+                                                        ? 'from-green-500  to-emerald-600 group-hover/card:from-green-600 group-hover/card:to-emerald-700 ' 
+                                                        : 'from-blue-500 to-indigo-600 group-hover/card:from-blue-600 group-hover/card:to-indigo-700 ',
+                                                ]"
+                                                class="size-14 min-w-14 text-2xl rounded-full shadow-lg bg-linear-to-br 
+                                                 flex items-center justify-center text-white border-2 border-white 
+                                                dark:border-gray-800 font-bold transition-all duration-300"
                                                 aria-hidden="true"
                                             >
                                                 {{ participant.user_info.fullname.charAt(0).toUpperCase() }}
@@ -92,9 +103,14 @@ dark:bg-blue-800/50">
 
                                         <!-- User Info -->
                                         <div class="flex flex-col flex-1 min-w-0">
-                                            <p class="font-semibold leading-tight line-clamp-1 wrap-anywhere text-sm 
-                                            text-gray-800 dark:text-white group-hover/card:text-blue-600 
-                                            dark:group-hover/card:text-blue-400 transition-colors duration-300">
+                                            <p
+                                            [ngClass]="[
+                                                isCurrentChat(item.id) 
+                                                    ? 'group-hover/card:text-green-600 dark:group-hover/card:text-green-400' 
+                                                    : 'group-hover/card:text-blue-600 dark:group-hover/card:text-blue-400',
+                                            ]"
+                                            class="font-semibold leading-tight line-clamp-1 wrap-anywhere text-sm 
+                                            text-gray-800 dark:text-white transition-colors duration-300">
                                                 {{ participant.user_info.fullname }}
                                             </p>
                                             <p 

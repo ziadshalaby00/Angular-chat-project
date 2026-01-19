@@ -24,6 +24,8 @@ export class InitAppService {
 
     this.stopInit.set(true);
     this.authApi.verifyloading.set(false);
-    this.router.navigate([reRouting]);
+    this.router.navigate([reRouting], {
+      replaceUrl: true
+    });
   }
 }
