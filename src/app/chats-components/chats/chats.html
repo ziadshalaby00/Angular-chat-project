@@ -50,7 +50,7 @@ dark:bg-blue-800/50">
                                 <!-- Chat Card -->
                                 <ZS-card
                                     [clickable]="!isSettingsHover()"
-                                    (click)="chatService.currentChat.set(item.id)"
+                                    (click)="chatService.currentChatId.set(item.id)"
                                     [cardStyle]="isCurrentChat(item.id) ? 'success' : 'primary'"
                                     [style.zIndex]="filteredChats().length - i"
                                     bodyClass="group/card 
@@ -59,47 +59,13 @@ dark:bg-blue-800/50">
                                 >
                                     <div class="py-3 px-4 flex justify-start items-center 
                                     gap-3 relative">
+
                                         <!-- User Avatar -->
-                                        @if(participant.user_info.user_image) {
-                                            <img
-                                                [src]="participant.user_info.user_image"
-                                                alt="User image"
-                                                [ngClass]="[
-                                                    isCurrentChat(item.id) 
-                                                        ? 'group-hover/card:border-green-600 dark:group-hover/card:border-green-500' 
-                                                        : 'group-hover/card:border-blue-600 dark:group-hover/card:border-blue-500',
-                                                ]"
-                                                class="size-14 min-w-14 rounded-full shadow-lg border-2 border-white 
-                                                dark:border-gray-800 object-cover transition-colors duration-300"
-                                            >
-                                        }
-                                        @else if(participant.user_info.is_deleted) {
-                                            <div
-                                                class="size-14 min-w-14 text-2xl rounded-full shadow-lg bg-linear-to-br 
-                                                from-red-500 to-rose-600 flex items-center justify-center text-white 
-                                                border-2 border-white dark:border-gray-800 relative"
-                                                aria-hidden="true"
-                                            >
-                                                <i class="fa-solid fa-user-slash"></i>
-                                                <div class="absolute -bottom-1 -right-1 size-3.5 bg-red-600 rounded-full 
-                                                border-2 border-white dark:border-gray-800"></div>
-                                            </div>
-                                        }
-                                        @else {
-                                            <div
-                                                [ngClass]="[
-                                                    isCurrentChat(item.id) 
-                                                        ? 'from-green-500  to-emerald-600 group-hover/card:from-green-600 group-hover/card:to-emerald-700 ' 
-                                                        : 'from-blue-500 to-indigo-600 group-hover/card:from-blue-600 group-hover/card:to-indigo-700 ',
-                                                ]"
-                                                class="size-14 min-w-14 text-2xl rounded-full shadow-lg bg-linear-to-br 
-                                                 flex items-center justify-center text-white border-2 border-white 
-                                                dark:border-gray-800 font-bold transition-all duration-300"
-                                                aria-hidden="true"
-                                            >
-                                                {{ participant.user_info.fullname.charAt(0).toUpperCase() }}
-                                            </div>
-                                        }
+                                        <app-user-avatar
+                                        [participant]="participant"
+                                        [isCurrentChat]="isCurrentChat(item.id)"
+                                        >
+                                        </app-user-avatar>
 
                                         <!-- User Info -->
                                         <div class="flex flex-col flex-1 min-w-0">
@@ -207,6 +173,19 @@ dark:bg-blue-800/50">
     </div>
 </div>
 
+
+
+<!-- New Chat Modal -->
+<app-new-chat [(newChatModal)]="newChatModal"></app-new-chat>
+
+<!-- Remove Chat Modal -->
+<app-remove-chat 
+    [(removeChatModal)]="removeChatModal" 
+    [(removeChatId)]="removeChatId"
+></app-remove-chat>
+
+
+
 <!-- Templates -->
 <ng-template #newChatIcon>
     <div class="size-9">
@@ -234,6 +213,7 @@ dark:bg-blue-800/50">
     </div>
 </ng-template>
 
+<!-- Setting Icon -->
 <ng-template #chatSettingsIcon>
     <div class="zs:flex zs:items-center zs:p-2 zs:justify-center">
         <i class="fa-solid fa-ellipsis-vertical"></i>
@@ -257,75 +237,4 @@ dark:bg-blue-800/50">
     <app-icon-container color="red">
         <i icon class="fa-solid fa-trash-can text-red-600 dark:text-red-400"></i>
     </app-icon-container>
-</ng-template>
-
-<!-- New Chat Modal -->
-<app-new-chat [(newChatModal)]="newChatModal"></app-new-chat>
-
-<!-- Remove Chat Modal -->
-<ZS-modal
-  [(open)]="removeChatModal"
-  [showHeader]="false"
-  (cancelEv)="removeChatModal.set(false)"
-  [confirmConfig]="{
-    text: 'Remove Chat',
-    btnStyle: 'danger',
-    disabled: chatsService.removeChatLoading(),
-    iconTpl: chatsService.removeChatLoading() ? loaderIconTpl : null,
-  }"
-  (confirmEv)="RemoveChat()"
-  [modalStyle]="'danger'"
-  modalSize="md"
-  modalClass="border-2 border-red-200 dark:border-red-800/50"
-  bodyClass="p-6"
->
-  <div class="flex flex-col gap-3 items-center text-center">
-    <!-- Warning Icon -->
-    <div class="relative">
-      <div class="size-20 rounded-full bg-linear-to-br from-red-500/10 to-rose-600/10 dark:from-red-500/20 dark:to-rose-600/20 flex items-center justify-center">
-        <div class="size-16 rounded-full bg-linear-to-br from-red-100 to-rose-200 dark:from-red-900/40 dark:to-rose-900/40 flex items-center justify-center">
-          <i class="fa-solid fa-trash-can text-3xl text-red-600 dark:text-red-400"></i>
-        </div>
-      </div>
-      <div class="absolute -top-1 -right-1 size-8 rounded-full bg-red-500 border-2 border-white dark:border-gray-900 flex items-center justify-center animate-pulse">
-        <i class="fa-solid fa-exclamation text-xs text-white"></i>
-      </div>
-    </div>
-
-    <!-- Warning Message -->
-    <div class="space-y-2">
-      <h3 class="text-xl font-bold text-gray-900 dark:text-white">
-        Remove Chat from Your List?
-      </h3>
-      
-      <div class="space-y-2">
-        <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-3">
-            This will remove the conversation from <span class="font-semibold">your chat list only</span>.
-            The other participant will still be able to see the chat and its messages.
-        </p>
-        
-        <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/50 rounded-lg p-3 mt-2">
-          <div class="flex items-start gap-2">
-            <i class="fa-solid fa-circle-info text-red-500 dark:text-red-400"></i>
-            <div class="text-left">
-              <p class="text-xs text-red-700 dark:text-red-300 font-medium">
-                What happens when you remove this chat:
-              </p>
-              <ul class="text-xs text-red-600 dark:text-red-400 mt-1 space-y-1 pl-4 list-disc">
-                    <li>The chat and all its messages will be removed <strong>only for you</strong></li>
-                    <li>The other person will <strong>not be notified</strong></li>
-                    <li>You can start the chat again anytime by adding the user again</li>
-                    <li>You will not receive notifications for new messages sent to this chat</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</ZS-modal>
-
-<!-- Loader Icon Template -->
-<ng-template #loaderIcon>
-    <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
 </ng-template>

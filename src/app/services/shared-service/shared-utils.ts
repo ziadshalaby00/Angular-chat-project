@@ -28,16 +28,16 @@ export class SharedUtils {
     return date.toLocaleString("en-GB", options);
   }
 
-  readonly alertService: AlertService = inject(AlertService);
-  readonly extractorService: ExtractorService = inject(ExtractorService);
-  readonly http: HttpClient = inject(HttpClient);
+  public readonly alertService: AlertService = inject(AlertService);
+  private readonly extractorService: ExtractorService = inject(ExtractorService);
+  public readonly http: HttpClient = inject(HttpClient);
 
-  setErrors(errorObject: any) {
-    const errors = this.extractorService.extract(errorObject)
+  public setErrors(errorObject: any) {
+    const errors: string[] = this.extractorService.extract(errorObject);
     this.alertService.bulkAlert(errors, { type: 'danger' });
   }
 
-  extractCSRFToken(): string | null {
+  public extractCSRFToken(): string | null {
     const name = 'csrftoken=';
     const decodedCookie = decodeURIComponent(document.cookie);
     const cookies = decodedCookie.split(';');
@@ -52,7 +52,7 @@ export class SharedUtils {
     return null;
   }
 
-  CredAndCsrf(extraOptions: HttpOptions = {}): HttpOptions {
+  public CredAndCsrf(extraOptions: HttpOptions = {}): HttpOptions {
     const csrfToken = this.extractCSRFToken();
 
     const defaultOptions: HttpOptions = {
@@ -92,5 +92,5 @@ export class SharedUtils {
   }
 
   // ========================= Breakpoints =========================
-  readonly min768px = this.createMediaSignal('(min-width: 768px)');
+  public readonly min768px = this.createMediaSignal('(min-width: 768px)');
 }

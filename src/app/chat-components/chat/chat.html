@@ -1,5 +1,72 @@
-<div class="h-full w-full px-3">
-  @if(!chatService.currentChat()) {
+<div class="h-full w-full">
+  <!-- Header -->
+  <div class="w-full"> 
+    @if(currentChat()) {
+      @for(participant of currentChat()?.participants; track participant.user_info.id) {
+        @if(participant.user_info.id !== authApi.userData()?.id) {
+          <!-- Chat Card -->
+          <div class="py-3 pl-4 pr-2 flex justify-start items-center 
+          gap-3 relative group/card bg-blue-300/60 dark:bg-blue-800/60">
+            <!-- User Avatar -->
+            <app-user-avatar
+            [participant]="participant"
+            [isCurrentChat]="true"
+            >
+            </app-user-avatar>
+  
+            <!-- User Info -->
+            <div class="flex flex-col flex-1 min-w-0">
+              <p
+              class="font-semibold leading-tight line-clamp-1 wrap-anywhere text-sm 
+              text-gray-800 dark:text-white transition-colors duration-300
+              group-hover/card:text-green-600 dark:group-hover/card:text-green-400">
+                {{ participant.user_info.fullname }}
+              </p>
+              <p 
+                  class="text-xs text-gray-600 dark:text-gray-400 wrap-anywhere leading-tight mt-0.5"
+                  [ngClass]="[participant.user_info.is_deleted ? 'line-clamp-2 italic' : 'line-clamp-1']"
+              >
+                @if(participant.user_info.is_deleted) {
+                  <span class="text-rose-800 dark:text-rose-400">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                    This user is no longer available.
+                  </span>
+                }
+                @else {
+                  <span class="text-gray-500 dark:text-gray-400">
+                    @{{ participant.user_info.username }}
+                  </span>
+                }
+              </p>
+            </div>
+
+            <!-- Leave Chat -->
+            <i 
+            class="p-3
+            fa-solid fa-circle-xmark text-lg cursor-pointer
+            hover:scale-[1.02] active:scale-[0.97]
+            text-red-600 dark:text-red-400 
+            hover:text-red-700 darkhover:text-red-300
+            "
+            ></i>
+
+            <!-- Chat Settings Menu -->
+            <div
+            (click)="$event.stopPropagation()"
+            class="zs:h-full zs:flex zs:items-center zs:justify-center"
+            >
+              <ZS-nav-item
+              (anyItemClickedEv)="itemClicked($event, participant.user_info.id)"
+              [collectionName]="''+currentChat()?.id"
+              [item]="getChatSettings(participant.user_info.is_deleted)"
+              ></ZS-nav-item>
+            </div>
+          </div>
+        }
+      }
+    }
+  </div>
+  @if(!chatService.currentChatId()) {
     <div class="w-full h-full text-3xl text-red-700 flex justify-center items-center">
       You are not in any chat
     </div>
@@ -19,31 +86,30 @@
         </div>
       </div>
     }@else {
-      <div class="h-full w-full">
-        <div class="w-full h-full text-3xl text-green-700 flex justify-center items-center">
-          Messages
-        </div>
+      <div class="w-full h-full text-3xl text-green-700 flex justify-center items-center">
+        {{ chatService.chatMessages()?.count }}
       </div>
     }
   }
 </div>
 
 <!-- Onthor Button To Open Side Bar -->
-<div class="
-    absolute
-    right-0
-    top-1/2
-    -translate-y-1/2
-    w-8
-    py-2
-    bg-gray-200 dark:bg-gray-700
-    flex items-center justify-center
-    rounded-l-xl
-    shadow-md
-    hover:opacity-90
-    hover:cursor-pointer
-    transition-opacity 
-    duration-300
+<div 
+class="
+  absolute
+  right-0
+  top-1/2
+  -translate-y-1/2
+  w-8
+  py-2
+  bg-gray-200 dark:bg-gray-700
+  flex items-center justify-center
+  rounded-l-xl
+  shadow-md
+  hover:opacity-90
+  hover:cursor-pointer
+  transition-opacity 
+  duration-300
 "
 [ngClass]="[
     openSide()
@@ -69,3 +135,35 @@
     <path d="M9 4l0 16" />
   </svg>
 </div>
+
+<!-- Remove Chat Modal -->
+<app-remove-chat 
+[(removeChatModal)]="removeChatModal" 
+[removeChatId]="this.chatService.currentChatId()"
+></app-remove-chat>
+
+<!-- Setting Icon -->
+<ng-template #chatSettingsIcon>
+  <div class="flex zs:items-center p-2 justify-center">
+    <i class="fa-solid fa-ellipsis-vertical"></i>
+  </div>
+</ng-template>
+
+<!-- Chat Setting Icons -->
+<ng-template #viewProfileIcon>
+  <app-icon-container color="blue">
+    <i icon class="fa-solid fa-user text-blue-600 dark:text-blue-400"></i>
+  </app-icon-container>
+</ng-template>
+
+<ng-template #dismissUnreadIcon>
+  <app-icon-container color="green">
+    <i icon class="fa-solid fa-envelope-open text-green-600 dark:text-green-400"></i>
+  </app-icon-container>
+</ng-template>
+
+<ng-template #removeChatIcon>
+  <app-icon-container color="red">
+    <i icon class="fa-solid fa-trash-can text-red-600 dark:text-red-400"></i>
+  </app-icon-container>
+</ng-template>

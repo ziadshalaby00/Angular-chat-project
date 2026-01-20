@@ -9,12 +9,14 @@ import { SharedUtils } from '../../services/shared-service/shared-utils';
 import { NewChat } from '../new-chat/new-chat';
 import { IconContainer } from '../../other-components/icon-container/icon-container';
 import { ChatService } from '../../services/chat-service/chat-service';
+import { RemoveChat } from '../remove-chat/remove-chat';
+import { UserAvatar } from '../user-avatar/user-avatar';
 
 @Component({
   selector: 'app-chats',
   imports: [Sidebar, Input, Card, Chat, Button, 
     Spinner, CommonModule, NewChat, NavItem, 
-    Modal, IconContainer],
+    IconContainer, RemoveChat, UserAvatar],
   templateUrl: './chats.html',
   styleUrl: './chats.css',
 })
@@ -169,25 +171,10 @@ export class Chats {
     }
   }
 
-  readonly loaderIconTpl = viewChild<TemplateRef<any>>('loaderIcon');
-  readonly removeChatModal = signal<boolean>(false);
-  readonly removeChatId = signal<number | null>(null);
-
-  RemoveChat() {
-    const id = this.removeChatId();
-    if(!id) return;
-    this.chatsService.removeChatLoading.set(true);
-    this.chatsService.removeChat(
-      id,
-      () => {
-        this.removeChatId.set(null);
-        this.removeChatModal.set(false);
-      },
-      () => this.removeChatId.set(null)
-    );
-  }
+  readonly removeChatModal = model<boolean>(false);
+  readonly removeChatId = model<number | null>(null);
 
   isCurrentChat(chat_id: number): boolean {
-    return this.chatService.currentChat() === chat_id;
+    return this.chatService.currentChatId() === chat_id;
   }
 }

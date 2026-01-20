@@ -30,7 +30,7 @@ interface WebSocketMessageType {
 })
 export class ChatsService {
   private readonly config = inject(ConfigService);
-  readonly shared: SharedUtils = inject(SharedUtils);
+  private readonly shared: SharedUtils = inject(SharedUtils);
 
   public readonly chats = signal<ChatType[]>([]);
   public readonly chatsLoading = signal<boolean>(false);
@@ -151,7 +151,7 @@ export class ChatsService {
     })
   }
 
-  removeChat(chat_id: number, sc?: () => void, fd?: () => void) {
+  public removeChat(chat_id: number, sc?: () => void, fd?: () => void) {
     this.shared.http.delete(`${this.deleteChatURL}${chat_id}/`, this.shared.CredAndCsrf()).subscribe({
       next: (res: any) => {
         this.chats.update(prev => 
@@ -168,7 +168,7 @@ export class ChatsService {
     })
   }
 
-  markAsRead(chat_id: number, sc?: (message: string) => void, fd?: () => void) {
+  public markAsRead(chat_id: number, sc?: (message: string) => void, fd?: () => void) {
     this.shared.http.post(`${this.markAsReadURL}${chat_id}/`, {}, this.shared.CredAndCsrf()).subscribe({
       next: (res: any) => {
         this.chats.update(prev =>
