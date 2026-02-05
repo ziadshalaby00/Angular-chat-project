@@ -2,6 +2,7 @@ import { inject, Injectable, Injector } from '@angular/core';
 import { UserSharedUtils } from './user-shared-utils';
 import { Token } from './token';
 import { ChatsService } from '../chats-service/chats-service';
+import { ChatService } from '../chat-service/chat-service';
 
 @Injectable({
   providedIn: 'root',
@@ -12,24 +13,30 @@ export class Logout {
   private get token(): Token { return this.injector.get(Token); }
 
   readonly chatsService: ChatsService = inject(ChatsService);
+  readonly chatService: ChatService = inject(ChatService);
 
   private readonly logoutURL = `${this.userShared.config.apiUrl}/api/auth/logout/`;
 
-  logout(logoutAction?: (message?: string) => void) {
+  logout(logoutAction?: (message?: string) => void, router?: string) {
     this.userShared.shared.http.post(this.logoutURL, {}, { withCredentials: true }).subscribe({
       next: (res: any) => {
         if(logoutAction) logoutAction(res.message)
+        this.userShared.router.navigate([`/${router ?? 'home'}`]);
+
         this.resetDataLogout();
         this.token.stopRefreshEventLoop();
       },
-      error: (err: any) => { if(logoutAction) logoutAction() }
+      error: (err: any) => { if(logoutAction) logoutAction(); }
     })
   }
 
   resetDataLogout() {
     this.userShared.userData.set(null);
     this.userShared.isLoggedin.set(false);
+
     this.chatsService.chats.set([]);
     this.chatsService.disconnectChats();
+
+    this.chatService.currentChatId.set(null);
   }
 }

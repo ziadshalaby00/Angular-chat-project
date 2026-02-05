@@ -77,24 +77,12 @@ export class Profile {
       );
     });
 
-
-    effect(() => {
-      const isLoggedin = this.authApi.isLoggedin()
-      untracked(() => {
-        const isProfileForUserLoggedIn = this.isProfileForUserLoggedIn();
-
-        if(!isLoggedin && isProfileForUserLoggedIn) {
-          this.router.navigate(['/login']);
-        }
-      })
-    })
-
     effect(() => {
       const userLoggedinData = this.authApi.userData();
 
       untracked(() => {
-        const isUserLoggedIn = this.isProfileForUserLoggedIn();
-        if(isUserLoggedIn) {
+        const isProfileForUserLoggedIn = this.isProfileForUserLoggedIn();
+        if(isProfileForUserLoggedIn) {
           this.profileData.set(userLoggedinData);
         }
       })

@@ -1,3 +1,4 @@
+import { ChatService } from './../chat-service/chat-service';
 import { inject, Injectable, signal } from '@angular/core';
 import { ConfigService } from '../config-service/config-service';
 import { SharedUtils } from '../shared-service/shared-utils';
@@ -31,6 +32,7 @@ interface WebSocketMessageType {
 export class ChatsService {
   private readonly config = inject(ConfigService);
   private readonly shared: SharedUtils = inject(SharedUtils);
+  private readonly chatService: ChatService = inject(ChatService);
 
   public readonly chats = signal<ChatType[]>([]);
   public readonly chatsLoading = signal<boolean>(false);
@@ -154,6 +156,9 @@ export class ChatsService {
   public removeChat(chat_id: number, sc?: () => void, fd?: () => void) {
     this.shared.http.delete(`${this.deleteChatURL}${chat_id}/`, this.shared.CredAndCsrf()).subscribe({
       next: (res: any) => {
+        if(res.chat_id === this.chatService.currentChatId()) {
+          this.chatService.currentChatId.set(null);
+        }
         this.chats.update(prev => 
           prev.filter(chat => chat.id !== res.chat_id)
         );

@@ -2,7 +2,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { SharedUtils } from '../shared-service/shared-utils';
 import { ConfigService } from '../config-service/config-service';
 
-interface ResultType {
+export interface ResultType {
   "id": number,
   "chat": number,
   "sender": {
@@ -13,12 +13,15 @@ interface ResultType {
     "is_active": boolean,
     "is_deleted": boolean
   },
-  "type": string,
+  "type": 'text' | 'audio' | 'file',
   "timestamp": string,
   "reply_to": ResultType | null,
   "audio_message": string | null,
   "file_message": string | null,
-  "text_message": string | null
+  "text_message": {
+    "id": number,
+    "content": string | null
+  }
 }
 export interface ChatMessagesType {
   "count": number,

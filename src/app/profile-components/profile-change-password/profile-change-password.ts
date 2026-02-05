@@ -65,7 +65,7 @@ export class ProfileChangePassword {
         values,
           () => {
             this.handleCloseSuccess()?.(this.openChangePassModal);
-            this.authApi.logout();
+            this.authApi.logout(undefined, 'login');
           },
           this.handleCloseFail()
       );

@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, input } from '@angular/core';
+import { ResultType } from '../../services/chat-service/chat-service';
 
 @Component({
   selector: 'app-file',
@@ -7,5 +8,5 @@ import { Component } from '@angular/core';
   styleUrl: './file.css',
 })
 export class File {
-
+  readonly item = input.required<ResultType>();
 }

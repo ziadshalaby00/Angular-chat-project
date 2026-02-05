@@ -9,10 +9,13 @@ import { SharedUtils } from '../../services/shared-service/shared-utils';
 import { RemoveChat } from '../../chats-components/remove-chat/remove-chat';
 import { UserAvatar } from '../../chats-components/user-avatar/user-avatar';
 import { IconContainer } from '../../other-components/icon-container/icon-container';
+import { Audio } from '../audio/audio';
+import { File } from '../file/file';
+import { Text } from '../text/text';
 
 @Component({
   selector: 'app-chat',
-  imports: [CommonModule, Spinner, NavItem, Button, IconContainer, RemoveChat, UserAvatar],
+  imports: [CommonModule, Spinner, NavItem, IconContainer, RemoveChat, UserAvatar, Text, Audio, File],
   templateUrl: './chat.html',
   styleUrl: './chat.css',
 })
@@ -24,6 +27,8 @@ export class Chat {
   readonly openSide = model<boolean>(true);
   readonly chatService: ChatService = inject(ChatService);
   readonly chatsService: ChatsService = inject(ChatsService);
+
+  readonly messages = computed(() => this.chatService.chatMessages()?.results.reverse() ?? []);
 
   readonly currentChat = computed<ChatType | null>(() =>
     this.chatsService.chats()
@@ -103,5 +108,13 @@ export class Chat {
         this.removeChatModal.set(true);
         break;
     }
+  }
+
+  exitChat() {
+    this.chatService.currentChatId.set(null);
+  }
+
+  isUserMessage(sender_id: number): boolean {
+    return sender_id === this.authApi.userData()?.id;
   }
 }

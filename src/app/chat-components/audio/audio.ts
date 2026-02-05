@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, input } from '@angular/core';
+import { ResultType } from '../../services/chat-service/chat-service';
 
 @Component({
   selector: 'app-audio',
@@ -7,5 +8,5 @@ import { Component } from '@angular/core';
   styleUrl: './audio.css',
 })
 export class Audio {
-
+  readonly item = input.required<ResultType>();
 }
