@@ -1,0 +1,13 @@
+<!-- Chat Settings Menu -->
+<ZS-nav-item
+    [collectionName]="id()"
+    [item]="chatSettings()"
+    (anyItemClickedEv)="anyItemClickedEv.emit($event)"
+></ZS-nav-item>
+
+<!-- Setting Icon -->
+<ng-template #chatSettingsIcon>
+    <div class="zs:flex zs:items-center zs:p-2 zs:justify-center">
+        <i class="fa-solid fa-ellipsis-vertical"></i>
+    </div>
+</ng-template>

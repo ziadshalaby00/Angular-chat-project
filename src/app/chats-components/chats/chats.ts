@@ -11,12 +11,13 @@ import { IconContainer } from '../../other-components/icon-container/icon-contai
 import { ChatService } from '../../services/chat-service/chat-service';
 import { RemoveChat } from '../remove-chat/remove-chat';
 import { UserAvatar } from '../user-avatar/user-avatar';
+import { SettingsUi } from "../../other-components/settings-ui/settings-ui";
 
 @Component({
   selector: 'app-chats',
-  imports: [Sidebar, Input, Card, Chat, Button, 
-    Spinner, CommonModule, NewChat, NavItem, 
-    IconContainer, RemoveChat, UserAvatar],
+  imports: [Sidebar, Input, Card, Chat, Button,
+    Spinner, CommonModule, NewChat,
+    IconContainer, RemoveChat, UserAvatar, SettingsUi],
   templateUrl: './chats.html',
   styleUrl: './chats.css',
 })
@@ -95,16 +96,11 @@ export class Chats {
   readonly newChatModal = model<boolean>(false);
   readonly openSide = model<boolean>(true);
 
-  readonly chatSettingsIconTpl = viewChild<TemplateRef<any>>('chatSettingsIcon');
-
   readonly viewProfileIconTpl = viewChild<TemplateRef<any>>('viewProfileIcon');
   readonly dismissUnreadIconTpl = viewChild<TemplateRef<any>>('dismissUnreadIcon');
   readonly removeChatIconTpl = viewChild<TemplateRef<any>>('removeChatIcon');
 
-  readonly chatSettings = signal<NavbarItem>({
-    id: 'chat-settings',
-    label: '',
-    iconTpl: this.chatSettingsIconTpl,
+  readonly settings = {
     children: [
       {
         id: 'view-profile',
@@ -127,13 +123,13 @@ export class Chats {
       },
     ],
     childrenOpenWindow: true,
-    childrenWindowDir: 'left',
+    childrenWindowDir: 'left' as 'left' | 'right',
     showChevronDownIcon: false,
     closeOnPointerOutside: true
-  })
+  }
 
-  getChatSettings(isDeleted: boolean = false): NavbarItem {
-    const chatSettings = this.chatSettings();
+  getChatSettings(isDeleted: boolean = false) {
+    const chatSettings = this.settings;
 
     if (!isDeleted) {
       return chatSettings;
@@ -149,6 +145,7 @@ export class Chats {
 
   readonly isSettingsHover = signal(false);
   itemClicked(event: NavbarItem, chat: ChatType, user_id: number) {
+    console.log(event, chat, user_id)
     switch(event.id) {
       case 'view-profile': 
         this.router.navigate([`/profile/${user_id}`]);

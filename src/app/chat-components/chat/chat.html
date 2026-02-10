@@ -57,11 +57,11 @@
             (click)="$event.stopPropagation()"
             class="mr-1.5 h-full flex items-center justify-center"
             >
-              <ZS-nav-item
+              <app-settings-ui
+              [settings]="getChatSettings(participant.user_info.is_deleted)"
               (anyItemClickedEv)="itemClicked($event, participant.user_info.id)"
-              [collectionName]="''+currentChat()?.id"
-              [item]="getChatSettings(participant.user_info.is_deleted)"
-              ></ZS-nav-item>
+              >
+              </app-settings-ui>
             </div>
           </div>
         }
@@ -89,14 +89,18 @@
       </div>
     }@else {
       <div class="w-full h-[75%] flex flex-col gap-3 p-3 overflow-y-auto scroll scroll-primary">
-        @for(item of messages(); track item.id) {
-          @if(item.type === 'text') {
-            <app-text [item]="item" [isUserMessage]="isUserMessage(item.sender.id)"></app-text>
-          }@else if(item.type === 'audio') {
-            <app-audio [item]="item"></app-audio>
-          }@else if(item.type === 'file') {
-            <app-file [item]="item"></app-file>
-          }
+        @for(item of messages(); track item.id; let i = $index) {
+          <div
+          [style.zIndex]="messages().length - i"
+          >
+            @if(item.type === 'text') {
+              <app-text [item]="item" [isUserMessage]="isUserMessage(item.sender.id)"></app-text>
+            }@else if(item.type === 'audio') {
+              <app-audio [item]="item" [isUserMessage]="isUserMessage(item.sender.id)"></app-audio>
+            }@else if(item.type === 'file') {
+              <app-file [item]="item" [isUserMessage]="isUserMessage(item.sender.id)"></app-file>
+            }
+          </div>
         }
       </div>
     }

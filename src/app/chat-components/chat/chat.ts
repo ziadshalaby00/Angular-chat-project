@@ -12,10 +12,11 @@ import { IconContainer } from '../../other-components/icon-container/icon-contai
 import { Audio } from '../audio/audio';
 import { File } from '../file/file';
 import { Text } from '../text/text';
+import { SettingsUi } from '../../other-components/settings-ui/settings-ui';
 
 @Component({
   selector: 'app-chat',
-  imports: [CommonModule, Spinner, NavItem, IconContainer, RemoveChat, UserAvatar, Text, Audio, File],
+  imports: [CommonModule, Spinner, IconContainer, RemoveChat, UserAvatar, Text, Audio, File, SettingsUi],
   templateUrl: './chat.html',
   styleUrl: './chat.css',
 })
@@ -59,10 +60,7 @@ export class Chat {
   readonly dismissUnreadIconTpl = viewChild<TemplateRef<any>>('dismissUnreadIcon');
   readonly removeChatIconTpl = viewChild<TemplateRef<any>>('removeChatIcon');
 
-  readonly chatSettings = signal<NavbarItem>({
-    id: 'chat-settings',
-    label: '',
-    iconTpl: this.chatSettingsIconTpl,
+  readonly chatSettings = {
     children: [
       {
         id: 'view-profile',
@@ -78,13 +76,13 @@ export class Chat {
       },
     ],
     childrenOpenWindow: true,
-    childrenWindowDir: 'left',
+    childrenWindowDir: 'left' as 'left' | 'right',
     showChevronDownIcon: false,
     closeOnPointerOutside: true
-  })
+  };
 
-  getChatSettings(isDeleted: boolean = false): NavbarItem {
-    const chatSettings = this.chatSettings();
+  getChatSettings(isDeleted: boolean = false) {
+    const chatSettings = this.chatSettings;
 
     if (!isDeleted) {
       return chatSettings;

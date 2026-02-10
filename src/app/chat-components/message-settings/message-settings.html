@@ -1,0 +1,29 @@
+<!-- Chat Settings Menu -->
+<div
+class="absolute top-1/2 h-full flex items-center 
+justify-center -translate-y-1/2 -right-2.5"
+>
+    <app-settings-ui
+    [settings]="getMessageSettings()"
+    >
+    </app-settings-ui>
+</div>
+
+<!-- Message Setting Icons -->
+<ng-template #editMessageIcon>
+  <app-icon-container color="blue">
+    <i icon class="fa-solid fa-pen text-blue-600 dark:text-blue-400"></i>
+  </app-icon-container>
+</ng-template>
+
+<ng-template #replyToMessageIcon>
+  <app-icon-container color="green">
+    <i icon class="fa-solid fa-reply text-green-600 dark:text-green-400"></i>
+  </app-icon-container>
+</ng-template>
+
+<ng-template #deleteMessageIcon>
+  <app-icon-container color="red">
+    <i icon class="fa-solid fa-trash text-red-600 dark:text-red-400"></i>
+  </app-icon-container>
+</ng-template>

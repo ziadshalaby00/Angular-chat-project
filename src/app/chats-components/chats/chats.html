@@ -108,17 +108,16 @@ dark:bg-blue-800/50">
 
                                         <!-- Chat Settings Menu -->
                                         <div
-                                            (click)="$event.stopPropagation()"
+                                        (click)="$event.stopPropagation()"
+                                        class="zs:absolute zs:top-1/2 zs:h-full zs:flex zs:items-center 
+                                        zs:justify-center zs:-translate-y-1/2 zs:right-0">
+                                            <app-settings-ui
                                             (mouseenter)="isSettingsHover.set(true)"
                                             (mouseleave)="isSettingsHover.set(false)"
-                                            class="zs:absolute zs:top-1/2 zs:h-full zs:flex zs:items-center 
-                                            zs:justify-center zs:-translate-y-1/2 zs:right-0"
-                                        >
-                                            <ZS-nav-item
-                                                (anyItemClickedEv)="itemClicked($event, item, participant.user_info.id)"
-                                                [collectionName]="''+item.id"
-                                                [item]="getChatSettings(participant.user_info.is_deleted)"
-                                            ></ZS-nav-item>
+                                            [settings]="getChatSettings(participant.user_info.is_deleted)"
+                                            (anyItemClickedEv)="itemClicked($event, item, participant.user_info.id)"
+                                            >
+                                            </app-settings-ui>
                                         </div>
                                     </div>
                                 </ZS-card>
@@ -210,13 +209,6 @@ dark:bg-blue-800/50">
                 <path d="M14 19c-1.236 0-2.598.5-3.841 1.145c-1.998 1.037-2.997 1.556-3.489 1.225c-.492-.33-.399-1.355-.212-3.404L6.5 17.5"/>
             </g>
         </svg>
-    </div>
-</ng-template>
-
-<!-- Setting Icon -->
-<ng-template #chatSettingsIcon>
-    <div class="zs:flex zs:items-center zs:p-2 zs:justify-center">
-        <i class="fa-solid fa-ellipsis-vertical"></i>
     </div>
 </ng-template>
 

@@ -3,7 +3,7 @@
   [ngClass]="isUserMessage() ? 'pl-1.5 justify-start' : 'pr-1 justify-end'"
 >
   <div
-    class="relative px-3 py-2 max-w-[75%] rounded-lg wrap-break-word text-sm leading-tight
+    class="relative px-3 pr-6 py-2 max-w-[75%] rounded-lg wrap-break-word text-sm leading-tight
            text-gray-800 dark:text-white transition-colors duration-300
            bubble"
     [ngClass]="isUserMessage()
@@ -21,5 +21,12 @@
     ></div>
 
     <p>{{ item().text_message.content }}</p>
+
+    @if(isUserMessage()) {
+      <app-message-settings
+      [type]="item().type"
+      >
+      </app-message-settings>
+    }
   </div>
 </div>

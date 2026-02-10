@@ -1,1 +1,15 @@
-<p>audio works!</p>
+<div
+class="relative px-3 pr-6 py-2 max-w-[75%] rounded-lg wrap-break-word text-sm leading-tight
+    text-gray-800 dark:text-white transition-colors duration-300
+    bubble"
+
+>
+    Audio Message
+
+    @if(isUserMessage()) {
+      <app-message-settings
+      [type]="item().type"
+      >
+      </app-message-settings>
+    }
+</div>
