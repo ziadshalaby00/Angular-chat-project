@@ -1,15 +1,12 @@
-import { Component, inject, input, TemplateRef, viewChild } from '@angular/core';
-import { ResultType } from '../../services/chat-service/chat-service';
+import { Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MessageSettings } from '../message-settings/message-settings';
 
 @Component({
   selector: 'app-text',
-  imports: [CommonModule, MessageSettings],
+  imports: [CommonModule],
   templateUrl: './text.html',
   styleUrl: './text.css',
 })
 export class Text {
-  readonly item = input.required<ResultType>();
-  readonly isUserMessage = input.required<boolean>();
+  readonly content = input.required<string>();
 }

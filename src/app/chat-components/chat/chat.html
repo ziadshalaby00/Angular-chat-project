@@ -93,13 +93,10 @@
           <div
           [style.zIndex]="messages().length - i"
           >
-            @if(item.type === 'text') {
-              <app-text [item]="item" [isUserMessage]="isUserMessage(item.sender.id)"></app-text>
-            }@else if(item.type === 'audio') {
-              <app-audio [item]="item" [isUserMessage]="isUserMessage(item.sender.id)"></app-audio>
-            }@else if(item.type === 'file') {
-              <app-file [item]="item" [isUserMessage]="isUserMessage(item.sender.id)"></app-file>
-            }
+            <app-message
+            [item]="item" [isUserMessage]="isUserMessage(item.sender.id)"
+            >
+            </app-message>
           </div>
         }
       </div>
@@ -113,6 +110,7 @@ class="
   absolute
   right-0
   top-1/2
+  z-999999999999
   -translate-y-1/2
   w-8
   py-2

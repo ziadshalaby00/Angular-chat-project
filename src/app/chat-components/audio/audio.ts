@@ -1,14 +1,13 @@
-import { Component, input } from '@angular/core';
+import { Component, ElementRef, input, signal, viewChild } from '@angular/core';
 import { ResultType } from '../../services/chat-service/chat-service';
-import { MessageSettings } from '../message-settings/message-settings';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-audio',
-  imports: [MessageSettings],
+  imports: [CommonModule],
   templateUrl: './audio.html',
   styleUrl: './audio.css',
 })
 export class Audio {
-  readonly item = input.required<ResultType>();
-  readonly isUserMessage = input.required<boolean>();
+
 }

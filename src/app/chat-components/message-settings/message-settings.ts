@@ -10,6 +10,7 @@ import { IconContainer } from '../../other-components/icon-container/icon-contai
 })
 export class MessageSettings {
   readonly type = input.required<'text' | 'file' | 'audio'>();
+  readonly settingsDirection = input.required<'left' | 'right'>();
 
   readonly editMessageIconTpl = viewChild<TemplateRef<any>>('editMessageIcon');
   readonly deleteMessageIconTpl = viewChild<TemplateRef<any>>('deleteMessageIcon');
@@ -18,16 +19,16 @@ export class MessageSettings {
   readonly messageSettings = {
     children: [
       {
-        id: 'Edit',
-        label: 'Edit',
-        colorClass: 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 group',
-        iconTpl: this.editMessageIconTpl,
-      },
-      {
         id: 'Reply',
         label: 'Reply',
         colorClass: 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 group',
         iconTpl: this.replyToMessageIconTpl
+      },
+      {
+        id: 'Edit',
+        label: 'Edit',
+        colorClass: 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 group',
+        iconTpl: this.editMessageIconTpl,
       },
       {
         id: 'Delete',
@@ -42,10 +43,13 @@ export class MessageSettings {
     closeOnPointerOutside: true
   }
 
-  getMessageSettings() {
-    const messageSettings = this.messageSettings;
-    const type = this.type();
+  get getMessageSettings() {
+    const messageSettings = {
+      ...this.messageSettings,
+      childrenWindowDir: this.settingsDirection() as 'right' | 'left',
+    };
 
+    const type = this.type();
     if(type === 'text') {
       return messageSettings;
     }

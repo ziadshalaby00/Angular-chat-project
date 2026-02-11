@@ -13,10 +13,11 @@ import { Audio } from '../audio/audio';
 import { File } from '../file/file';
 import { Text } from '../text/text';
 import { SettingsUi } from '../../other-components/settings-ui/settings-ui';
+import { Message } from '../message/message';
 
 @Component({
   selector: 'app-chat',
-  imports: [CommonModule, Spinner, IconContainer, RemoveChat, UserAvatar, Text, Audio, File, SettingsUi],
+  imports: [CommonModule, Spinner, IconContainer, RemoveChat, UserAvatar, Message, SettingsUi],
   templateUrl: './chat.html',
   styleUrl: './chat.css',
 })
