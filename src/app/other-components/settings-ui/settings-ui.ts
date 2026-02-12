@@ -1,5 +1,6 @@
-import { Component, computed, input, output, OutputEmitterRef, signal, TemplateRef, viewChild } from '@angular/core';
+import { Component, computed, input, output, TemplateRef, viewChild } from '@angular/core';
 import { NavbarItem, NavItem } from '@ziadshalaby/ngx-zs-component';
+import { Dir } from '../../services/shared-service/shared-utils';
 
 @Component({
   selector: 'app-settings-ui',
@@ -10,11 +11,13 @@ import { NavbarItem, NavItem } from '@ziadshalaby/ngx-zs-component';
 export class SettingsUi {
   readonly id = input<string>('');
   readonly settings = input<{
-    children: NavbarItem[],
-    childrenOpenWindow: boolean,
-    childrenWindowDir: 'left' | 'right',
-    showChevronDownIcon: boolean,
-    closeOnPointerOutside: boolean
+    children: NavbarItem[];
+    childrenConfig: {
+      childrenOpenWindow: boolean;
+      childrenWindowDir?: Dir;
+      showChevronDownIcon: boolean;
+      closeMenuOnPointerOutside: boolean;
+    }
   }>()
   readonly settingsIconTpl = viewChild<TemplateRef<any>>('chatSettingsIcon');
 

@@ -44,15 +44,15 @@ dark:bg-blue-800/50">
                 }
                 <!-- Chats Content -->
                 @else {
-                    @for(item of filteredChats(); track item.id; let i = $index) {
+                    @for(item of filteredChats(); track item.id;) {
                         @for(participant of item.participants; track participant.user_info.id) {
                             @if(participant.user_info.id !== authApi.userData()?.id) {
                                 <!-- Chat Card -->
                                 <ZS-card
+                                    class="peer"
                                     [clickable]="!isSettingsHover()"
                                     (click)="chatService.currentChatId.set(item.id)"
                                     [cardStyle]="isCurrentChat(item.id) ? 'success' : 'primary'"
-                                    [style.zIndex]="filteredChats().length - i"
                                     bodyClass="group/card 
                                     {{ isCurrentChat(item.id) ? 'bg-green-300/60 dark:bg-green-700/60' : '' }}
                                     "
@@ -109,9 +109,10 @@ dark:bg-blue-800/50">
                                         <!-- Chat Settings Menu -->
                                         <div
                                         (click)="$event.stopPropagation()"
-                                        class="zs:absolute zs:top-1/2 zs:h-full zs:flex zs:items-center 
-                                        zs:justify-center zs:-translate-y-1/2 zs:right-0">
+                                        class="absolute top-1/2 h-full flex items-center 
+                                        justify-center -translate-y-1/2 right-0">
                                             <app-settings-ui
+                                            class="peer-focus:z-999 peer-hover:z-999"
                                             (mouseenter)="isSettingsHover.set(true)"
                                             (mouseleave)="isSettingsHover.set(false)"
                                             [settings]="getChatSettings(participant.user_info.is_deleted)"

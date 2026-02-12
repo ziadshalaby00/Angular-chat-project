@@ -5,7 +5,7 @@ import { Sidebar, Input, Card, AlertService, Button, Spinner, NavItem, NavbarIte
 import { Chat } from "../../chat-components/chat/chat";
 import { ChatsService, ChatType } from '../../services/chats-service/chats-service';
 import { CommonModule } from '@angular/common';
-import { SharedUtils } from '../../services/shared-service/shared-utils';
+import { Dir, SharedUtils } from '../../services/shared-service/shared-utils';
 import { NewChat } from '../new-chat/new-chat';
 import { IconContainer } from '../../other-components/icon-container/icon-container';
 import { ChatService } from '../../services/chat-service/chat-service';
@@ -122,10 +122,12 @@ export class Chats {
         iconTpl: this.removeChatIconTpl
       },
     ],
-    childrenOpenWindow: true,
-    childrenWindowDir: 'left' as 'left' | 'right',
-    showChevronDownIcon: false,
-    closeOnPointerOutside: true
+    childrenConfig: {
+      childrenOpenWindow: true,
+      childrenWindowDir: 'bottom-left' as Dir,
+      showChevronDownIcon: false,
+      closeMenuOnPointerOutside: true
+    }
   }
 
   getChatSettings(isDeleted: boolean = false) {

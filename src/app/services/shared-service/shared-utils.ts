@@ -3,6 +3,8 @@ import { DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { AlertService, ExtractorService } from '@ziadshalaby/ngx-zs-component';
 import { HttpOptions } from '../auth-services/user-shared-utils';
 
+export type Dir = 'bottom-left' | 'bottom-right' | 'top-left' | 'top-right';
+
 @Injectable({
   providedIn: 'root',
 })

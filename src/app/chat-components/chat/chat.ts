@@ -1,17 +1,14 @@
-import { Component, computed, effect, inject, model, signal, TemplateRef, untracked, viewChild } from '@angular/core';
+import { Component, computed, effect, ElementRef, inject, model, signal, TemplateRef, untracked, viewChild } from '@angular/core';
 import { AuthApi } from '../../services/auth-services/auth-api';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ChatService } from '../../services/chat-service/chat-service';
 import { ChatsService, ChatType } from '../../services/chats-service/chats-service';
-import { Button, NavbarItem, NavItem, Spinner } from '@ziadshalaby/ngx-zs-component';
-import { SharedUtils } from '../../services/shared-service/shared-utils';
+import { NavbarItem, Spinner } from '@ziadshalaby/ngx-zs-component';
+import { Dir, SharedUtils } from '../../services/shared-service/shared-utils';
 import { RemoveChat } from '../../chats-components/remove-chat/remove-chat';
 import { UserAvatar } from '../../chats-components/user-avatar/user-avatar';
 import { IconContainer } from '../../other-components/icon-container/icon-container';
-import { Audio } from '../audio/audio';
-import { File } from '../file/file';
-import { Text } from '../text/text';
 import { SettingsUi } from '../../other-components/settings-ui/settings-ui';
 import { Message } from '../message/message';
 
@@ -29,6 +26,8 @@ export class Chat {
   readonly openSide = model<boolean>(true);
   readonly chatService: ChatService = inject(ChatService);
   readonly chatsService: ChatsService = inject(ChatsService);
+
+  readonly parentContainerS = viewChild<ElementRef<HTMLElement>>('parentContainer');
 
   readonly messages = computed(() => this.chatService.chatMessages()?.results.reverse() ?? []);
 
@@ -76,10 +75,12 @@ export class Chat {
         iconTpl: this.removeChatIconTpl
       },
     ],
-    childrenOpenWindow: true,
-    childrenWindowDir: 'left' as 'left' | 'right',
-    showChevronDownIcon: false,
-    closeOnPointerOutside: true
+    childrenConfig: {
+      childrenOpenWindow: true,
+      childrenWindowDir: 'bottom-left' as Dir,
+      showChevronDownIcon: false,
+      closeMenuOnPointerOutside: true
+    }
   };
 
   getChatSettings(isDeleted: boolean = false) {

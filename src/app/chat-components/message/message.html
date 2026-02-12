@@ -1,4 +1,4 @@
-<div #parentContainer
+<div
   class="flex"
   [ngClass]="isUserMessage() ? 'pl-1.5 justify-start' : 'pr-1 justify-end'"
 >
@@ -22,17 +22,17 @@
 
     <!-- Message Content -->
     @if(item().type === 'text') {
-        <app-text [content]="item().text_message.content!"></app-text>
+      <app-text [content]="item().text_message.content!"></app-text>
     }@else if(item().type === 'file') {
-        <app-file></app-file>
+      <app-file></app-file>
     }@else if(item().type === 'audio') {
-        <app-audio></app-audio>
+      <app-audio></app-audio>
     }
 
     @if(isUserMessage()) {
       <app-message-settings
       [type]="item().type"
-      [settingsDirection]="settingsDirection()"
+      [(settingsDirection)]="settingsDirection"
       >
       </app-message-settings>
     }

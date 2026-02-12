@@ -88,13 +88,15 @@
         </div>
       </div>
     }@else {
-      <div class="w-full h-[75%] flex flex-col gap-3 p-3 overflow-y-auto scroll scroll-primary">
+      <div #parentContainer class="w-full h-[75%] flex flex-col gap-3 p-3 overflow-y-auto scroll scroll-primary">
         @for(item of messages(); track item.id; let i = $index) {
           <div
           [style.zIndex]="messages().length - i"
           >
             <app-message
-            [item]="item" [isUserMessage]="isUserMessage(item.sender.id)"
+            [item]="item" 
+            [isUserMessage]="isUserMessage(item.sender.id)"
+            [parentContainerS]="parentContainerS()!"
             >
             </app-message>
           </div>
@@ -110,7 +112,6 @@ class="
   absolute
   right-0
   top-1/2
-  z-999999999999
   -translate-y-1/2
   w-8
   py-2

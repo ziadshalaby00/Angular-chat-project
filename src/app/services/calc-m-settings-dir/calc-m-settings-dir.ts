@@ -1,22 +1,46 @@
 import { ElementRef, Injectable } from '@angular/core';
+import { Dir } from '../shared-service/shared-utils';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CalcMSettingsDir {
   recalculateDirection(
-    messageBubble: ElementRef<HTMLElement> | undefined, 
+    messageBubble: ElementRef<HTMLElement> | undefined,
     parentContainer: ElementRef<HTMLElement> | undefined
-  ) {
-    const bubbleRect =
-      messageBubble?.nativeElement.getBoundingClientRect();
+  ): Dir {
+    if (!messageBubble || !parentContainer) {
+      return 'bottom-right';
+    }
 
-    const parentRect =
-      parentContainer?.nativeElement.getBoundingClientRect();
+    const bubbleRect = messageBubble.nativeElement.getBoundingClientRect();
+    const parentRect = parentContainer.nativeElement.getBoundingClientRect();
 
-    const spaceRight = (parentRect?.right ?? 0) - (bubbleRect?.right ?? 0);
-    const spaceLeft = (bubbleRect?.right ?? 0) - (parentRect?.left ?? 0);
+    // vertical mid
+    const bubbleMidY = (bubbleRect.top + bubbleRect.bottom) / 2;
+    const parentMidY = (parentRect.top + parentRect.bottom) / 2;
 
-    return spaceRight < 200 && spaceLeft > spaceRight ? 'left' : 'right'
+    // horizontal space
+    const spaceRight = parentRect.right - bubbleRect.right;
+    const spaceLeft = bubbleRect.right - parentRect.left;
+
+    const horizontal: 'left' | 'right' =
+      spaceRight < 200 && spaceLeft > spaceRight ? 'left' : 'right';
+
+    const vertical: 'top' | 'bottom' =
+      bubbleMidY > parentMidY ? 'top' : 'bottom';
+
+      console.log('bubbleRect:', bubbleRect)
+      console.log('parentRect:', parentRect)
+
+      console.log('spaceRight:', spaceRight)
+      console.log('spaceLeft:', spaceLeft)
+
+      console.log('bubbleMidY:', bubbleMidY)
+      console.log('parentMidY:', parentMidY)
+
+      console.log(`${vertical}-${horizontal}:`, `${vertical}-${horizontal}`)
+
+    return `${vertical}-${horizontal}` as Dir;
   }
 }

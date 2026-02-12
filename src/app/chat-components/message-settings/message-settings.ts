@@ -1,6 +1,7 @@
-import { Component, input, TemplateRef, viewChild } from '@angular/core';
+import { Component, input, model, TemplateRef, viewChild } from '@angular/core';
 import { SettingsUi } from '../../other-components/settings-ui/settings-ui';
 import { IconContainer } from '../../other-components/icon-container/icon-container';
+import { Dir } from '../../services/shared-service/shared-utils';
 
 @Component({
   selector: 'app-message-settings',
@@ -10,7 +11,7 @@ import { IconContainer } from '../../other-components/icon-container/icon-contai
 })
 export class MessageSettings {
   readonly type = input.required<'text' | 'file' | 'audio'>();
-  readonly settingsDirection = input.required<'left' | 'right'>();
+  readonly settingsDirection = model.required<Dir>();
 
   readonly editMessageIconTpl = viewChild<TemplateRef<any>>('editMessageIcon');
   readonly deleteMessageIconTpl = viewChild<TemplateRef<any>>('deleteMessageIcon');
@@ -37,16 +38,21 @@ export class MessageSettings {
         iconTpl: this.deleteMessageIconTpl
       },
     ],
-    childrenOpenWindow: true,
-    childrenWindowDir: 'right' as 'right' | 'left',
-    showChevronDownIcon: false,
-    closeOnPointerOutside: true
+    childrenConfig: {
+      childrenOpenWindow: true,
+      childrenWindowDir: 'bottom-right' as Dir,
+      showChevronDownIcon: false,
+      closeMenuOnPointerOutside: true
+    }
   }
 
   get getMessageSettings() {
     const messageSettings = {
       ...this.messageSettings,
-      childrenWindowDir: this.settingsDirection() as 'right' | 'left',
+      childrenConfig: {
+        ...this.messageSettings.childrenConfig,
+        childrenWindowDir: this.settingsDirection() as Dir,
+      }
     };
 
     const type = this.type();
