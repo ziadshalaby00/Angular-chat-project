@@ -25,7 +25,7 @@ export class CalcMSettingsDir {
     const spaceLeft = bubbleRect.right - parentRect.left;
 
     const horizontal: 'left' | 'right' =
-      spaceRight < 200 && spaceLeft > spaceRight ? 'left' : 'right';
+      spaceLeft > spaceRight ? 'left' : 'right';
 
     const vertical: 'top' | 'bottom' =
       bubbleMidY > parentMidY ? 'top' : 'bottom';

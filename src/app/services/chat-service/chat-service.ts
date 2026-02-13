@@ -27,7 +27,7 @@ export interface ChatMessagesType {
   "count": number,
   "next": string | null,
   "previous": string | null,
-  "results": ResultType[]
+  "results"?: ResultType[]
 }
 
 @Injectable({
@@ -40,7 +40,9 @@ export class ChatService {
   public readonly currentChatId = signal<number | null>(31) ;
   public readonly chatMessagesChatId = signal<number | null>(null) ;
 
-  public readonly chatMessages = signal<ChatMessagesType | null>(null);
+  public readonly chatMessagesMetaData = signal<ChatMessagesType | null>(null);
+  public readonly chatMessages = signal<ResultType[] | null>(null);
+
   public readonly getChatMessagesLoading = signal<boolean>(false);
 
   private readonly getChatMessagesURL = `${this.config.apiUrl}/api/message/`;
@@ -49,8 +51,15 @@ export class ChatService {
     this.shared.http.get(`${this.getChatMessagesURL}${chat_id}/messages/`, this.shared.CredAndCsrf()).subscribe({
       next: (res) => {
         console.log(res);
+        
+        const data = res as ChatMessagesType
+        const { results, ...meta } = data;
+
         this.chatMessagesChatId.set(chat_id);
-        this.chatMessages.set(res as ChatMessagesType);
+
+        this.chatMessages.set([...(results ?? [])].reverse());
+        this.chatMessagesMetaData.set(meta);
+
         this.getChatMessagesLoading.set(false);
       },
       error: (err) => {

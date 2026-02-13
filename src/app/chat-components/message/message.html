@@ -31,6 +31,8 @@
 
     @if(isUserMessage()) {
       <app-message-settings
+      (click)="startCalcDir()"
+      (click)="overflowCard.setCardOverFlow('message-card' + item().id, 'messagesCards')"
       [type]="item().type"
       [(settingsDirection)]="settingsDirection"
       >

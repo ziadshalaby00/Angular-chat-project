@@ -12,6 +12,7 @@ import { ChatService } from '../../services/chat-service/chat-service';
 import { RemoveChat } from '../remove-chat/remove-chat';
 import { UserAvatar } from '../user-avatar/user-avatar';
 import { SettingsUi } from "../../other-components/settings-ui/settings-ui";
+import { OverflowCard } from '../../services/overflow-card/overflow-card';
 
 @Component({
   selector: 'app-chats',
@@ -26,6 +27,7 @@ export class Chats {
   readonly shared: SharedUtils = inject(SharedUtils);
   readonly chatsService: ChatsService = inject(ChatsService);
   readonly chatService: ChatService = inject(ChatService);
+  readonly overflowCard: OverflowCard = inject(OverflowCard);
   
   readonly router: Router = inject(Router);
   readonly alert: AlertService = inject(AlertService);

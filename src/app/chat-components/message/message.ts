@@ -7,6 +7,7 @@ import { Text } from "../text/text";
 import { Audio } from "../audio/audio";
 import { File } from '../file/file';
 import { Dir } from '../../services/shared-service/shared-utils';
+import { OverflowCard } from '../../services/overflow-card/overflow-card';
 
 @Component({
   selector: 'app-message',
@@ -19,12 +20,14 @@ export class Message {
   readonly isUserMessage = input.required<boolean>();
   readonly parentContainerS = input.required<ElementRef<HTMLElement>>();
 
+  readonly overflowCard: OverflowCard = inject(OverflowCard);
+
   readonly calcMSettingsDir = inject(CalcMSettingsDir);
   readonly settingsDirection = model<Dir>('bottom-right');
   
   readonly messageBubble = viewChild<ElementRef<HTMLElement>>('messageBubble');
 
-  ngAfterViewInit() {
+  startCalcDir() {
     if(this.isUserMessage()) {
       const dir: Dir = this.calcMSettingsDir.recalculateDirection(
         this.messageBubble(),

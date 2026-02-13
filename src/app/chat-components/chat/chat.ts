@@ -29,8 +29,6 @@ export class Chat {
 
   readonly parentContainerS = viewChild<ElementRef<HTMLElement>>('parentContainer');
 
-  readonly messages = computed(() => this.chatService.chatMessages()?.results.reverse() ?? []);
-
   readonly currentChat = computed<ChatType | null>(() =>
     this.chatsService.chats()
       .find(chat => chat.id === this.chatService.currentChatId()) ?? null
