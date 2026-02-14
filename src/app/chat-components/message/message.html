@@ -22,9 +22,9 @@
 
     <!-- Message Content -->
     @if(item().type === 'text') {
-      <app-text [content]="item().text_message.content!"></app-text>
+      <app-text [text_message]="item().text_message!"></app-text>
     }@else if(item().type === 'file') {
-      <app-file></app-file>
+      <app-file [file_message]="item().file_message!"></app-file>
     }@else if(item().type === 'audio') {
       <app-audio></app-audio>
     }

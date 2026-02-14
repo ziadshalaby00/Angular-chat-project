@@ -2,6 +2,20 @@ import { inject, Injectable, signal } from '@angular/core';
 import { SharedUtils } from '../shared-service/shared-utils';
 import { ConfigService } from '../config-service/config-service';
 
+export interface Text_message {
+  "id": number,
+  "content": string
+}
+export interface Audio_message {
+  "audio_file": string,
+  "audio_duration": number
+}
+export interface File_message {
+  "file": string,
+  "file_name": string,
+  "file_size": number,
+  "file_type": string
+}
 export interface ResultType {
   "id": number,
   "chat": number,
@@ -16,12 +30,9 @@ export interface ResultType {
   "type": 'text' | 'audio' | 'file',
   "timestamp": string,
   "reply_to": ResultType | null,
-  "audio_message": string | null,
-  "file_message": string | null,
-  "text_message": {
-    "id": number,
-    "content": string | null
-  }
+  "audio_message": Audio_message | null,
+  "file_message": File_message | null,
+  "text_message": Text_message | null
 }
 export interface ChatMessagesType {
   "count": number,
@@ -44,29 +55,49 @@ export class ChatService {
   public readonly chatMessages = signal<ResultType[] | null>(null);
 
   public readonly getChatMessagesLoading = signal<boolean>(false);
+  public readonly loadMoreMessagesLoading = signal<boolean>(false);
 
+  private readonly page = signal<number>(1);
   private readonly getChatMessagesURL = `${this.config.apiUrl}/api/message/`;
 
   public getChatMessages(chat_id: number) {
-    this.shared.http.get(`${this.getChatMessagesURL}${chat_id}/messages/`, this.shared.CredAndCsrf()).subscribe({
+    this.shared.http.get(`${this.getChatMessagesURL}${chat_id}/messages/?page=${this.page()}`, this.shared.CredAndCsrf()).subscribe({
       next: (res) => {
-        console.log(res);
-        
         const data = res as ChatMessagesType
         const { results, ...meta } = data;
+        
+        const newMessages = (results ?? []).reverse();
+        const oldMessages = this.chatMessages() ?? [];
 
-        this.chatMessagesChatId.set(chat_id);
-
-        this.chatMessages.set([...(results ?? [])].reverse());
+        this.chatMessages.set(
+          [...newMessages, ...oldMessages]
+        );
         this.chatMessagesMetaData.set(meta);
 
+        this.chatMessagesChatId.set(chat_id);
         this.getChatMessagesLoading.set(false);
+        this.loadMoreMessagesLoading.set(false);
       },
       error: (err) => {
         console.log(err);
         this.getChatMessagesLoading.set(false);
+        this.loadMoreMessagesLoading.set(false);
         this.shared.setErrors(err.error);
       }
     })
+  }
+
+  public currentChatHasNext(): boolean {
+    const next = this.chatMessagesMetaData()?.next
+    const currentChatId = this.currentChatId();
+    return (next && currentChatId) ? true : false;
+  }
+
+  public loadMoreMessages() {
+    if(this.currentChatHasNext()) {
+      this.loadMoreMessagesLoading.set(true);
+      this.page.update((v) => ++v);
+      this.getChatMessages(this.currentChatId()!);
+    }
   }
 }

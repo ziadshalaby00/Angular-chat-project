@@ -1,5 +1,6 @@
 import { Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Text_message } from '../../services/chat-service/chat-service';
 
 @Component({
   selector: 'app-text',
@@ -8,5 +9,5 @@ import { CommonModule } from '@angular/common';
   styleUrl: './text.css',
 })
 export class Text {
-  readonly content = input.required<string>();
+  readonly text_message = input.required<Text_message>();
 }

@@ -88,6 +88,25 @@
         </div>
       </div>
     }@else {
+      @if(chatService.loadMoreMessagesLoading()) {
+        <div class="flex items-center justify-center">
+          <div class="relative">
+            <ZS-spinner
+            [loading]="true"
+            [type]="'pulse'"
+            [color]="'green'"
+            ></ZS-spinner>
+            <div class="absolute inset-0 flex items-center justify-center">
+              <div class="size-10 rounded-full bg-green-500/15 dark:bg-green-500/20
+              animate-pulse"></div>
+            </div>
+          </div>
+        </div>
+      }@else if(chatService.currentChatHasNext()) {
+        <button (click)="chatService.loadMoreMessages()">
+          Load More Messages
+        </button>
+      }
       <div #parentContainer class="w-full h-[75%] flex flex-col gap-3 p-3 overflow-y-auto scroll scroll-primary">
         @for(item of chatService.chatMessages(); track item.id) {
           <div
