@@ -149,7 +149,6 @@ export class Chats {
 
   readonly isSettingsHover = signal(false);
   itemClicked(event: NavbarItem, chat: ChatType, user_id: number) {
-    console.log(event, chat, user_id)
     switch(event.id) {
       case 'view-profile': 
         this.router.navigate([`/profile/${user_id}`]);
@@ -177,5 +176,10 @@ export class Chats {
 
   isCurrentChat(chat_id: number): boolean {
     return this.chatService.currentChatId() === chat_id;
+  }
+
+  changeCurrentChat(chat_id: number) {
+    this.chatService.resetChat();
+    this.chatService.currentChatId.set(chat_id);
   }
 }

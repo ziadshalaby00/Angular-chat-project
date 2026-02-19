@@ -29,18 +29,7 @@ export class CalcMSettingsDir {
 
     const vertical: 'top' | 'bottom' =
       bubbleMidY > parentMidY ? 'top' : 'bottom';
-
-      console.log('bubbleRect:', bubbleRect)
-      console.log('parentRect:', parentRect)
-
-      console.log('spaceRight:', spaceRight)
-      console.log('spaceLeft:', spaceLeft)
-
-      console.log('bubbleMidY:', bubbleMidY)
-      console.log('parentMidY:', parentMidY)
-
-      console.log(`${vertical}-${horizontal}:`, `${vertical}-${horizontal}`)
-
+    
     return `${vertical}-${horizontal}` as Dir;
   }
 }

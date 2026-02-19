@@ -51,7 +51,7 @@ dark:bg-blue-800/50">
                                 <ZS-card
                                     [id]="'chat-card' + item.id"
                                     [clickable]="!isSettingsHover()"
-                                    (click)="chatService.currentChatId.set(item.id)"
+                                    (click)="changeCurrentChat(item.id)"
                                     [cardStyle]="isCurrentChat(item.id) ? 'success' : 'primary'"
                                     bodyClass="group/card 
                                     {{ isCurrentChat(item.id) ? 'bg-green-300/60 dark:bg-green-700/60' : '' }}

@@ -60,7 +60,7 @@ export class ChatService {
   private readonly page = signal<number>(1);
   private readonly getChatMessagesURL = `${this.config.apiUrl}/api/message/`;
 
-  public getChatMessages(chat_id: number) {
+  public getChatMessages(chat_id: number, sf?: () => void) {
     this.shared.http.get(`${this.getChatMessagesURL}${chat_id}/messages/?page=${this.page()}`, this.shared.CredAndCsrf()).subscribe({
       next: (res) => {
         const data = res as ChatMessagesType
@@ -77,9 +77,10 @@ export class ChatService {
         this.chatMessagesChatId.set(chat_id);
         this.getChatMessagesLoading.set(false);
         this.loadMoreMessagesLoading.set(false);
+
+        if(sf) sf();
       },
       error: (err) => {
-        console.log(err);
         this.getChatMessagesLoading.set(false);
         this.loadMoreMessagesLoading.set(false);
         this.shared.setErrors(err.error);
@@ -93,11 +94,18 @@ export class ChatService {
     return (next && currentChatId) ? true : false;
   }
 
-  public loadMoreMessages() {
+  public loadMoreMessages(sf?: () => void) {
     if(this.currentChatHasNext()) {
       this.loadMoreMessagesLoading.set(true);
       this.page.update((v) => ++v);
-      this.getChatMessages(this.currentChatId()!);
+      this.getChatMessages(this.currentChatId()!, sf);
     }
+  }
+
+  public resetChat() {
+    this.chatMessagesChatId.set(null);
+    this.chatMessagesMetaData.set(null);
+    this.chatMessages.set(null);
+    this.page.set(1);
   }
 }

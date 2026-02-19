@@ -6,12 +6,13 @@ import { MessageSettings } from '../message-settings/message-settings';
 import { Text } from "../text/text";
 import { Audio } from "../audio/audio";
 import { File } from '../file/file';
-import { Dir } from '../../services/shared-service/shared-utils';
+import { Dir, SharedUtils } from '../../services/shared-service/shared-utils';
 import { OverflowCard } from '../../services/overflow-card/overflow-card';
+import { IconContainer } from '../../other-components/icon-container/icon-container';
 
 @Component({
   selector: 'app-message',
-  imports: [CommonModule, MessageSettings, Text, Audio, File],
+  imports: [CommonModule, MessageSettings, Text, Audio, File, IconContainer],
   templateUrl: './message.html',
   styleUrl: './message.css',
 })
@@ -19,6 +20,7 @@ export class Message {
   readonly item = input.required<ResultType>();
   readonly isUserMessage = input.required<boolean>();
   readonly parentContainerS = input.required<ElementRef<HTMLElement>>();
+  readonly shared: SharedUtils = inject(SharedUtils);
 
   readonly overflowCard: OverflowCard = inject(OverflowCard);
 

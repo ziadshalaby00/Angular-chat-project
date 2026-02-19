@@ -93,6 +93,10 @@ export class SharedUtils {
     return sig;
   }
 
+  public sleep(ms: number) {
+    return new Promise((r, j) => setTimeout(() => r(true), ms));
+  }
+
   // ========================= Breakpoints =========================
   public readonly min768px = this.createMediaSignal('(min-width: 768px)');
 }

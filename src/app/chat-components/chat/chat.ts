@@ -39,23 +39,30 @@ export class Chat {
       const currentChat: number | null = this.chatService.currentChatId();
       untracked(() => {
         if(!currentChat) {
-          this.chatService.chatMessages.set(null);
-          this.chatService.chatMessagesChatId.set(null);
+          this.chatService.resetChat();
           return;
         }else {
           if(this.chatService.currentChatId() !== this.chatService.chatMessagesChatId()) {
             this.chatsService.markAsRead(currentChat);
             this.chatService.getChatMessagesLoading.set(true);
-            this.chatService.getChatMessages(currentChat);
+            this.chatService.getChatMessages(currentChat, this.scrollToBottom);
           }
         }
       })
     })
   }
 
+  private scrollToBottom = async () => {
+    await this.shared.sleep(10);
+
+    const el = this.parentContainerS()?.nativeElement;
+    if(el) {
+      el.scrollTop = el.scrollHeight;
+    }
+  }
+
   readonly chatSettingsIconTpl = viewChild<TemplateRef<any>>('chatSettingsIcon');
   readonly viewProfileIconTpl = viewChild<TemplateRef<any>>('viewProfileIcon');
-  readonly dismissUnreadIconTpl = viewChild<TemplateRef<any>>('dismissUnreadIcon');
   readonly removeChatIconTpl = viewChild<TemplateRef<any>>('removeChatIcon');
 
   readonly chatSettings = {
@@ -114,5 +121,29 @@ export class Chat {
 
   isUserMessage(sender_id: number): boolean {
     return sender_id === this.authApi.userData()?.id;
+  }
+
+  private prevScrollHeight = 0;
+  onLoadMoreMessages() {
+    const container = this.parentContainerS()?.nativeElement;
+    if (!container) return;
+
+    this.prevScrollHeight = container.scrollHeight;
+
+    this.chatService.loadMoreMessages(() => {
+      this.restoreScrollPosition();
+    });
+  }
+
+  private restoreScrollPosition() {
+    const container = this.parentContainerS()?.nativeElement;
+    if (!container) return;
+
+    requestAnimationFrame(() => {
+      const newScrollHeight = container.scrollHeight;
+      const diff = newScrollHeight - this.prevScrollHeight;
+
+      container.scrollTop += diff;
+    });
   }
 }

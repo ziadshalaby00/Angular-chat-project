@@ -1,11 +1,11 @@
 <div
-  class="flex"
+  class="flex mb-4.5"
   [ngClass]="isUserMessage() ? 'pl-1.5 justify-start' : 'pr-1 justify-end'"
 >
   <div #messageBubble
     class="relative px-3 pr-6 py-2 max-w-[75%] rounded-lg
-           text-gray-800 dark:text-white transition-colors duration-300
-           bubble"
+            text-gray-800 dark:text-white transition-colors duration-300
+            bubble"
     [ngClass]="isUserMessage()
       ? 'bg-green-300 dark:bg-green-700 rounded-tl-none'
       : 'bg-gray-300 dark:bg-gray-700 rounded-tr-none'
@@ -28,6 +28,32 @@
     }@else if(item().type === 'audio') {
       <app-audio></app-audio>
     }
+
+    <!-- Time -->
+    <div class="absolute top-[calc(100%+4px)]
+    text-slate-700 dark:text-slate-300 text-xs"
+    [ngClass]="[
+      isUserMessage()
+        ? 'left-1'
+        : 'right-1'
+    ]"
+    >
+      {{ shared.formatDate(item().timestamp, true) }}
+    </div>
+
+    <!-- replay button -->
+    <button 
+    class="absolute top-1/2 -translate-y-1/2
+    text-slate-700 dark:text-slate-300 text-xs
+     cursor-pointer hover:scale-[1.05] active:scale-[0.97]"
+    [ngClass]="[
+      isUserMessage()
+        ? '-right-8'
+        : '-left-8'
+    ]"
+    >
+      <i icon class="text-base fa-solid fa-reply text-green-600 dark:text-green-400"></i>
+    </button>
 
     @if(isUserMessage()) {
       <app-message-settings

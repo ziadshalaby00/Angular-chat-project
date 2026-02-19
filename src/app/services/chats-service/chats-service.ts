@@ -135,10 +135,6 @@ export class ChatsService {
   public addChat(user: number | undefined, sf?: () => void) {
     if (!user) return;
 
-    // await new Promise((r, j) => setTimeout(() => {
-    //   return r(true)
-    // }, 10000))
-
     this.shared.http.post(this.chatsURL, { user }, this.shared.CredAndCsrf()).subscribe({
       next: (res: any) => {
         this.chats.update(prev => [res.chat, ...prev])
