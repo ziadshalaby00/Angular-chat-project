@@ -16,6 +16,13 @@ justify-center -translate-y-1/2 -right-2.5"
   [removeMessageId]="id()"
 ></app-remove-message>
 
+<!-- Remove Chat Modal -->
+<app-edit-message
+  [(editMessageModal)]="editMessageModal" 
+  [editMessageId]="textMessage()?.id ?? null"
+  [newMessage]="textMessage()?.content ?? null"
+></app-edit-message>
+
 <!-- Message Setting Icons -->
 <ng-template #editMessageIcon>
   <app-icon-container color="blue">

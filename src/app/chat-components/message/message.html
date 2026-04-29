@@ -26,12 +26,12 @@
     }@else if(item().type === 'file') {
       <app-file [file_message]="item().file_message!"></app-file>
     }@else if(item().type === 'audio') {
-      <app-audio></app-audio>
+      <app-audio [record]="item().audio_message!"></app-audio>
     }
 
     <!-- Time -->
     <div class="absolute top-[calc(100%+4px)]
-    text-slate-700 dark:text-slate-300 text-xs"
+    text-slate-700 dark:text-slate-300 text-xs whitespace-nowrap"
     [ngClass]="[
       isUserMessage()
         ? 'left-1'
@@ -61,6 +61,7 @@
       (click)="overflowCard.setCardOverFlow('message-card' + item().id, 'messagesCards')"
       [type]="item().type"
       [id]="item().id"
+      [textMessage]="item().text_message"
       [(settingsDirection)]="settingsDirection"
       >
       </app-message-settings>

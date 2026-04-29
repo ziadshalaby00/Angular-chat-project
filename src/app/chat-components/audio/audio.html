@@ -1,0 +1,82 @@
+<!-- Hidden native audio player -->
+<audio #audioPlayer [src]="record().audio_file" preload="metadata"></audio>
+
+<!-- WhatsApp-style Audio Message Bubble -->
+<div class="audio-message-container">
+    <div class="flex items-center gap-3 p-3 pr-5 rounded-2xl bg-emerald-50 dark:bg-emerald-700 
+     w-80 max-w-full">
+    
+        <div class="flex flex-col items-center justify-center gap-1">
+            <!-- Play/Pause Button -->
+            <button 
+                (click)="togglePlay()"
+                class="shrink-0 w-10 h-10 rounded-full bg-emerald-500 hover:bg-emerald-600 
+                active:scale-95 transition-all duration-200 flex items-center justify-center 
+                text-white shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                [disabled]="isLoading()"
+                >
+                @if (isLoading()) {
+                    <i class="fas fa-spinner text-lg animate-spin"></i>
+                } @else if (isPlaying()) {
+                    <i class="fas fa-pause text-lg"></i>
+                } @else {
+                    <i class="fas fa-play text-lg ml-0.5"></i>
+                }
+            </button>
+    
+            <!-- Current Time / Duration -->
+            <span class="text-gray-500 dark:text-gray-400 font-medium tabular-nums text-xs">
+                {{ isPlaying() ? formatTime(currentTime()) : formatTime(duration() || record().audio_duration) }}
+            </span>
+        </div>
+    
+        <!-- Waveform & Controls -->
+        <div class="flex-1 min-w-0 flex flex-col gap-2.5">
+        
+            <!-- Waveform Visualization -->
+            <div 
+                class="waveform-wrapper relative h-8 flex items-center cursor-pointer select-none"
+                (click)="seekTo($event)"
+                title="Click to seek"
+            >
+                <!-- Background bars -->
+                <div class="flex items-center gap-0.75 w-full h-full">
+                    @for (bar of waveformBars(); track $index) {
+                        <div 
+                        class="waveform-bar rounded-full transition-colors duration-150"
+                        [style.height.%]="bar * 100"
+                        [style.backgroundColor]="$index / waveformBars().length * 100 <= progressPercentage ? '#06b6d4' : '#9ca3af'"
+                        [class.played]="$index / waveformBars().length * 100 <= progressPercentage"
+                        ></div>
+                    }
+                </div>
+            
+                <!-- Progress overlay line (optional visual enhancement) -->
+                <div 
+                class="absolute top-0 left-0 h-full pointer-events-none"
+                [style.width.%]="progressPercentage"
+                >
+                    <div class="absolute -right-2 top-1/2 -translate-y-1/2 w-2.5 h-2.5 bg-cyan-500 rounded-full shadow-lg ring-2 ring-white dark:ring-gray-800"></div>
+                </div>
+            </div>
+      
+            <!-- Playback Speed -->
+            <div class="flex items-center gap-1 text-xs self-end">
+                @for (rate of [0.5, 1, 1.5, 2]; track rate) {
+                    <button
+                    (click)="setPlaybackRate(rate)"
+                    class="px-1.5 py-0.5 rounded text-[10px] font-bold transition-all duration-200"
+                    [class.bg-cyan-500]="playbackRate() === rate"
+                    [class.text-white]="playbackRate() === rate"
+                    [class.bg-gray-200]="playbackRate() !== rate"
+                    [class.text-gray-600]="playbackRate() !== rate"
+                    [class.dark:bg-gray-700]="playbackRate() !== rate"
+                    [class.dark:text-gray-300]="playbackRate() !== rate"
+                    >
+                    {{ rate }}x
+                    </button>
+                }
+            </div>
+        </div>
+    </div>
+</div>

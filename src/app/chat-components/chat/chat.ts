@@ -45,19 +45,27 @@ export class Chat {
           if(this.chatService.currentChatId() !== this.chatService.chatMessagesChatId()) {
             this.chatsService.markAsRead(currentChat);
             this.chatService.getChatMessagesLoading.set(true);
-            this.chatService.getChatMessages(currentChat, this.scrollToBottom);
+            this.chatService.getChatMessages(currentChat, this.startSTB);
           }
         }
       })
     })
+
+    this.startSTB();
   }
 
-  private scrollToBottom = async () => {
-    await this.shared.sleep(10);
-
+  private scrollToBottom = () => {
     const el = this.parentContainerS()?.nativeElement;
     if(el) {
       el.scrollTop = el.scrollHeight;
+    }
+  }
+
+  private startSTB = async () => {
+    for(let i = 0; i<5; i++) {
+      this.scrollToBottom()
+      console.log('scroll now')
+      await this.shared.sleep(100);
     }
   }
 

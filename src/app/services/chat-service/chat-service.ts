@@ -60,6 +60,7 @@ export class ChatService {
   private readonly page = signal<number>(1);
   private readonly getChatMessagesURL = `${this.config.apiUrl}/api/message/`;
   private readonly DeleteMessageURL = `${this.config.apiUrl}/api/message/delete`;
+  private readonly EditMessageURL = `${this.config.apiUrl}/api/text_message`;
 
   public getChatMessages(chat_id: number, sf?: () => void) {
     this.shared.http.get(`${this.getChatMessagesURL}${chat_id}/messages/?page=${this.page()}`, this.shared.CredAndCsrf()).subscribe({
@@ -123,11 +124,42 @@ export class ChatService {
     })
   }
 
+  public editMessage(messageId: number, newMessage: string) {
+    this.shared.http.patch(`${this.EditMessageURL}/${messageId}/update-text-message/`, {content: newMessage}, this.shared.CredAndCsrf()).subscribe({
+      next: (res) => {
+        this.performEditedMessage(res as ResultType);
+        console.log(res)
+      },
+      error: (err) => {
+        this.getChatMessagesLoading.set(false);
+        this.loadMoreMessagesLoading.set(false);
+        this.shared.setErrors(err.error);
+      }
+    })
+  }
+
   private performDeletedMessage(messageId: number) {
     this.chatMessages.update((messages) => {
       if (!messages) return null;
 
       return messages.filter(message => message.id !== messageId);
     });
+  }
+
+  private performEditedMessage(updatedMessage: ResultType) {
+    this.chatMessages.update((msgs) =>
+      msgs!.map((msg) => {
+        if (msg.id === updatedMessage.id) {
+          return {
+            ...msg,
+            text_message: {
+              ...msg.text_message!,
+              content: updatedMessage.text_message?.content || ''
+            }
+          };
+        }
+        return msg;
+      })
+    );
   }
 }

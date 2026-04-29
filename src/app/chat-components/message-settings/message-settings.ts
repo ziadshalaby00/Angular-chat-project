@@ -4,16 +4,20 @@ import { IconContainer } from '../../other-components/icon-container/icon-contai
 import { Dir } from '../../services/shared-service/shared-utils';
 import { NavbarItem } from '@ziadshalaby/ngx-zs-component';
 import { RemoveMessage } from '../remove-message/remove-message';
+import { EditMessage } from '../edit-message/edit-message';
+import { Text_message } from '../../services/chat-service/chat-service';
 
 @Component({
   selector: 'app-message-settings',
-  imports: [SettingsUi, IconContainer, RemoveMessage],
+  imports: [SettingsUi, IconContainer, RemoveMessage, EditMessage],
   templateUrl: './message-settings.html',
   styleUrl: './message-settings.css',
 })
 export class MessageSettings {
   readonly type = input.required<'text' | 'file' | 'audio'>();
   readonly id = input.required<number>();
+  readonly textMessage = input.required<Text_message | null>()
+
   readonly settingsDirection = model.required<Dir>();
 
   readonly editMessageIconTpl = viewChild<TemplateRef<any>>('editMessageIcon');
@@ -72,13 +76,14 @@ export class MessageSettings {
   }
 
   readonly removeMessageModal = model<boolean>(false);
+  readonly editMessageModal = model<boolean>(false);
   itemClicked(event: NavbarItem) {
     switch(event.id) {
       case 'Reply': 
         
         break;
       case 'Edit': 
-        
+        this.editMessageModal.set(true);
         break;
       case 'Delete': 
         this.removeMessageModal.set(true);

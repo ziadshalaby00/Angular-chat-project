@@ -1,0 +1,51 @@
+/* audio.component.css */
+
+.audio-message-container {
+  direction: ltr; /* عشان الwaveform يشتغل صح */
+}
+
+.waveform-wrapper {
+  touch-action: none; /* منع scroll لما المستخدم يseek على الموبايل */
+}
+
+.waveform-bar {
+  width: calc(100% / 30); /* عدد الـ bars */
+  min-width: 0; /* مهم */
+  border-radius: 9999px;
+  transition: height 0.3s ease, background-color 0.2s ease;
+}
+
+.waveform-bar.played {
+  background-color: #06b6d4 !important; /* cyan-500 */
+}
+
+/* Animation للbars لما يبقى playing */
+@keyframes sound-wave {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(1.3); }
+}
+
+.is-playing .waveform-bar.played {
+  animation: sound-wave 0.5s ease-in-out infinite;
+  animation-delay: calc(var(--i) * 0.05s);
+}
+
+/* Hover effects */
+.waveform-wrapper:hover .waveform-bar {
+  opacity: 0.8;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .waveform-bar {
+    min-width: 1.5px;
+    gap: 2px;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .waveform-bar:not(.played) {
+    background-color: #4b5563 !important;
+  }
+}

@@ -10,7 +10,6 @@ import { ChatService } from '../../services/chat-service/chat-service';
 })
 export class RemoveMessage {
   readonly removeMessageModal = model<boolean>(false);
-  readonly loaderIconTpl = viewChild<TemplateRef<any>>('loaderIcon');
 
   readonly chatService: ChatService = inject(ChatService);
   readonly removeMessageId = input.required<number>()
