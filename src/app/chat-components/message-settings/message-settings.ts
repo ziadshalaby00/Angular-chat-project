@@ -2,15 +2,18 @@ import { Component, input, model, TemplateRef, viewChild } from '@angular/core';
 import { SettingsUi } from '../../other-components/settings-ui/settings-ui';
 import { IconContainer } from '../../other-components/icon-container/icon-container';
 import { Dir } from '../../services/shared-service/shared-utils';
+import { NavbarItem } from '@ziadshalaby/ngx-zs-component';
+import { RemoveMessage } from '../remove-message/remove-message';
 
 @Component({
   selector: 'app-message-settings',
-  imports: [SettingsUi, IconContainer],
+  imports: [SettingsUi, IconContainer, RemoveMessage],
   templateUrl: './message-settings.html',
   styleUrl: './message-settings.css',
 })
 export class MessageSettings {
   readonly type = input.required<'text' | 'file' | 'audio'>();
+  readonly id = input.required<number>();
   readonly settingsDirection = model.required<Dir>();
 
   readonly editMessageIconTpl = viewChild<TemplateRef<any>>('editMessageIcon');
@@ -65,6 +68,21 @@ export class MessageSettings {
       children: messageSettings.children?.filter(
         child => ['Delete', 'Reply'].includes(child.id as string)
       )
+    }
+  }
+
+  readonly removeMessageModal = model<boolean>(false);
+  itemClicked(event: NavbarItem) {
+    switch(event.id) {
+      case 'Reply': 
+        
+        break;
+      case 'Edit': 
+        
+        break;
+      case 'Delete': 
+        this.removeMessageModal.set(true);
+        break;
     }
   }
 }

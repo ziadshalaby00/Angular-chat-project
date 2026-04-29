@@ -1,7 +1,7 @@
 import { Component, computed, effect, inject, model, signal, TemplateRef, viewChild } from '@angular/core';
 import { AuthApi } from '../../services/auth-services/auth-api';
 import { Router } from '@angular/router';
-import { Sidebar, Input, Card, AlertService, Button, Spinner, NavItem, NavbarItem, Modal } from '@ziadshalaby/ngx-zs-component';
+import { Sidebar, Input, Card, AlertService, Button, Spinner, NavbarItem } from '@ziadshalaby/ngx-zs-component';
 import { Chat } from "../../chat-components/chat/chat";
 import { ChatsService, ChatType } from '../../services/chats-service/chats-service';
 import { CommonModule } from '@angular/common';
@@ -115,7 +115,8 @@ export class Chats {
         label: 'Dismiss Unread',
         colorClass: 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 group',
         closeMenuAfterClick: true,
-        iconTpl: this.dismissUnreadIconTpl
+        iconTpl: this.dismissUnreadIconTpl,
+        closeParentMenuAfterClick: true
       },
       {
         id: 'remove-chat',
@@ -179,6 +180,8 @@ export class Chats {
   }
 
   changeCurrentChat(chat_id: number) {
+    if(this.isCurrentChat(chat_id)) return;
+    
     this.chatService.resetChat();
     this.chatService.currentChatId.set(chat_id);
   }

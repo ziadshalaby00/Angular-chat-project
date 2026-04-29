@@ -59,6 +59,7 @@ export class ChatService {
 
   private readonly page = signal<number>(1);
   private readonly getChatMessagesURL = `${this.config.apiUrl}/api/message/`;
+  private readonly DeleteMessageURL = `${this.config.apiUrl}/api/message/delete`;
 
   public getChatMessages(chat_id: number, sf?: () => void) {
     this.shared.http.get(`${this.getChatMessagesURL}${chat_id}/messages/?page=${this.page()}`, this.shared.CredAndCsrf()).subscribe({
@@ -107,5 +108,26 @@ export class ChatService {
     this.chatMessagesMetaData.set(null);
     this.chatMessages.set(null);
     this.page.set(1);
+  }
+
+  public removeMessage(messageId: number) {
+    this.shared.http.delete(`${this.DeleteMessageURL}/${messageId}/`, this.shared.CredAndCsrf()).subscribe({
+      next: (res) => {
+        this.performDeletedMessage(messageId);
+      },
+      error: (err) => {
+        this.getChatMessagesLoading.set(false);
+        this.loadMoreMessagesLoading.set(false);
+        this.shared.setErrors(err.error);
+      }
+    })
+  }
+
+  private performDeletedMessage(messageId: number) {
+    this.chatMessages.update((messages) => {
+      if (!messages) return null;
+
+      return messages.filter(message => message.id !== messageId);
+    });
   }
 }

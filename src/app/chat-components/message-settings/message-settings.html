@@ -5,9 +5,16 @@ justify-center -translate-y-1/2 -right-2.5"
 >
   <app-settings-ui
   [settings]="getMessageSettings"
+  (anyItemClickedEv)="itemClicked($event)"
   >
   </app-settings-ui>
 </div>
+
+<!-- Remove Chat Modal -->
+<app-remove-message
+  [(removeMessageModal)]="removeMessageModal" 
+  [removeMessageId]="id()"
+></app-remove-message>
 
 <!-- Message Setting Icons -->
 <ng-template #editMessageIcon>

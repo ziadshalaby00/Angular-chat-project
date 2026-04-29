@@ -8,11 +8,10 @@ import { Audio } from "../audio/audio";
 import { File } from '../file/file';
 import { Dir, SharedUtils } from '../../services/shared-service/shared-utils';
 import { OverflowCard } from '../../services/overflow-card/overflow-card';
-import { IconContainer } from '../../other-components/icon-container/icon-container';
 
 @Component({
   selector: 'app-message',
-  imports: [CommonModule, MessageSettings, Text, Audio, File, IconContainer],
+  imports: [CommonModule, MessageSettings, Text, Audio, File],
   templateUrl: './message.html',
   styleUrl: './message.css',
 })
