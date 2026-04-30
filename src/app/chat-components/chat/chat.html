@@ -133,7 +133,9 @@
       }
     </div>
     <div class="w-full shrink-0 bg-emerald-500 dark:bg-emerald-700 min-h-20 p-2.5">
-      <app-send-message>
+      <app-send-message
+      [chatId]="chatService.currentChatId()!"
+      >
       </app-send-message>
     </div>
   }

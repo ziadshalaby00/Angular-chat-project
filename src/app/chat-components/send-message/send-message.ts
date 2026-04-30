@@ -1,4 +1,5 @@
-import { Component, ElementRef, signal, viewChild } from '@angular/core';
+import { Component, ElementRef, inject, input, signal, viewChild } from '@angular/core';
+import { SendMessageService } from '../../services/send-message/send-message';
 
 @Component({
   selector: 'app-send-message',
@@ -7,6 +8,9 @@ import { Component, ElementRef, signal, viewChild } from '@angular/core';
   styleUrl: './send-message.css',
 })
 export class SendMessage {
+  readonly sendMessageService: SendMessageService = inject(SendMessageService);
+  readonly chatId = input.required<number>();
+
   readonly messageInput = viewChild<ElementRef<HTMLTextAreaElement>>('messageInput');
   readonly fileInput = viewChild<ElementRef<HTMLInputElement>>('fileInput');
 
@@ -19,6 +23,11 @@ export class SendMessage {
 
   private recordingInterval?: ReturnType<typeof setInterval>;
   private seconds = 0;
+  
+  // ====== NEW: Real Recording Properties ======
+  private mediaRecorder: MediaRecorder | null = null;
+  private audioChunks: Blob[] = [];
+  private audioStream: MediaStream | null = null;
 
   onInput(event: Event) {
     const value = (event.target as HTMLTextAreaElement).value;
@@ -64,44 +73,90 @@ export class SendMessage {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
   }
 
-  startRecording() {
-    this.isRecording.set(true);
-    this.seconds = 0;
-    this.recordingTime.set('00:00');
-    
-    this.recordingInterval = setInterval(() => {
-      this.seconds++;
-      const mins = Math.floor(this.seconds / 60).toString().padStart(2, '0');
-      const secs = (this.seconds % 60).toString().padStart(2, '0');
-      this.recordingTime.set(`${mins}:${secs}`);
-    }, 1000);
+  // ====== NEW: Real Audio Recording Methods ======
+  async startRecording() {
+    try {
+      // Request microphone access
+      this.audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+      // Create MediaRecorder
+      this.mediaRecorder = new MediaRecorder(this.audioStream);
+      this.audioChunks = [];
+
+      this.mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          this.audioChunks.push(event.data);
+        }
+      };
+
+      this.mediaRecorder.onstop = () => {
+        const audioBlob = new Blob(this.audioChunks, { type: 'audio/webm' });
+        this.recordedBlob.set(audioBlob);
+      };
+
+      // Start recording
+      this.mediaRecorder.start();
+      this.isRecording.set(true);
+      this.seconds = 0;
+      this.recordingTime.set('00:00');
+
+      // Start timer
+      this.recordingInterval = setInterval(() => {
+        this.seconds++;
+        const mins = Math.floor(this.seconds / 60).toString().padStart(2, '0');
+        const secs = (this.seconds % 60).toString().padStart(2, '0');
+        this.recordingTime.set(`${mins}:${secs}`);
+      }, 1000);
+
+    } catch (error) {
+      console.error('Error accessing microphone:', error);
+      alert('Could not access microphone. Please check permissions.');
+      this.cleanup();
+    }
   }
 
   stopRecording() {
+    if (this.mediaRecorder && this.mediaRecorder.state !== 'inactive') {
+      this.mediaRecorder.stop();
+    }
+    
     this.isRecording.set(false);
     if (this.recordingInterval) clearInterval(this.recordingInterval);
     
-    // Fake blob for demo - replace with actual MediaRecorder blob
-    this.recordedBlob.set(new Blob(['audio'], { type: 'audio/webm' }));
+    // Stop all tracks in the stream
+    this.audioStream?.getTracks().forEach(track => track.stop());
   }
 
   deleteRecording() {
     this.recordedBlob.set(null);
     this.seconds = 0;
     this.recordingTime.set('00:00');
+    this.audioChunks = [];
+    this.cleanup();
+  }
+
+  // ====== Cleanup ======
+
+  private cleanup() {
+    this.audioStream?.getTracks().forEach(track => track.stop());
+    this.audioStream = null;
+    this.mediaRecorder = null;
   }
 
   onSend() {
-    console.log('message', this.message())
-    console.log('files', this.selectedFiles())
-    console.log('audio', this.recordedBlob())
-    
+    this.sendMessageService.sendMessage(
+      {
+        text: this.message(),
+        file: this.selectedFiles(),
+        audio: this.recordedBlob()
+      },
+      this.chatId()
+    )
+
     // Reset everything
     this.message.set('');
     this.selectedFiles.set([]);
-    this.recordedBlob.set(null);
-    this.seconds = 0;
-    this.recordingTime.set('00:00');
+    this.deleteRecording()
     
     const textarea = this.messageInput()?.nativeElement;
     if (textarea) textarea.style.height = 'auto';

@@ -12,6 +12,7 @@ import { IconContainer } from '../../other-components/icon-container/icon-contai
 import { SettingsUi } from '../../other-components/settings-ui/settings-ui';
 import { Message } from '../message/message';
 import { SendMessage } from '../send-message/send-message';
+import { SendMessageService } from '../../services/send-message/send-message';
 
 @Component({
   selector: 'app-chat',
@@ -27,6 +28,7 @@ export class Chat {
   readonly openSide = model<boolean>(true);
   readonly chatService: ChatService = inject(ChatService);
   readonly chatsService: ChatsService = inject(ChatsService);
+  readonly sendMessageService: SendMessageService = inject(SendMessageService);
 
   readonly parentContainerS = viewChild<ElementRef<HTMLElement>>('parentContainer');
 
@@ -41,12 +43,16 @@ export class Chat {
       untracked(() => {
         if(!currentChat) {
           this.chatService.resetChat();
+          this.sendMessageService.disconnectMessage();
           return;
         }else {
           if(this.chatService.currentChatId() !== this.chatService.chatMessagesChatId()) {
             this.chatsService.markAsRead(currentChat);
             this.chatService.getChatMessagesLoading.set(true);
             this.chatService.getChatMessages(currentChat, this.startSTB);
+
+            this.sendMessageService.disconnectMessage()
+            this.sendMessageService.connectMessage(currentChat);
           }
         }
       })
