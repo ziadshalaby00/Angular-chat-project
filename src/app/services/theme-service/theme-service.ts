@@ -20,5 +20,13 @@ export class ThemeService {
   constructor() {
     const stored = localStorage.getItem('quickTheme');
     this.quickTheme.set(stored ? JSON.parse(stored) : true);
+
+    let theme = localStorage.getItem('theme');
+    if(!theme) {
+      setTimeout(() => {
+        this.setTheme('light');
+        console.log('light');
+      }, 10);
+    }
   }
 }

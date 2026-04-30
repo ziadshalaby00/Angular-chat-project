@@ -48,7 +48,7 @@ export class ChatService {
   private readonly config = inject(ConfigService);
   private readonly shared: SharedUtils = inject(SharedUtils);
   
-  public readonly currentChatId = signal<number | null>(31) ;
+  public readonly currentChatId = signal<number | null>(64) ;
   public readonly chatMessagesChatId = signal<number | null>(null) ;
 
   public readonly chatMessagesMetaData = signal<ChatMessagesType | null>(null);

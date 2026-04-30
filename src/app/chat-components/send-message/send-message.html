@@ -1,0 +1,115 @@
+<div class="flex items-end gap-2 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl p-2 shadow-sm 
+hover:shadow-md transition-shadow duration-200 w-full h-full min-h-full">
+    
+    <!-- Upload Button -->
+    @if(!isRecording() && !message().trim() && !recordedBlob()) {
+        <button 
+        type="button"
+        (click)="fileInput.click()"
+        class="shrink-0 w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 hover:text-gray-800 dark:hover:text-gray-100 transition-all duration-200 active:scale-95"
+        title="Upload file"
+        >
+        <i class="fas fa-arrow-up-from-bracket text-lg"></i>
+        </button>
+    }
+    <input #fileInput type="file" class="hidden" (change)="onFileSelected($event)" multiple>
+
+    <!-- File Preview (replaces textarea when file selected) -->
+    @if(selectedFiles().length > 0) {
+        <div class="flex-1 min-w-0 flex items-center gap-3 p-1">
+            @for(file of selectedFiles(); track file.name) {
+                <div class="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 rounded-lg px-3 py-2">
+                    <i [class]="getFileIcon(file)" class="text-gray-600 dark:text-gray-400 text-lg"></i>
+                    <div class="flex flex-col min-w-0">
+                        <span class="text-sm text-gray-800 dark:text-gray-200 truncate max-w-37.5">{{ file.name }}</span>
+                        <span class="text-xs text-gray-500 dark:text-gray-400">{{ formatFileSize(file.size) }}</span>
+                    </div>
+                    <button 
+                    type="button"
+                    (click)="removeFile(file)"
+                    class="text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 transition-colors ml-1"
+                    >
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            }
+        </div>
+    }
+
+    <!-- Recording Wave -->
+    @if(isRecording()) {
+        <div class="flex-1 h-full min-w-0 flex items-center justify-between gap-3">
+            <!-- Recording Dots -->
+            <div class="flex items-center gap-1 pl-4">
+                <div class="w-2 h-2 bg-red-500 rounded-full animate-bounce"></div>
+                <div class="w-2 h-2 bg-red-500 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+                <div class="w-2 h-2 bg-red-500 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+            </div>
+            <!-- Timer -->
+            <span class="text-sm text-red-600 dark:text-red-400 font-mono">{{ recordingTime() }}</span>
+        </div>
+    }
+
+    <!-- Text Input -->
+    @if(!selectedFiles().length && !isRecording()) {
+        <div class="flex-1 min-w-0">
+            <textarea
+                #messageInput
+                (input)="onInput($event)"
+                [value]="message()"
+                [placeholder]="recordedBlob() ? '' : 'Write your message...'"
+                rows="1"
+                [disabled]="recordedBlob()"
+                class="w-full scroll scroll-success bg-transparent border-0 outline-none resize-none text-gray-800 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 p-1 text-base leading-relaxed max-h-32"
+            ></textarea>
+        </div>
+    }
+
+    <!-- Voice Button -->
+    @if(!message().trim() && !selectedFiles().length && !isRecording() && !recordedBlob()) {
+        <button 
+        type="button"
+        (click)="startRecording()"
+        title="Audio recording"
+        class="shrink-0 w-10 h-10 flex items-center justify-center rounded-full dark:bg-emerald-700 bg-emerald-500 text-white hover:bg-emerald-600 transition-all duration-200 active:scale-95"
+        >
+            <i class="fas fa-microphone text-lg"></i>
+        </button>
+    }
+
+    <!-- Stop Recording Button -->
+    @if(isRecording()) {
+        <button 
+        type="button"
+        (click)="stopRecording()"
+        title="Stop recording"
+        class="shrink-0 w-10 h-10 flex items-center justify-center rounded-full bg-red-500 text-white hover:bg-red-600 transition-all duration-200 active:scale-95 animate-pulse"
+        >
+            <i class="fas fa-stop text-lg"></i>
+        </button>
+    }
+
+    <!-- Delete Recording Button (after stop) -->
+    @if(recordedBlob() && !isRecording()) {
+        <button 
+        type="button"
+        (click)="deleteRecording()"
+        title="Delete recording"
+        class="shrink-0 w-10 h-10 flex items-center justify-center rounded-full bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-300 dark:hover:bg-gray-600 hover:text-red-500 dark:hover:text-red-400 transition-all duration-200 active:scale-95"
+        >
+            <i class="fas fa-trash text-lg"></i>
+        </button>
+    }
+
+    <!-- Send Button -->
+    @if(message().trim() || selectedFiles().length || recordedBlob()) {
+        <button 
+        type="button"
+        (click)="onSend()"
+        title="Send"
+        class="shrink-0 w-10 h-10 flex items-center justify-center rounded-lg dark:bg-emerald-700 bg-emerald-500 text-white hover:bg-emerald-600 transition-all duration-200 active:scale-95 shadow-sm hover:shadow-md"
+        >
+        <i class="fas fa-paper-plane text-lg"></i>
+        </button>
+    }
+</div>

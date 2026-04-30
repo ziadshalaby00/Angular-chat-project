@@ -11,10 +11,11 @@ import { UserAvatar } from '../../chats-components/user-avatar/user-avatar';
 import { IconContainer } from '../../other-components/icon-container/icon-container';
 import { SettingsUi } from '../../other-components/settings-ui/settings-ui';
 import { Message } from '../message/message';
+import { SendMessage } from '../send-message/send-message';
 
 @Component({
   selector: 'app-chat',
-  imports: [CommonModule, Spinner, IconContainer, RemoveChat, UserAvatar, Message, SettingsUi],
+  imports: [CommonModule, Spinner, IconContainer, RemoveChat, UserAvatar, Message, SettingsUi, SendMessage],
   templateUrl: './chat.html',
   styleUrl: './chat.css',
 })
