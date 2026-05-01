@@ -86,7 +86,6 @@ export class ChatsService {
 
     if (!this.chatSocket()) return;
     this.chatSocket()!.onopen = () => {
-      console.log('WS opened');
     };
 
     this.chatSocket()!.onmessage = (event) => {
@@ -117,7 +116,6 @@ export class ChatsService {
     };
 
     this.chatSocket()!.onclose = () => {
-      console.log('WS closed');
     };
   }
 
@@ -132,7 +130,6 @@ export class ChatsService {
 
       socket.close();
       this.chatSocket.set(null);
-      console.log('WebSocket manually closed');
     }
   }
 

@@ -103,7 +103,6 @@ export class Auth {
       const res = await firstValueFrom(
         this.userShared.shared.http.get(this.csrfTokenURL, { withCredentials: true })
       );
-      console.log('CSRF token fetched', res);
       return true;
     } catch (err) {
       console.warn('CSRF token fetch failed', err);

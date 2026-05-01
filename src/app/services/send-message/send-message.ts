@@ -50,7 +50,6 @@ export class SendMessageService {
       paylod,
       this.shared.CredAndCsrf()).subscribe({
       next: (res) => {
-        console.log(res);
         this.replyToMessage.set(null);
       },
       error: (err) => {
@@ -72,7 +71,6 @@ export class SendMessageService {
     this.shared.http.post(`${this.fileMessagesURL}/${chatId}/uplode-file/`, 
       formData, this.shared.CredAndCsrf()).subscribe({
       next: (res) => {
-        console.log(res);
         this.replyToMessage.set(null);
       },
       error: (err) => {
@@ -95,7 +93,6 @@ export class SendMessageService {
     this.shared.http.post(`${this.audioMessagesURL}/${chatId}/uplode-audio/`, 
       formData, this.shared.CredAndCsrf()).subscribe({
       next: (res) => {
-        console.log(res);
         this.replyToMessage.set(null);
       },
       error: (err) => {
@@ -116,7 +113,6 @@ export class SendMessageService {
 
     if (!this.messageSocket()) return;
     this.messageSocket()!.onopen = () => {
-      console.log('WS opened');
     };
 
     this.messageSocket()!.onmessage = (event) => {
@@ -158,7 +154,6 @@ export class SendMessageService {
             return messages.filter(message => message.id !== messageId);
           });
       }
-      console.log(data)
     };
 
     this.messageSocket()!.onerror = (error) => {
@@ -166,7 +161,6 @@ export class SendMessageService {
     };
 
     this.messageSocket()!.onclose = () => {
-      console.log('WS closed');
     };
   }
 
@@ -181,7 +175,6 @@ export class SendMessageService {
 
       socket.close();
       this.messageSocket.set(null);
-      console.log('WebSocket manually closed');
     }
   }
 

@@ -31,8 +31,6 @@ export class Token {
           () => resolve()
         );
       });
-
-      console.log('Refreshed Token Done');
       return true;
 
     } catch (err) {

@@ -39,14 +39,7 @@ export class App {
     .subscribe((event: NavigationStart) => {
       this.router.navigate(['/init-page']);
       const reRouting = event.url === '/init-page' ? '/home' : event.url
-      console.log('Actual URL:', event.url);
-      console.log('Re routing URL:', reRouting);
       this.initAppService.initApp(reRouting);
     });
-
-    effect(() => {
-      console.log('userData: ', this.authApi.userData());
-      console.log('isLoggedin: ',this.authApi.isLoggedin());
-    })
   }
 }

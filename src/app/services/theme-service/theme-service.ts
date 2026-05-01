@@ -25,7 +25,6 @@ export class ThemeService {
     if(!theme) {
       setTimeout(() => {
         this.setTheme('light');
-        console.log('light');
       }, 10);
     }
   }
