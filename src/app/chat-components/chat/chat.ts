@@ -37,6 +37,12 @@ export class Chat {
       .find(chat => chat.id === this.chatService.currentChatId()) ?? null
   );
 
+  
+  // ==============================================================================================
+  // ==============================================================================================
+  private resizeObserver: ResizeObserver | null = null;
+  readonly messagesContainerS = viewChild<ElementRef<HTMLElement>>('messagesContainer');
+  num = 0
   constructor() {
     effect(() => {
       const currentChat: number | null = this.chatService.currentChatId();
@@ -58,30 +64,53 @@ export class Chat {
       })
     })
 
-    effect(() => {
-      const userSendMessage = this.sendMessageService.userSendMessage();
-      if(userSendMessage) {
-        setTimeout(() => {
-          this.scrollToBottom();
-        }, 300);
-        this.sendMessageService.userSendMessage.set(false);
-      }
-    })
+    effect((onCleanup) => {
+      const containerRef = this.messagesContainerS();
+      if (!containerRef?.nativeElement) return;
+
+      const el = containerRef.nativeElement;
+      this.resizeObserver = new ResizeObserver((entries) => {
+        for (const entry of entries) {
+          if(this.sendMessageService.userSendMessage()) {
+            this.scrollToBottom(false, 3);
+            this.sendMessageService.userSendMessage.set(false);
+          }else {
+            this.scrollToBottom(true);
+          }
+          this.num++
+          console.log(`resized ${this.num}`)
+        }
+      });
+      this.resizeObserver.observe(el);
+
+      onCleanup(() => {
+        this.resizeObserver?.disconnect();
+        this.resizeObserver = null;
+      });
+    });
   }
 
-  scrollToBottom(): void {
+  async scrollToBottom(ifNear: boolean = false, loop: number = 1) {
     const container = this.parentContainerS()?.nativeElement;
     if (!container) return;
 
-    const isAtBottom = container.scrollTop + container.clientHeight >= container.scrollHeight;
+    const currentScroll = container.scrollTop;
 
-    if (!isAtBottom) {
-      container.scrollTo({
-        top: container.scrollHeight,
-        behavior: 'smooth'
-      });
+    const threshold = 300;
+
+    const isNearBottom = Math.abs(currentScroll) <= threshold;
+
+    if (ifNear) {
+      if (!isNearBottom) return;
+    }
+    for(let i = 0; i<loop; i++) {
+      await this.shared.sleep(100);
+      container.scrollTop = container.scrollHeight;
     }
   }
+  // ==============================================================================================
+  // ==============================================================================================
+
 
   readonly chatSettingsIconTpl = viewChild<TemplateRef<any>>('chatSettingsIcon');
   readonly viewProfileIconTpl = viewChild<TemplateRef<any>>('viewProfileIcon');

@@ -127,11 +127,6 @@ export class ChatsService {
     const socket = this.chatSocket();
 
     if (socket) {
-      socket.onopen = null;
-      socket.onmessage = null;
-      socket.onerror = null;
-      socket.onclose = null;
-
       socket.close();
       this.chatSocket.set(null);
     }

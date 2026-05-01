@@ -91,7 +91,7 @@
       }@else {
         <div #parentContainer class="w-full h-full flex flex-col-reverse p-3 
         overflow-y-auto scroll scroll-primary">
-          <div class="flex flex-col gap-3.5">
+          <div #messagesContainer class="flex flex-col gap-3.5">
             @for(item of chatService.chatMessages(); track item.id) {
               <div
               [id]="'message-card' + item.id"

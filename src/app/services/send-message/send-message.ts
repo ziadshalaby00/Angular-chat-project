@@ -134,6 +134,8 @@ export class SendMessageService {
           this.sendingCount.update(c => c - 1);
         }
 
+        this.chatsService.markAsRead(chatId);
+
       }else if(data.type === 'message_updated') {
         const message: ResultType = data.message_data;
         this.chatService.chatMessages.update((msgs) =>
@@ -166,7 +168,6 @@ export class SendMessageService {
 
     this.messageSocket()!.onclose = () => {
       console.log('Ws messages closed');
-      this.chatsService.markAsRead(chatId);
     };
   }
 
@@ -174,11 +175,6 @@ export class SendMessageService {
     const socket = this.messageSocket();
 
     if (socket) {
-      socket.onopen = null;
-      socket.onmessage = null;
-      socket.onerror = null;
-      socket.onclose = null;
-
       socket.close();
       this.messageSocket.set(null);
     }
