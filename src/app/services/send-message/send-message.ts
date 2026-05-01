@@ -2,6 +2,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { ConfigService } from '../config-service/config-service';
 import { SharedUtils } from '../shared-service/shared-utils';
 import { ChatService, ResultType } from '../chat-service/chat-service';
+import { ChatsService } from '../chats-service/chats-service';
 export interface MessageType {
   'text': string;
   'file': File[];
@@ -13,7 +14,9 @@ export interface MessageType {
 export class SendMessageService {
   private readonly config = inject(ConfigService);
   private readonly shared: SharedUtils = inject(SharedUtils);
+
   private readonly chatService: ChatService = inject(ChatService);
+  private readonly chatsService: ChatsService = inject(ChatsService);
 
   readonly userSendMessage = signal<boolean>(false);
 
@@ -113,6 +116,7 @@ export class SendMessageService {
 
     if (!this.messageSocket()) return;
     this.messageSocket()!.onopen = () => {
+      console.log('Ws messages opend')
     };
 
     this.messageSocket()!.onmessage = (event) => {
@@ -161,6 +165,8 @@ export class SendMessageService {
     };
 
     this.messageSocket()!.onclose = () => {
+      console.log('Ws messages closed');
+      this.chatsService.markAsRead(chatId);
     };
   }
 

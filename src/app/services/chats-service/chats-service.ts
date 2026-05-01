@@ -86,6 +86,7 @@ export class ChatsService {
 
     if (!this.chatSocket()) return;
     this.chatSocket()!.onopen = () => {
+      console.log('Ws chats opend')
     };
 
     this.chatSocket()!.onmessage = (event) => {
@@ -118,6 +119,7 @@ export class ChatsService {
     };
 
     this.chatSocket()!.onclose = () => {
+      console.log('Ws chats closed')
     };
   }
 
