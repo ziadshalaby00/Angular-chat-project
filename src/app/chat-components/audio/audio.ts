@@ -32,8 +32,7 @@ export class Audio implements OnDestroy {
   readonly playbackRate = signal(1);
   readonly isLoading = signal(false);
   
-  // Waveform bars (simulated - في الحقيقة ممكن تحلل الaudio عشان bars حقيقية)
-  // 30 bar زي واتساب كدا
+  // 30 bar  
   readonly waveformBars = signal<number[]>([]);
   
   private audioElement!: HTMLAudioElement;

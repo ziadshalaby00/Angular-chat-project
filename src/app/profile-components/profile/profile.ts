@@ -52,14 +52,14 @@ export class Profile {
 
       const userLoggedinData = this.authApi.userData();
 
-      // بروفايل المستخدم الحالي
+      // Current user profile
       if (userId === userLoggedinData?.id) {
         this.isProfileForUserLoggedIn.set(true);
         this.profileData.set(userLoggedinData);
         return;
       }
 
-      // بروفايل مستخدم آخر
+      // Another user's profile
       this.isProfileForUserLoggedIn.set(false);
 
       this.authApi.getUsersProfileLoading.set(true);

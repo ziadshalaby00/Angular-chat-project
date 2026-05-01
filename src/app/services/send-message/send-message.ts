@@ -30,7 +30,8 @@ export class SendMessageService {
   }
 
   private sendTextMessage(content: string, chatId: number) {
-    this.shared.http.post(`${this.textMessagesURL}/${chatId}/send-text-message/`, { content }, this.shared.CredAndCsrf()).subscribe({
+    this.shared.http.post(`${this.textMessagesURL}/${chatId}/send-text-message/`, 
+      { content }, this.shared.CredAndCsrf()).subscribe({
       next: (res) => {
         console.log(res)
       },
@@ -44,7 +45,8 @@ export class SendMessageService {
     const formData = new FormData();
     formData.append('file', file);
 
-    this.shared.http.post(`${this.fileMessagesURL}/${chatId}/uplode-file/`, formData, this.shared.CredAndCsrf()).subscribe({
+    this.shared.http.post(`${this.fileMessagesURL}/${chatId}/uplode-file/`, 
+      formData, this.shared.CredAndCsrf()).subscribe({
       next: (res) => {
         console.log(res)
       },
@@ -58,7 +60,8 @@ export class SendMessageService {
     const formData = new FormData();
     formData.append('audio', audio);
 
-    this.shared.http.post(`${this.audioMessagesURL}/${chatId}/uplode-audio/`, formData, this.shared.CredAndCsrf()).subscribe({
+    this.shared.http.post(`${this.audioMessagesURL}/${chatId}/uplode-audio/`, 
+      formData, this.shared.CredAndCsrf()).subscribe({
       next: (res) => {
         console.log(res)
       },

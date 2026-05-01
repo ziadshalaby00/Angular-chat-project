@@ -60,7 +60,8 @@ export class ChatsService {
   }
 
   public getUserByUserName(username: string) {
-    this.shared.http.get(`${this.getUserByUserNameURL}?username=${username}`, this.shared.CredAndCsrf()).subscribe({
+    this.shared.http.get(`${this.getUserByUserNameURL}?username=${username}`, 
+      this.shared.CredAndCsrf()).subscribe({
       next: (res: any) => {
         this.userFetchedLoading.set(false);
         this.userFetched.set(res.user as UserFetchedType);

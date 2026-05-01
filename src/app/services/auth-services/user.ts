@@ -44,7 +44,8 @@ export class User {
   getUsersProfile(user_id: number | null, successFn?: (res: any) => void, faildFn?: () => void) {
     if(!user_id) return;
 
-    this.userShared.shared.http.get(`${this.getUsersProfileURL}/${user_id}/`, { withCredentials: true }).subscribe({
+    this.userShared.shared.http.get(`${this.getUsersProfileURL}/${user_id}/`, 
+      { withCredentials: true }).subscribe({
       next: (res: any) => {
         if(successFn) successFn(res);
       },
@@ -63,7 +64,8 @@ export class User {
       }
     });
 
-    this.userShared.shared.http.patch(this.updateProfileURL, formData, this.userShared.shared.CredAndCsrf()).subscribe({
+    this.userShared.shared.http.patch(this.updateProfileURL, 
+      formData, this.userShared.shared.CredAndCsrf()).subscribe({
       next: (res: any) => {
         this.userShared.userData.set(res.user);
 
@@ -82,7 +84,8 @@ export class User {
   }
 
   deleteUserImage(successFn?: () => void, faildFn?: () => void) {
-    this.userShared.shared.http.delete(this.deleteUserImageURL, this.userShared.shared.CredAndCsrf()).subscribe({
+    this.userShared.shared.http.delete(this.deleteUserImageURL, 
+      this.userShared.shared.CredAndCsrf()).subscribe({
       next: (res: any) => {
         this.userShared.userData.update((prev) => {
           if (!prev) return prev;

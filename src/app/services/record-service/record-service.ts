@@ -10,7 +10,7 @@ export class RecordService {
   setCurrent(audio: HTMLAudioElement) {
     const current = this.currentAudio();
 
-    // لو فيه واحد شغال قبل كده وقيمته مختلفة
+    // If there's one that's been used before and its value is different
     if (current && current !== audio) {
       current.pause();
     }

@@ -112,7 +112,8 @@ export class Auth {
   }
 
   deleteAcc(password: string) {
-    this.userShared.shared.http.post(this.deleteAccURL, { password } ,this.userShared.shared.CredAndCsrf()).subscribe({
+    this.userShared.shared.http.post(this.deleteAccURL, 
+      { password }, this.userShared.shared.CredAndCsrf()).subscribe({
       next: (res: any) => {
         this.userShared.deleteAccLoading.set(false);
         this.userShared.shared.alertService.addAlert({

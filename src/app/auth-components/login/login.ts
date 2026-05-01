@@ -49,7 +49,6 @@ export class Login {
   }
 
   // Password Reset
-
   readonly passwordResetModal = signal<boolean>(false)
   readonly passwordResetForm = new Form({
     email: ''

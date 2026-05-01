@@ -63,7 +63,8 @@ export class ChatService {
   private readonly EditMessageURL = `${this.config.apiUrl}/api/text_message`;
 
   public getChatMessages(chat_id: number, sf?: () => void) {
-    this.shared.http.get(`${this.getChatMessagesURL}${chat_id}/messages/?page=${this.page()}`, this.shared.CredAndCsrf()).subscribe({
+    this.shared.http.get(`${this.getChatMessagesURL}${chat_id}/messages/?page=${this.page()}`, 
+      this.shared.CredAndCsrf()).subscribe({
       next: (res) => {
         const data = res as ChatMessagesType
         const { results, ...meta } = data;
@@ -113,9 +114,7 @@ export class ChatService {
 
   public removeMessage(messageId: number) {
     this.shared.http.delete(`${this.DeleteMessageURL}/${messageId}/`, this.shared.CredAndCsrf()).subscribe({
-      next: (res) => {
-        // this.performDeletedMessage(messageId);
-      },
+      next: (res) => {},
       error: (err) => {
         this.shared.setErrors(err.error);
       }
@@ -124,10 +123,7 @@ export class ChatService {
 
   public editMessage(messageId: number, newMessage: string) {
     this.shared.http.patch(`${this.EditMessageURL}/${messageId}/update-text-message/`, {content: newMessage}, this.shared.CredAndCsrf()).subscribe({
-      next: (res) => {
-        // this.performEditedMessage(res as ResultType);
-        console.log(res)
-      },
+      next: (res) => {},
       error: (err) => {
         this.shared.setErrors(err.error);
       }

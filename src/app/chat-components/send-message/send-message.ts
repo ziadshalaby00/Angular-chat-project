@@ -24,7 +24,7 @@ export class SendMessage {
   private recordingInterval?: ReturnType<typeof setInterval>;
   private seconds = 0;
   
-  // ====== NEW: Real Recording Properties ======
+  // ====== Recording Properties ======
   private mediaRecorder: MediaRecorder | null = null;
   private audioChunks: Blob[] = [];
   private audioStream: MediaStream | null = null;
