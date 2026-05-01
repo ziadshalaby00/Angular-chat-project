@@ -1,9 +1,12 @@
-import { Component, ElementRef, inject, input, signal, viewChild } from '@angular/core';
+import { Component, effect, ElementRef, inject, input, signal, viewChild } from '@angular/core';
 import { SendMessageService } from '../../services/send-message/send-message';
+import { Text } from '../text/text';
+import { FileComp } from '../file/file';
+import { Audio } from '../audio/audio';
 
 @Component({
   selector: 'app-send-message',
-  imports: [],
+  // imports: [Text, FileComp, Audio],
   templateUrl: './send-message.html',
   styleUrl: './send-message.css',
 })
@@ -73,7 +76,7 @@ export class SendMessage {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
   }
 
-  // ====== NEW: Real Audio Recording Methods ======
+  // ====== Real Audio Recording Methods ======
   async startRecording() {
     try {
       // Request microphone access
@@ -160,5 +163,9 @@ export class SendMessage {
     
     const textarea = this.messageInput()?.nativeElement;
     if (textarea) textarea.style.height = 'auto';
+  }
+
+  cancelReply() {
+    this.sendMessageService.replyToMessage.set(null);
   }
 }

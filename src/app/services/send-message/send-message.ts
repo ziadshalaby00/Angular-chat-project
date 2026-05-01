@@ -15,25 +15,43 @@ export class SendMessageService {
   private readonly shared: SharedUtils = inject(SharedUtils);
   private readonly chatService: ChatService = inject(ChatService);
 
+  readonly userSendMessage = signal<boolean>(false);
+
+  readonly sendingCount = signal<number>(0);
+  readonly replyToMessage = signal<ResultType | null>(null);
+
   private readonly textMessagesURL = `${this.config.apiUrl}/api/text_message`;
   private readonly fileMessagesURL = `${this.config.apiUrl}/api/file_message`;
   private readonly audioMessagesURL = `${this.config.apiUrl}/api/audio_message`;
 
   public sendMessage(message: MessageType, chatId: number) {
+    const reply_to = this.replyToMessage()?.id;
+
+    this.userSendMessage.set(true);
+
     if(message.text) {
-      this.sendTextMessage(message.text,chatId)
+      this.sendTextMessage(message.text, chatId, reply_to)
     }else if(message.file.length !== 0) {
-      this.sendFileMessage(message.file[0], chatId)
+      this.sendFileMessage(message.file[0], chatId, reply_to)
     }else if(message.audio) {
-      this.sendAudioMessage(message.audio, chatId)
+      this.sendAudioMessage(message.audio, chatId, reply_to)
     }
   }
 
-  private sendTextMessage(content: string, chatId: number) {
+  private sendTextMessage(content: string, chatId: number, reply_to: number | undefined) {
+    let paylod: any = { 
+      content:content,
+    }
+    if(reply_to) {
+      paylod['reply_to'] = reply_to
+    }
+
     this.shared.http.post(`${this.textMessagesURL}/${chatId}/send-text-message/`, 
-      { content }, this.shared.CredAndCsrf()).subscribe({
+      paylod,
+      this.shared.CredAndCsrf()).subscribe({
       next: (res) => {
-        console.log(res)
+        console.log(res);
+        this.replyToMessage.set(null);
       },
       error: (err) => {
         this.shared.setErrors(err.error);
@@ -41,32 +59,48 @@ export class SendMessageService {
     })
   }
 
-  private sendFileMessage(file: File, chatId: number) {
+  private sendFileMessage(file: File, chatId: number, reply_to: number | undefined) {
+    this.sendingCount.update(c => c + 1);
+
     const formData = new FormData();
     formData.append('file', file);
+
+    if(reply_to) {
+      formData.append('reply_to', JSON.stringify(reply_to));
+    }
 
     this.shared.http.post(`${this.fileMessagesURL}/${chatId}/uplode-file/`, 
       formData, this.shared.CredAndCsrf()).subscribe({
       next: (res) => {
-        console.log(res)
+        console.log(res);
+        this.replyToMessage.set(null);
       },
       error: (err) => {
         this.shared.setErrors(err.error);
+        this.sendingCount.update(c => c - 1);
       }
     })
   }
 
-  private sendAudioMessage(audio: Blob, chatId: number) {
+  private sendAudioMessage(audio: Blob, chatId: number,  reply_to: number | undefined) {
+    this.sendingCount.update(c => c + 1);
+
     const formData = new FormData();
     formData.append('audio', audio);
+    
+    if(reply_to) {
+      formData.append('reply_to', JSON.stringify(reply_to));
+    }
 
     this.shared.http.post(`${this.audioMessagesURL}/${chatId}/uplode-audio/`, 
       formData, this.shared.CredAndCsrf()).subscribe({
       next: (res) => {
-        console.log(res)
+        console.log(res);
+        this.replyToMessage.set(null);
       },
       error: (err) => {
         this.shared.setErrors(err.error);
+        this.sendingCount.update(c => c - 1);
       }
     })
   }
@@ -95,6 +129,10 @@ export class SendMessageService {
           if(!messages) return null;
           return [...messages, newMessage];
         })
+
+        if(newMessage.type !== 'text') {
+          this.sendingCount.update(c => c - 1);
+        }
 
       }else if(data.type === 'message_updated') {
         const message: ResultType = data.message_data;

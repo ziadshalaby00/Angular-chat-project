@@ -14,3 +14,12 @@ body {
 a, button {
   cursor: pointer; 
 }
+
+@keyframes highlight-pulse {
+  0%, 100% { background-color: transparent; }
+  50% { background-color: rgba(16, 185, 129, 0.2); }
+}
+
+.message-highlight {
+  animation: highlight-pulse 1.5s ease-in-out;
+}

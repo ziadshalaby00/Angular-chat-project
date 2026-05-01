@@ -3,7 +3,7 @@
 
 <!-- WhatsApp-style Audio Message Bubble -->
 <div class="audio-message-container">
-    <div class="flex items-center gap-3 p-3 pr-5 rounded-2xl bg-emerald-50 dark:bg-emerald-700 
+    <div class="flex items-center gap-3 p-3 pr-5 rounded-2xl bg-emerald-50 dark:bg-emerald-100/30
      w-80 max-w-full">
     
         <div class="flex flex-col items-center justify-center gap-1">
@@ -25,7 +25,7 @@
             </button>
     
             <!-- Current Time / Duration -->
-            <span class="text-gray-500 dark:text-gray-400 font-medium tabular-nums text-xs">
+            <span class="text-gray-500 dark:text-gray-100 font-medium tabular-nums text-xs">
                 {{ isPlaying() ? formatTime(currentTime()) : formatTime(duration() || record().audio_duration) }}
             </span>
         </div>

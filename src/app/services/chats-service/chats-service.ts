@@ -23,7 +23,8 @@ export interface ChatType {
 
 interface WebSocketMessageType {
   "type": 'chat_created' | 'new_message_notification';
-  "chat": ChatType
+  "chat"?: ChatType
+  "chat_id"?: number
 }
 
 @Injectable({
@@ -93,10 +94,21 @@ export class ChatsService {
       if(!data) return;
 
       if(data.type === 'chat_created') {
-        this.chats.update((prev) => [...prev, data.chat]);
+        this.chats.update((prev) => [...prev!, data.chat!]);
       }
       else if(data.type === 'new_message_notification') {
-        console.log(data);
+        const chat_id = data.chat_id
+        this.chats.update((chats) => 
+          chats!.map((chat) => {
+            if (chat.id === chat_id) {
+              return {
+                ...chat,
+                unread_count: chat.unread_count + 1
+              };
+            }
+            return chat;
+          })
+        )
       }
     };
 

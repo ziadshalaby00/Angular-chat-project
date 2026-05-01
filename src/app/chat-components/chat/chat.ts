@@ -49,7 +49,7 @@ export class Chat {
           if(this.chatService.currentChatId() !== this.chatService.chatMessagesChatId()) {
             this.chatsService.markAsRead(currentChat);
             this.chatService.getChatMessagesLoading.set(true);
-            this.chatService.getChatMessages(currentChat, this.startSTB);
+            this.chatService.getChatMessages(currentChat);
 
             this.sendMessageService.disconnectMessage()
             this.sendMessageService.connectMessage(currentChat);
@@ -58,21 +58,24 @@ export class Chat {
       })
     })
 
-    this.startSTB();
+    effect(() => {
+      const userSendMessage = this.sendMessageService.userSendMessage();
+      if(userSendMessage) {
+        setTimeout(() => {
+          this.scrollToBottom();
+        }, 300);
+        this.sendMessageService.userSendMessage.set(false);
+      }
+    })
   }
 
-  private scrollToBottom = () => {
-    const el = this.parentContainerS()?.nativeElement;
-    if(el) {
-      el.scrollTop = el.scrollHeight;
-    }
-  }
-
-  private startSTB = async () => {
-    for(let i = 0; i<5; i++) {
-      this.scrollToBottom()
-      console.log('scroll now')
-      await this.shared.sleep(100);
+  scrollToBottom(): void {
+    const container = this.parentContainerS()?.nativeElement;
+    if (container) {
+      container.scrollTo({
+        top: container.scrollHeight,
+        behavior: 'smooth'
+      });
     }
   }
 
@@ -138,27 +141,7 @@ export class Chat {
     return sender_id === this.authApi.userData()?.id;
   }
 
-  private prevScrollHeight = 0;
   onLoadMoreMessages() {
-    const container = this.parentContainerS()?.nativeElement;
-    if (!container) return;
-
-    this.prevScrollHeight = container.scrollHeight;
-
-    this.chatService.loadMoreMessages(() => {
-      this.restoreScrollPosition();
-    });
-  }
-
-  private restoreScrollPosition() {
-    const container = this.parentContainerS()?.nativeElement;
-    if (!container) return;
-
-    requestAnimationFrame(() => {
-      const newScrollHeight = container.scrollHeight;
-      const diff = newScrollHeight - this.prevScrollHeight;
-
-      container.scrollTop += diff;
-    });
+    this.chatService.loadMoreMessages();
   }
 }

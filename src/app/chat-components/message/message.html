@@ -20,6 +20,45 @@
       "
     ></div>
 
+    @if(item().reply_to !== null) {
+      <div 
+        (click)="scrollToMessage(item().reply_to?.id)"
+        class="bg-emerald-50 dark:bg-emerald-900 border border-emerald-200 
+        dark:border-emerald-800 rounded-xl p-3 shadow-sm animate-fade-in-down mb-1.5
+        cursor-pointer hover:bg-emerald-100 dark:hover:bg-emerald-900/70 transition-colors"
+      >
+        <div class="flex items-start gap-3">
+          <div class="w-1 h-full min-h-10 bg-emerald-500 dark:bg-emerald-400 
+          rounded-full shrink-0 self-stretch"></div>
+          
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-xs font-semibold text-emerald-700 dark:text-emerald-400 
+              uppercase tracking-wider">
+                Reply to
+              </span>
+              <span class="text-xs text-gray-500 dark:text-gray-400">
+                {{ item().reply_to?.sender?.fullname || 'User' }}
+              </span>
+            </div>
+            
+            <div class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+              @if(item().reply_to?.type === 'text') {
+                <i class="fas fa-comment text-emerald-500 dark:text-emerald-400 text-xs"></i>
+                <span class="truncate">{{ item().reply_to?.text_message?.content }}</span>
+              } @else if(item().reply_to?.type === 'file') {
+                <i class="fas fa-file text-blue-500 dark:text-blue-400 text-xs"></i>
+                <span class="truncate">{{ item().reply_to?.file_message?.file_name || 'File' }}</span>
+              } @else if(item().reply_to?.type === 'audio') {
+                <i class="fas fa-microphone text-red-500 dark:text-red-400 text-xs"></i>
+                <span>Voice message</span>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+
     <!-- Message Content -->
     @if(item().type === 'text') {
       <app-text [text_message]="item().text_message!"></app-text>
@@ -41,8 +80,9 @@
       {{ shared.formatDate(item().timestamp, true) }}
     </div>
 
-    <!-- replay button -->
+    <!-- reply button -->
     <button 
+    (click)="sendMessageService.replyToMessage.set(item())"
     class="absolute top-1/2 -translate-y-1/2
     text-slate-700 dark:text-slate-300 text-xs
      cursor-pointer hover:scale-[1.05] active:scale-[0.97]"
@@ -61,7 +101,7 @@
       (click)="overflowCard.setCardOverFlow('message-card' + item().id, 'messagesCards')"
       [type]="item().type"
       [id]="item().id"
-      [textMessage]="item().text_message"
+      [item]="item()"
       [(settingsDirection)]="settingsDirection"
       >
       </app-message-settings>

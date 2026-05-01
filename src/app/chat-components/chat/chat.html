@@ -89,8 +89,29 @@
           </div>
         </div>
       }@else {
-        <div #parentContainer class="w-full h-full flex flex-col gap-3 p-3 
+        <div #parentContainer class="w-full h-full flex flex-col-reverse p-3 
         overflow-y-auto scroll scroll-primary">
+          <div class="flex flex-col gap-3.5">
+            @for(item of chatService.chatMessages(); track item.id) {
+              <div
+              [id]="'message-card' + item.id"
+              >
+                <app-message
+                [item]="item" 
+                [isUserMessage]="isUserMessage(item.sender.id)"
+                [parentContainerS]="parentContainerS()!"
+                >
+                </app-message>
+              </div>
+            }
+          </div>
+
+          @if(chatService.chatMessages()?.length === 0) {
+            <div class="text-3xl h-full w-full dark:text-emerald-500 text-emerald-600 flex justify-center items-center">
+              No messages yet
+            </div>
+          }
+          
           <div class="flex items-center justify-center p-3">
             @if(chatService.loadMoreMessagesLoading()) {
               <div class="relative">
@@ -113,22 +134,6 @@
               </button>
             }
           </div>
-          @for(item of chatService.chatMessages(); track item.id) {
-            <div
-            [id]="'message-card' + item.id"
-            >
-              <app-message
-              [item]="item" 
-              [isUserMessage]="isUserMessage(item.sender.id)"
-              [parentContainerS]="parentContainerS()!"
-              >
-              </app-message>
-            </div>
-          }@empty {
-            <div class="text-3xl h-full w-full dark:text-emerald-500 text-emerald-600 flex justify-center items-center">
-              No messages yet
-            </div>
-          }
         </div>
       }
     </div>

@@ -7,7 +7,7 @@ import { File_message } from '../../services/chat-service/chat-service';
   templateUrl: './file.html',
   styleUrl: './file.css',
 })
-export class File {
+export class FileComp {
   readonly file_message = input.required<File_message>();
 
   getFileCategory(fileType: string): 'image' | 'video' | 'audio' | 'pdf' | 'document' | 'code' | 'archive' | 'unknown' {

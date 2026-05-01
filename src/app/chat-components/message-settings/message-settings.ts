@@ -1,11 +1,12 @@
-import { Component, input, model, TemplateRef, viewChild } from '@angular/core';
+import { Component, inject, input, model, TemplateRef, viewChild } from '@angular/core';
 import { SettingsUi } from '../../other-components/settings-ui/settings-ui';
 import { IconContainer } from '../../other-components/icon-container/icon-container';
 import { Dir } from '../../services/shared-service/shared-utils';
 import { NavbarItem } from '@ziadshalaby/ngx-zs-component';
 import { RemoveMessage } from '../remove-message/remove-message';
 import { EditMessage } from '../edit-message/edit-message';
-import { Text_message } from '../../services/chat-service/chat-service';
+import { ResultType, Text_message } from '../../services/chat-service/chat-service';
+import { SendMessageService } from '../../services/send-message/send-message';
 
 @Component({
   selector: 'app-message-settings',
@@ -14,9 +15,10 @@ import { Text_message } from '../../services/chat-service/chat-service';
   styleUrl: './message-settings.css',
 })
 export class MessageSettings {
+  readonly sendMessageService: SendMessageService = inject(SendMessageService);
+  
   readonly type = input.required<'text' | 'file' | 'audio'>();
-  readonly id = input.required<number>();
-  readonly textMessage = input.required<Text_message | null>()
+  readonly item = input.required<ResultType>();
 
   readonly settingsDirection = model.required<Dir>();
 
@@ -80,7 +82,7 @@ export class MessageSettings {
   itemClicked(event: NavbarItem) {
     switch(event.id) {
       case 'Reply': 
-        
+        this.sendMessageService.replyToMessage.set(this.item());
         break;
       case 'Edit': 
         this.editMessageModal.set(true);
