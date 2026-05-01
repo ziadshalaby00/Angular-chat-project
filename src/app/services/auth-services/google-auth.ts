@@ -4,7 +4,7 @@ import { Auth } from './auth';
 
 declare const google: any;
 export const googleClientId: string = 
-  '376492260397-n5gnu7445umh0vut3a1tl06an5aoc186.apps.googleusercontent.com'
+  '981341511714-hdejio89rghet6t2p1s4362rfrrt9k3u.apps.googleusercontent.com'
 
 @Injectable({
   providedIn: 'root',
