@@ -11,7 +11,7 @@ export class ConfigService {
   private readonly prodWsProtocol: string = 'wss';
 
   private readonly localSocketUrl: string = 'localhost:8000';
-  private readonly prodSocketUrl: string = 'ziadshalaby00.pythonanywhere.com/';
+  private readonly prodSocketUrl: string = 'ziadshalaby00.pythonanywhere.com';
 
   public get apiUrl(): string {
     return this.isProd ? this.prodApiUrl : this.localApiUrl;
