@@ -96,7 +96,9 @@ export class ChatsService {
         this.chats.update((prev) => [...prev!, data.chat!]);
       }
       else if(data.type === 'new_message_notification') {
-        const chat_id = data.chat_id
+        const chat_id = data.chat_id;
+        if(this.chatService.currentChatId() === chat_id) return;
+
         this.chats.update((chats) => 
           chats!.map((chat) => {
             if (chat.id === chat_id) {

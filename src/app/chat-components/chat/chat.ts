@@ -71,7 +71,11 @@ export class Chat {
 
   scrollToBottom(): void {
     const container = this.parentContainerS()?.nativeElement;
-    if (container) {
+    if (!container) return;
+
+    const isAtBottom = container.scrollTop + container.clientHeight >= container.scrollHeight;
+
+    if (!isAtBottom) {
       container.scrollTo({
         top: container.scrollHeight,
         behavior: 'smooth'
