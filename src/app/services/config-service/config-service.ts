@@ -5,13 +5,13 @@ export class ConfigService {
   private readonly isProd: boolean = !window.location.hostname.includes('localhost');
 
   private readonly localApiUrl: string = 'http://localhost:8000';
-  private readonly prodApiUrl: string = '';
+  private readonly prodApiUrl: string = 'https://municipality-neighbors-testament-back.trycloudflare.com';
 
   private readonly localWsProtocol: string = 'ws';
   private readonly prodWsProtocol: string = 'wss';
 
-  private readonly localSocketUrl: string = 'localhost:8000';
-  private readonly prodSocketUrl: string = '';
+  private readonly localSocketUrl: string = this.localApiUrl.replace(/^https?:\/\//, '').replace(/\/$/, '');
+  private readonly prodSocketUrl: string = this.prodApiUrl.replace(/^https?:\/\//, '').replace(/\/$/, '');
 
   public get apiUrl(): string {
     return this.isProd ? this.prodApiUrl : this.localApiUrl;

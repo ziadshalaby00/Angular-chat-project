@@ -19,6 +19,7 @@ export class SendMessageService {
   private readonly chatsService: ChatsService = inject(ChatsService);
 
   readonly userSendMessage = signal<boolean>(false);
+  readonly sendedMessage = signal<boolean>(false);
 
   readonly sendingCount = signal<number>(0);
   readonly replyToMessage = signal<ResultType | null>(null);
@@ -135,6 +136,7 @@ export class SendMessageService {
         }
 
         this.chatsService.markAsRead(chatId);
+        this.sendedMessage.set(true);
 
       }else if(data.type === 'message_updated') {
         const message: ResultType = data.message_data;

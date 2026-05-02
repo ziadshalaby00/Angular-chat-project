@@ -40,9 +40,7 @@ export class Chat {
   
   // ==============================================================================================
   // ==============================================================================================
-  private resizeObserver: ResizeObserver | null = null;
   readonly messagesContainerS = viewChild<ElementRef<HTMLElement>>('messagesContainer');
-  num = 0
   constructor() {
     effect(() => {
       const currentChat: number | null = this.chatService.currentChatId();
@@ -64,49 +62,78 @@ export class Chat {
       })
     })
 
-    effect((onCleanup) => {
-      const containerRef = this.messagesContainerS();
-      if (!containerRef?.nativeElement) return;
+    effect(() => {
+      const sendedMessage = this.sendMessageService.sendedMessage();
+      if(!sendedMessage) return;
+      
+      untracked(() => {
+        const userSendMessage = this.sendMessageService.userSendMessage();
+        this.scrollToBottom(!userSendMessage);
 
-      const el = containerRef.nativeElement;
-      this.resizeObserver = new ResizeObserver((entries) => {
-        for (const entry of entries) {
-          if(this.sendMessageService.userSendMessage()) {
-            this.scrollToBottom(false, 3);
-            this.sendMessageService.userSendMessage.set(false);
-          }else {
-            this.scrollToBottom(true);
-          }
-          this.num++
-          console.log(`resized ${this.num}`)
-        }
-      });
-      this.resizeObserver.observe(el);
-
-      onCleanup(() => {
-        this.resizeObserver?.disconnect();
-        this.resizeObserver = null;
-      });
+        this.sendMessageService.sendedMessage.set(false);
+        this.sendMessageService.userSendMessage.set(false);
+      })
     });
   }
 
-  async scrollToBottom(ifNear: boolean = false, loop: number = 1) {
+  private isAutoScrolling = false;
+  async scrollToBottom(ifNear: boolean = false, retry = 0): Promise<any> {
+    if (retry > 5) return;
+
     const container = this.parentContainerS()?.nativeElement;
-    if (!container) return;
+    if (!container || this.isAutoScrolling) return;
 
-    const currentScroll = container.scrollTop;
+    const threshold = container.clientHeight / 2;
+    const isNearBottom = Math.abs(container.scrollTop) <= threshold;
 
-    const threshold = 300;
+    if (ifNear && !isNearBottom) return;
 
-    const isNearBottom = Math.abs(currentScroll) <= threshold;
+    this.isAutoScrolling = true;
 
-    if (ifNear) {
-      if (!isNearBottom) return;
+    const target = 0;
+
+    console.log('scroll')
+    container.scrollTo({
+      top: target,
+      behavior: 'smooth'
+    });
+
+    await this.waitForScrollEnd(container);
+
+    if (Math.abs(container.scrollTop - target) > 2) {
+      this.isAutoScrolling = false;
+      console.log('retry scroll')
+      return this.scrollToBottom(ifNear, retry + 1);
     }
-    for(let i = 0; i<loop; i++) {
-      await this.shared.sleep(100);
-      container.scrollTop = container.scrollHeight;
-    }
+
+    this.isAutoScrolling = false;
+  }
+
+  private waitForScrollEnd(container: HTMLElement): Promise<void> {
+    return new Promise((resolve) => {
+      let last = container.scrollTop;
+      let sameCount = 0;
+
+      const check = () => {
+        const current = container.scrollTop;
+
+        if (Math.abs(current - last) < 1) {
+          sameCount++;
+        } else {
+          sameCount = 0;
+        }
+
+        last = current;
+
+        if (sameCount > 5) {
+          resolve();
+        } else {
+          requestAnimationFrame(check);
+        }
+      };
+
+      requestAnimationFrame(check);
+    });
   }
   // ==============================================================================================
   // ==============================================================================================
