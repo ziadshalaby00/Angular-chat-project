@@ -32,3 +32,12 @@ Proton delivers a WhatsApp-like messaging experience with text, file sharing, vo
 | **Build** | Angular CLI v20, PostCSS, TypeScript 5.9 |
 
 ---
+
+## 📄 License
+
+Developed entirely by [Ziad Shalaby](https://github.com/ziadshalaby00).
+
+This project is licensed under the **MIT License**.
+
+---
+
