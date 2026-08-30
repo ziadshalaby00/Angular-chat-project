@@ -5,7 +5,7 @@ export class ConfigService {
   private readonly isProd: boolean = !window.location.hostname.includes('localhost');
 
   private readonly localApiUrl: string = 'http://localhost:8000';
-  private readonly prodApiUrl: string = 'https://shows-toe-requesting-sheriff.trycloudflare.com';
+  private readonly prodApiUrl: string = 'https://desktop-97l1ctr.tailc9493e.ts.net';
 
   private readonly localWsProtocol: string = 'ws';
   private readonly prodWsProtocol: string = 'wss';
