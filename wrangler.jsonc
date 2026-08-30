@@ -2,6 +2,7 @@
   "name": "proton",
   "compatibility_date": "2026-08-30",
   "assets": {
-    "directory": "./dist/Angular-chat-project/browser"
+    "directory": "./dist/Angular-chat-project/browser",
+    "not_found_handling": "single-page-application"
   }
 }
