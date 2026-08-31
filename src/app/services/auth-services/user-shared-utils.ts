@@ -13,6 +13,8 @@ export interface UserDataType {
   user_image : string;
   username : string;
   bio: string;
+  pending_email: string | null;
+  
 }
 
 export interface HttpOptions {

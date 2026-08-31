@@ -8,20 +8,21 @@
             color="blue"
             [withBox]="true"
         />
-    } @else if (authApi.verifyEmailError()) {
-        <div class="w-full max-w-md text-center">
-
-            <h2 class="text-xl font-semibold mb-2">
+    }
+    <div class="w-full max-w-md text-center">
+        @if (authApi.verifyEmailError()) {
+            <h2 class="text-xl font-semibold mb-2 dark:text-gray-200">
                 Email Verification Failed
             </h2>
 
-            <p class="text-gray-500 mb-8">
+            <p class="text-gray-500 text-gray-400 mb-8">
                 This verification link is invalid or has expired.
             </p>
-
+        }
+        @if (authApi.verifyEmailError() || isBodyNull()) {
             <app-resend-ver-link></app-resend-ver-link>
-        </div>
-    }
+        }
+    </div>
 </div>
 
 <!-- Envelope Icon -->

@@ -1,4 +1,4 @@
-import { Component, effect, inject } from '@angular/core';
+import { Component, effect, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Spinner } from '@ziadshalaby/ngx-zs-component';
 import { AuthApi } from '../../services/auth-services/auth-api';
 import { Router } from '@angular/router';
@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
   selector: 'app-init-page',
   imports: [Spinner],
   templateUrl: './init-page.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './init-page.css',
 })
 export class InitPage {

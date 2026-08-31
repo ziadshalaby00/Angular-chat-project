@@ -1,4 +1,4 @@
-import { Component, inject, input, model, TemplateRef, viewChild } from '@angular/core';
+import { Component, inject, input, model, TemplateRef, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { Modal } from '@ziadshalaby/ngx-zs-component';
 import { ChatService } from '../../services/chat-service/chat-service';
 
@@ -6,6 +6,7 @@ import { ChatService } from '../../services/chat-service/chat-service';
   selector: 'app-remove-message',
   imports: [Modal],
   templateUrl: './remove-message.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './remove-message.css',
 })
 export class RemoveMessage {

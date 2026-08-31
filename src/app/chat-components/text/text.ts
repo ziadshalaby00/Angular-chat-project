@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 
 import { Text_message } from '../../services/chat-service/chat-service';
 
@@ -6,6 +6,7 @@ import { Text_message } from '../../services/chat-service/chat-service';
   selector: 'app-text',
   imports: [],
   templateUrl: './text.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './text.css',
 })
 export class Text {

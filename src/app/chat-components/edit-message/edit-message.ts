@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, input, model, viewChild } from '@angular/core';
+import { Component, ElementRef, inject, input, model, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ChatService } from '../../services/chat-service/chat-service';
 import { Input, Modal } from '@ziadshalaby/ngx-zs-component';
 
@@ -6,6 +6,7 @@ import { Input, Modal } from '@ziadshalaby/ngx-zs-component';
   selector: 'app-edit-message',
   imports: [Modal],
   templateUrl: './edit-message.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './edit-message.css',
 })
 export class EditMessage {

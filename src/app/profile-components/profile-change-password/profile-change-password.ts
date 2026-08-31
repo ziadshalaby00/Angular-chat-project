@@ -1,4 +1,4 @@
-import { Component, effect, inject, input, model, signal, TemplateRef, viewChild, WritableSignal } from '@angular/core';
+import { Component, effect, inject, input, model, signal, TemplateRef, viewChild, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
 import { Modal, Input, Form, ValidatorFn, ChangeEventType } from '@ziadshalaby/ngx-zs-component';
 import { AuthApi } from '../../services/auth-services/auth-api';
 

@@ -1,4 +1,4 @@
-import { Component, computed, effect, HostListener, inject, model, signal, untracked, WritableSignal } from '@angular/core';
+import { Component, computed, effect, HostListener, inject, model, signal, untracked, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Button, Spinner } from '@ziadshalaby/ngx-zs-component';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -21,6 +21,7 @@ import { SharedUtils } from '../../services/shared-service/shared-utils';
     ProfileDeleteUserAccount
   ],
   templateUrl: './profile.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './profile.css',
 })
 export class Profile {
@@ -87,6 +88,10 @@ export class Profile {
         }
       })
     });
+
+    effect(() => {
+      console.log(this.profileData());
+    })
   }
  
   handleCloseSuccess = (modalToClose?: WritableSignal<boolean>): void => {
@@ -119,5 +124,9 @@ export class Profile {
   @HostListener('document:keydown.escape')
   onEsc() {
     this.closeImageZoom();
+  }
+
+  goToResendVerEmail() {
+    this.router.navigate(['/verify-email/NULL/NULL'])
   }
 }

@@ -1,10 +1,11 @@
-import { Component, input, signal } from '@angular/core';
+import { Component, input, signal, ChangeDetectionStrategy } from '@angular/core';
 import { File_message } from '../../services/chat-service/chat-service';
 
 @Component({
   selector: 'app-file',
   imports: [],
   templateUrl: './file.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './file.css',
 })
 export class FileComp {

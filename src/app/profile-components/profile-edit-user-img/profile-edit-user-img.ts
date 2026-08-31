@@ -1,4 +1,4 @@
-import { Component, effect, inject, input, model, signal, TemplateRef, viewChild, WritableSignal } from '@angular/core';
+import { Component, effect, inject, input, model, signal, TemplateRef, viewChild, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
 import { ChangeEventType, FileData, FileInput, Form, Modal, Button, FilesType } from '@ziadshalaby/ngx-zs-component';
 import { AuthApi } from '../../services/auth-services/auth-api';
 import { Or } from '../../other-components/or/or';
@@ -7,6 +7,7 @@ import { Or } from '../../other-components/or/or';
   selector: 'app-profile-edit-user-img',
   imports: [Modal, FileInput, Button, Or],
   templateUrl: './profile-edit-user-img.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './profile-edit-user-img.css',
 })
 export class ProfileEditUserImg {

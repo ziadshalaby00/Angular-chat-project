@@ -1,4 +1,4 @@
-import { Component, computed, input, output, TemplateRef, viewChild } from '@angular/core';
+import { Component, computed, input, output, TemplateRef, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { NavbarItem, NavItem } from '@ziadshalaby/ngx-zs-component';
 import { Dir } from '../../services/shared-service/shared-utils';
 
@@ -6,6 +6,7 @@ import { Dir } from '../../services/shared-service/shared-utils';
   selector: 'app-settings-ui',
   imports: [NavItem],
   templateUrl: './settings-ui.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './settings-ui.css',
 })
 export class SettingsUi {

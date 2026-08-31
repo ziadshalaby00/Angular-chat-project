@@ -1,4 +1,4 @@
-import { Component, inject, viewChild } from '@angular/core';
+import { Component, inject, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { Card, Input, Button, ChangeEventType, Form, ValidatorFn } from '@ziadshalaby/ngx-zs-component';
 import { ActivatedRoute } from '@angular/router';
 import { AuthApi } from '../../services/auth-services/auth-api';
@@ -7,6 +7,7 @@ import { AuthApi } from '../../services/auth-services/auth-api';
   selector: 'app-reset-password',
   imports: [Card, Input, Button],
   templateUrl: './reset-password.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './reset-password.css',
 })
 export class ResetPassword {

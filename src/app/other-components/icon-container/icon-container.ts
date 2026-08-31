@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, input, ChangeDetectionStrategy } from '@angular/core';
 
 export type ColorsType = 'blue' | 'red' | 'purple' | 'yellow' | 'indigo' | 'green'
 
@@ -7,6 +7,7 @@ export type ColorsType = 'blue' | 'red' | 'purple' | 'yellow' | 'indigo' | 'gree
   selector: 'app-icon-container',
   imports: [CommonModule],
   templateUrl: './icon-container.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './icon-container.css',
 })
 export class IconContainer {

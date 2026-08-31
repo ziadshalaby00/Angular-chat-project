@@ -1,4 +1,4 @@
-import { Component, effect, inject, signal, TemplateRef, viewChild } from '@angular/core';
+import { Component, effect, inject, signal, TemplateRef, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { Button, Card, ChangeEventType, Form, Input, Modal } from '@ziadshalaby/ngx-zs-component';
 import { Router } from '@angular/router';
 import { AuthApi } from '../../services/auth-services/auth-api';
@@ -14,6 +14,7 @@ import { Or } from '../../other-components/or/or';
     Or
   ],
   templateUrl: './login.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './login.css',
 })
 export class Login {
@@ -73,5 +74,9 @@ export class Login {
         this.router.navigate(['/home'])
       }
     })
+  }
+
+  goToResendVerEmail() {
+    this.router.navigate(['/verify-email/NULL/NULL'])
   }
 }

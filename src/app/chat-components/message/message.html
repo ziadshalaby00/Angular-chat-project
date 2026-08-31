@@ -22,7 +22,7 @@
 
     @if(item().reply_to !== null) {
       <div 
-        (click)="scrollToMessage(item().reply_to?.id)"
+        (click)="scrollToMessage($safeNavigationMigration(item().reply_to?.id))"
         class="bg-emerald-50 dark:bg-emerald-900 border border-emerald-200 
         dark:border-emerald-800 rounded-xl p-3 shadow-sm animate-fade-in-down mb-1.5
         cursor-pointer hover:bg-emerald-100 dark:hover:bg-emerald-900/70 transition-colors"

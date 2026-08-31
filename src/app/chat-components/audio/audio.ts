@@ -6,7 +6,8 @@ import {
   effect,
   OnDestroy,
   viewChild,
-  inject
+  inject,
+  ChangeDetectionStrategy
 } from '@angular/core';
 
 import { Audio_message } from '../../services/chat-service/chat-service';
@@ -16,6 +17,7 @@ import { RecordService } from '../../services/record-service/record-service';
   selector: 'app-audio',
   imports: [],
   templateUrl: './audio.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './audio.css',
 })
 export class Audio implements OnDestroy {

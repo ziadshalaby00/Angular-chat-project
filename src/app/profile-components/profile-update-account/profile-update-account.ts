@@ -1,4 +1,4 @@
-import { Component, effect, inject, input, model, signal, TemplateRef, untracked, viewChild, WritableSignal } from '@angular/core';
+import { Component, effect, inject, input, model, signal, TemplateRef, untracked, viewChild, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
 import { ChangeEventType, Form, Modal, Input } from '@ziadshalaby/ngx-zs-component';
 import { AuthApi, UserDataType } from '../../services/auth-services/auth-api';
 
@@ -6,6 +6,7 @@ import { AuthApi, UserDataType } from '../../services/auth-services/auth-api';
   selector: 'app-profile-update-account',
   imports: [Modal, Input],
   templateUrl: './profile-update-account.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './profile-update-account.css',
 })
 export class ProfileUpdateAccount {

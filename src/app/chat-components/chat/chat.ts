@@ -1,4 +1,4 @@
-import { Component, computed, effect, ElementRef, inject, model, signal, TemplateRef, untracked, viewChild } from '@angular/core';
+import { Component, computed, effect, ElementRef, inject, model, signal, TemplateRef, untracked, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { AuthApi } from '../../services/auth-services/auth-api';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -18,6 +18,7 @@ import { SendMessageService } from '../../services/send-message/send-message';
   selector: 'app-chat',
   imports: [CommonModule, Spinner, IconContainer, RemoveChat, UserAvatar, Message, SettingsUi, SendMessage],
   templateUrl: './chat.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './chat.css',
 })
 export class Chat {

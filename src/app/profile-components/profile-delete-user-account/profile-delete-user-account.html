@@ -55,8 +55,8 @@
       <!-- Confirmation Input -->
       <div class="w-full flex flex-col gap-4">
         <ZS-input
-          [label]="'To confirm, type: Delete ' + profileData()?.username"
-          [placeholder]="'Delete ' + profileData()?.username"
+          [label]="'To confirm, type: Delete ' + $safeNavigationMigration(profileData()?.username)"
+          [placeholder]="'Delete ' + $safeNavigationMigration(profileData()?.username)"
           [type]="'text'"
           [inputStyle]="'danger'"
           [required]="true"

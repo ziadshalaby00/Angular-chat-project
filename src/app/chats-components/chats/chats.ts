@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, model, signal, TemplateRef, viewChild } from '@angular/core';
+import { Component, computed, effect, inject, model, signal, TemplateRef, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { AuthApi } from '../../services/auth-services/auth-api';
 import { Router } from '@angular/router';
 import { Sidebar, Input, Card, AlertService, Button, Spinner, NavbarItem } from '@ziadshalaby/ngx-zs-component';
@@ -20,6 +20,7 @@ import { OverflowCard } from '../../services/overflow-card/overflow-card';
     Spinner, CommonModule, NewChat,
     IconContainer, RemoveChat, UserAvatar, SettingsUi],
   templateUrl: './chats.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './chats.css',
 })
 export class Chats {

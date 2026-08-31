@@ -1,11 +1,33 @@
 
-<div class="w-full max-w-md text-center">
+<div class="w-full max-w-md text-center dark:text-gray-300">
     <form
         (submit)="$event.preventDefault(); resendVerificationEmail()"
         class="text-left"
     >
         <!-- Email Input -->
         <div class="mb-4">
+                <ZS-field 
+                id="email"
+                fieldStyle="primary"
+                [iconTpl]="envelopeIcon"
+                label="Email Address"
+                hint="Enter your email address, or enter a new one to change it."
+
+                [required]="true"
+                [errors]="emailForm.email().touched()
+                ? emailForm.email().errors().map(value => value.message ?? '')
+                : []"
+                >
+                    <input 
+                        zsInputStyle
+                        type="email"
+                        autocomplete="email"
+                        placeholder="Enter your email address"
+                        [formField]="emailForm.email"
+                    >
+                </ZS-field>
+        </div>
+        <!-- <div class="mb-4">
             <label
                 for="email"
                 class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
@@ -14,7 +36,6 @@
             </label>
 
             <div class="relative">
-                <!-- Envelope Icon -->
                 <i
                     class="fas fa-envelope absolute left-3 top-1/2 -translate-y-1/2
                             text-blue-500"
@@ -54,14 +75,14 @@
                     }
                 </div>
             }
-        </div>
+        </div> -->
 
         <ZS-button
             class="w-full"
             size="lg"
             btnStyle="primary"
             [disabled]="emailForm().invalid()"
-            [iconTpl]="authApi.resendverifyEmailLoading() ? loaderIcon : envelopeIcon"
+            [iconTpl]="authApi.resendverifyEmailLoading() ? loaderIcon : resend"
             (clickedEv)="resendVerificationEmail()"
         >
             Resend Verification Email
@@ -72,6 +93,10 @@
 <!-- Envelope Icon -->
 <ng-template #envelopeIcon>
     <i class="fas fa-envelope mr-1.5"></i>
+</ng-template>
+
+<ng-template #resend>
+    <i class="fa-solid fa-rotate-right text-md"></i>
 </ng-template>
 
 <!-- Loader Icon -->

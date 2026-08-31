@@ -1,4 +1,4 @@
-import { Component, inject, input, model, TemplateRef, viewChild } from '@angular/core';
+import { Component, inject, input, model, TemplateRef, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { SettingsUi } from '../../other-components/settings-ui/settings-ui';
 import { IconContainer } from '../../other-components/icon-container/icon-container';
 import { Dir } from '../../services/shared-service/shared-utils';
@@ -12,6 +12,7 @@ import { SendMessageService } from '../../services/send-message/send-message';
   selector: 'app-message-settings',
   imports: [SettingsUi, IconContainer, RemoveMessage, EditMessage],
   templateUrl: './message-settings.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './message-settings.css',
 })
 export class MessageSettings {

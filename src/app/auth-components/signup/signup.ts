@@ -1,5 +1,5 @@
 import { AuthApi } from '../../services/auth-services/auth-api';
-import { Component, effect, inject, viewChild } from '@angular/core';
+import { Component, effect, inject, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { Button, Card, ChangeEventType, Form, Input, ValidatorFn } from '@ziadshalaby/ngx-zs-component';
 import { Router } from '@angular/router';
 import { Or } from '../../other-components/or/or';
@@ -13,6 +13,7 @@ import { Or } from '../../other-components/or/or';
     Or
   ],
   templateUrl: './signup.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './signup.css',
 })
 export class Signup {

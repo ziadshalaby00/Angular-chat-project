@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, ElementRef, inject, input, model, signal, viewChild, viewChildren } from '@angular/core';
+import { Component, computed, ElementRef, inject, input, model, signal, viewChild, viewChildren, ChangeDetectionStrategy } from '@angular/core';
 import { ResultType } from '../../services/chat-service/chat-service';
 import { CalcMSettingsDir } from '../../services/calc-m-settings-dir/calc-m-settings-dir';
 import { MessageSettings } from '../message-settings/message-settings';
@@ -14,6 +14,7 @@ import { SendMessageService } from '../../services/send-message/send-message';
   selector: 'app-message',
   imports: [CommonModule, MessageSettings, Text, Audio, FileComp],
   templateUrl: './message.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './message.css',
 })
 export class Message {

@@ -1,4 +1,4 @@
-import { Component, computed, inject, model, signal, TemplateRef, viewChild, WritableSignal } from '@angular/core';
+import { Component, computed, inject, model, signal, TemplateRef, viewChild, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { AlertService, AuthButtonsType, Navbar, NavbarItemExport, NavItemsType, SiteNameConfigType, UserItemsType, UserProfile } from '@ziadshalaby/ngx-zs-component';
 import { AuthApi } from '../../services/auth-services/auth-api';
@@ -11,6 +11,7 @@ import { IconContainer } from '../icon-container/icon-container';
   selector: 'app-navbar',
   imports: [Navbar, RouterModule, CommonModule, IconContainer],
   templateUrl: './navbar.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './navbar.css',
 })
 export class NavbarComp {

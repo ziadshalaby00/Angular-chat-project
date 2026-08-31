@@ -6,10 +6,18 @@
     "outDir": "./out-tsc/spec",
     "rootDir": "./src",
     "types": [
-      "jasmine"
+      "vitest/globals"
     ]
   },
   "include": [
     "src/**/*.ts"
-  ]
+  ],
+  "angularCompilerOptions": {
+    "extendedDiagnostics": {
+      "checks": {
+        "nullishCoalescingNotNullable": "suppress",
+        "optionalChainNotNullable": "suppress"
+      }
+    }
+  }
 }

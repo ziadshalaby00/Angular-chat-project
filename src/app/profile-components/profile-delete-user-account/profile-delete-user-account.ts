@@ -1,4 +1,4 @@
-import { Component, effect, inject, input, model, signal, WritableSignal } from '@angular/core';
+import { Component, effect, inject, input, model, signal, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
 import { AuthApi, UserDataType } from '../../services/auth-services/auth-api';
 import { ChangeEventType, Modal, Input, Button } from '@ziadshalaby/ngx-zs-component';
 
@@ -6,6 +6,7 @@ import { ChangeEventType, Modal, Input, Button } from '@ziadshalaby/ngx-zs-compo
   selector: 'app-profile-delete-user-account',
   imports: [Modal, Input, Button],
   templateUrl: './profile-delete-user-account.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './profile-delete-user-account.css',
 })
 export class ProfileDeleteUserAccount {

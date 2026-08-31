@@ -1,7 +1,7 @@
 <!-- User Avatar -->
 @if(participant()?.user_info?.user_image) {
     <img
-        [src]="participant()?.user_info?.user_image"
+        [src]="$safeNavigationMigration(participant()?.user_info?.user_image)"
         alt="User image"
         [ngClass]="[
             isCurrentChat()

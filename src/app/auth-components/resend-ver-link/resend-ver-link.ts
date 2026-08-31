@@ -1,13 +1,14 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { AuthApi } from '../../services/auth-services/auth-api';
-import { Button } from '@ziadshalaby/ngx-zs-component';
+import { Button, Field, FieldInputStyle } from '@ziadshalaby/ngx-zs-component';
 import { form, required, email, FormField, minLength } from '@angular/forms/signals';
 
 
 @Component({
   selector: 'app-resend-ver-link',
-  imports: [FormField, Button],
+  imports: [FormField, Button, Field, FieldInputStyle],
   templateUrl: './resend-ver-link.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './resend-ver-link.css',
 })
 export class ResendVerLink {

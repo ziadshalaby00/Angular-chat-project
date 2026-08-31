@@ -62,7 +62,7 @@
                 <div class="relative">
                   @if(chatsService.userFetched()?.user_image) {
                     <img
-                      [src]="chatsService.userFetched()?.user_image"
+                      [src]="$safeNavigationMigration(chatsService.userFetched()?.user_image)"
                       alt="User image"
                       class="size-14 min-w-14 rounded-full border-2 border-white 
                       dark:border-gray-800 shadow-lg object-cover"
