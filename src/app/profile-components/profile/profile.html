@@ -207,6 +207,7 @@
                   <!-- Resend Button -->
                   <button
                     type="button"
+                    [disabled]="authApi.resendverifyEmailLoading()"
                     class="shrink-0 self-start
                           inline-flex items-center gap-1.5
                           px-2.5 py-1 rounded-md
@@ -218,8 +219,10 @@
                           focus:outline-none
                           focus:ring-2
                           focus:ring-green-500/30 dark:focus:ring-green-400/30
-                          transition-colors"
-                    (click)="goToResendVerEmail()"
+                          transition-colors
+                          {{ authApi.resendverifyEmailLoading() ? 'opacity-50' : ''}}
+                          "
+                    (click)="resendVerificationEmail()"
                   >
                     <i class="fa-solid fa-rotate-right text-xs"></i>
                     <span>Resend Verification Email</span>
@@ -271,6 +274,17 @@
           >
             <span class="group-hover:translate-x-1 transition-transform">
               Edit Account
+            </span>
+          </ZS-button>
+
+          <ZS-button 
+            btnStyle="secondary" 
+            class="w-full group"
+            (clickedEv)="openChangeEmailModal.set(true)"
+            [iconTpl]="envelopeIcon"
+          >
+            <span class="group-hover:translate-x-1 transition-transform">
+              Change Email
             </span>
           </ZS-button>
 
@@ -364,6 +378,15 @@
 >
 </app-profile-change-password>
 
+<!-- ------------------------- Change Email ------------------------- -->
+<app-change-email
+[(openChangeEmailModal)]="openChangeEmailModal"
+
+[handleCloseSuccess]="handleCloseSuccess"
+[handleCloseFail]="handleCloseFail"
+>
+</app-change-email>
+
 <!-- ------------------------- Delete User Account ------------------------- -->
 <app-profile-delete-user-account
 [profileData]="profileData()"
@@ -382,4 +405,8 @@
 <!-- Ban Icon -->
 <ng-template #banIcon>
   <i class="fa-solid fa-ban group-hover:rotate-45 transition-transform"></i>
+</ng-template>
+<!-- Envelope Icon -->
+<ng-template #envelopeIcon>
+    <i class="fas fa-envelope"></i>
 </ng-template>

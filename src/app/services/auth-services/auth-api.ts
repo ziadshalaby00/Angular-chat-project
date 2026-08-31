@@ -68,6 +68,7 @@ export class AuthApi {
   me(...args: Parameters<User['me']>) { return this.user.me(...args); }
   getUsersProfile(...args: Parameters<User['getUsersProfile']>) { return this.user.getUsersProfile(...args); }
   updateProfile(...args: Parameters<User['updateProfile']>) { return this.user.updateProfile(...args); }
+  changeEmail(...args: Parameters<User['changeEmail']>) { return this.user.changeEmail(...args); }
   deleteUserImage(...args: Parameters<User['deleteUserImage']>) { return this.user.deleteUserImage(...args); }
 
   passwordReset(...args: Parameters<PasswordReset['passwordReset']>) { return this.passwordResetS.passwordReset(...args); }

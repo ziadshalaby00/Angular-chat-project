@@ -25,6 +25,7 @@ export class User {
   private readonly getUsersProfileURL = `${this.userShared.config.apiUrl}/api/auth/users-profile`;
   private readonly updateProfileURL = `${this.userShared.config.apiUrl}/api/auth/update-profile/`;
   private readonly deleteUserImageURL = `${this.userShared.config.apiUrl}/api/auth/delete-user-image/`;
+  private readonly changeEmailURL = `${this.userShared.config.apiUrl}/api/auth/change-email/`;
 
   me(successFn?: () => void, faildFn?: () => void) {
     this.userShared.shared.http.get(this.meUrl, { withCredentials: true }).subscribe({
@@ -102,6 +103,29 @@ export class User {
       error: (err: any) => {
         this.userShared.shared.setErrors(err.error);
         if(faildFn) faildFn();
+      }
+    })
+  }
+
+  changeEmail(email: string, sf?: () => void, fn?: () => void) {
+     this.userShared.shared.http.post(this.changeEmailURL, {new_email: email},
+      this.userShared.shared.CredAndCsrf()).subscribe({
+      next: (res: any) => {
+        this.userShared.userData.update((prev) => {
+          if (!prev) return prev;
+          return { ...prev, pending_email: email };
+        });
+
+        this.userShared.shared.alertService.addAlert({
+          message: res.detail,
+          type: 'success'
+        })
+
+        if(sf) sf();
+      },
+      error: (err: any) => {
+        this.userShared.shared.setErrors(err.error);
+        if(fn) fn();
       }
     })
   }

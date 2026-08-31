@@ -14,7 +14,6 @@ export interface UserDataType {
   username : string;
   bio: string;
   pending_email: string | null;
-  
 }
 
 export interface HttpOptions {

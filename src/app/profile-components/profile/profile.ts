@@ -9,6 +9,7 @@ import { ProfileEditUserImg } from '../profile-edit-user-img/profile-edit-user-i
 import { ProfileChangePassword } from '../profile-change-password/profile-change-password';
 import { ProfileDeleteUserAccount } from '../profile-delete-user-account/profile-delete-user-account';
 import { SharedUtils } from '../../services/shared-service/shared-utils';
+import { ChangeEmail } from '../change-email/change-email';
 
 @Component({
   selector: 'app-profile',
@@ -18,7 +19,8 @@ import { SharedUtils } from '../../services/shared-service/shared-utils';
     ProfileUpdateAccount, 
     ProfileEditUserImg,
     ProfileChangePassword,
-    ProfileDeleteUserAccount
+    ProfileDeleteUserAccount,
+    ChangeEmail
   ],
   templateUrl: './profile.html',
   changeDetection: ChangeDetectionStrategy.Eager,
@@ -109,6 +111,7 @@ export class Profile {
   readonly openUpdateAccModal = model<boolean>(false);
   readonly openEditImgModal = model<boolean>(false);
   readonly openChangePassModal = model<boolean>(false);
+  readonly openChangeEmailModal = model<boolean>(false);
   readonly openDelUserAccModal = model<boolean>(false);
 
   readonly isImageZoomOpen = signal(false);
@@ -126,7 +129,9 @@ export class Profile {
     this.closeImageZoom();
   }
 
-  goToResendVerEmail() {
-    this.router.navigate(['/verify-email/NULL/NULL'])
+  resendVerificationEmail() { 
+    this.authApi.resendverifyEmailLoading.set(true);
+    const email = this.profileData()?.email ?? '';
+    this.authApi.resendVerifyEmail(email);
   }
 }

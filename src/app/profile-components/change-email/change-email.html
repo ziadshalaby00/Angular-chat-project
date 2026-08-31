@@ -1,0 +1,55 @@
+<!-- Edit Account Modal -->
+<ZS-modal
+  [title]="'Change Email'"
+  [(open)]="openChangeEmailModal"
+  (cancelEv)="openChangeEmailModal.set(false)"
+  (confirmEv)="changeEmail()"
+  [confirmConfig]="{
+    text: 'Change',
+    btnStyle: 'primary',
+    disabled: authApi.updateProfileLoading(),
+    iconTpl: authApi.updateProfileLoading() ? loaderIconTpl : null
+  }"
+  [cancelConfig]="{
+    disabled: authApi.updateProfileLoading()
+  }"
+  [showCancelIcon]="!authApi.updateProfileLoading()"
+  [closeOnOverlay]="!authApi.updateProfileLoading()"
+  [modalStyle]="'primary'"
+>
+    <div class="flex flex-col gap-5 text-gray-800 dark:text-gray-300">
+        <!-- Email Field -->
+        <ZS-field 
+        id="email"
+        fieldStyle="secondary"
+        [iconTpl]="envelopeIcon"
+        label="Email Address"
+        [hint]="'Enter a unique email address'"
+
+        [required]="true"
+        [errors]="changeEmailForm.email().touched()
+        ? changeEmailForm.email().errors().map(value => value.message ?? '')
+        : []"
+        >
+            <input 
+                zsInputStyle
+                type="email"
+                autocomplete="email"
+                [placeholder]="'your.email@example.com'"
+                [formField]="changeEmailForm.email"
+            >
+        </ZS-field>
+    </div>
+</ZS-modal>
+
+<!-- Icons Templates -->
+<ng-container>
+  <!-- Loader Icon Template -->
+  <ng-template #loaderIcon>
+    <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+  </ng-template>
+  <!-- Envelope Icon Template -->
+  <ng-template #envelopeIcon>
+    <i class="fas fa-envelope mr-2" aria-hidden="true"></i>
+  </ng-template>
+</ng-container>
