@@ -9,6 +9,7 @@ export class VerifyEmail {
   private get userShared(): UserSharedUtils { return this.injector.get(UserSharedUtils); }
   
   private readonly verifyEmailURL = `${this.userShared.config.apiUrl}/api/auth/verify-email/`;
+  private readonly resendVerifyEmailURL = `${this.userShared.config.apiUrl}/api/auth/resend-verification-email/`;
   public readonly verifyEmailError = signal<boolean>(false);
 
   verifyEmail(body: {uid: string, token: string}, sf?: () => void) {
@@ -26,6 +27,22 @@ export class VerifyEmail {
         this.userShared.shared.setErrors(err.error);
         this.userShared.verifyEmailLoading.set(false);
         this.verifyEmailError.set(true);
+      }
+    })
+  }
+
+  resendVerifyEmail(email: string) {
+    this.userShared.shared.http.post(this.resendVerifyEmailURL, { email }).subscribe({
+      next: (res: any) => {
+        this.userShared.shared.alertService.addAlert({
+          message: res.detail,
+          type: 'success'
+        })
+        this.userShared.resendverifyEmailLoading.set(false);
+      },
+      error: (err: any) => {
+        this.userShared.shared.setErrors(err.error);
+        this.userShared.resendverifyEmailLoading.set(false);
       }
     })
   }

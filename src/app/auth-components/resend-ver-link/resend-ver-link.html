@@ -1,0 +1,80 @@
+
+<div class="w-full max-w-md text-center">
+    <form
+        (submit)="$event.preventDefault(); resendVerificationEmail()"
+        class="text-left"
+    >
+        <!-- Email Input -->
+        <div class="mb-4">
+            <label
+                for="email"
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
+            >
+                Email Address
+            </label>
+
+            <div class="relative">
+                <!-- Envelope Icon -->
+                <i
+                    class="fas fa-envelope absolute left-3 top-1/2 -translate-y-1/2
+                            text-blue-500"
+                ></i>
+
+                <input
+                    id="email"
+                    type="email"
+                    autocomplete="email"
+                    placeholder="Enter your email address"
+
+                    [formField]="emailForm.email"
+
+                    class="w-full rounded-lg border border-gray-300
+                            bg-white py-2.5 pl-10 pr-4
+                            text-gray-900 placeholder-gray-400
+                            outline-none transition-all
+
+                            focus:border-blue-500
+                            focus:ring-2 focus:ring-blue-500/20
+
+                            dark:border-gray-600
+                            dark:bg-gray-800
+                            dark:text-white
+                            dark:placeholder-gray-500
+                            dark:focus:border-blue-500"
+                />
+            </div>
+
+            @if (emailForm.email().invalid() && emailForm.email().touched()) {
+                <div class="mt-1.5 flex flex-col gap-1 text-xs text-red-500 dark:text-red-400">
+                    @for (err of emailForm.email().errors(); track err.kind) {
+                        <span class="flex items-center gap-1 font-medium">
+                            <i class="fas fa-exclamation-circle text-[11px]"></i>
+                            {{ err.message }}
+                        </span>
+                    }
+                </div>
+            }
+        </div>
+
+        <ZS-button
+            class="w-full"
+            size="lg"
+            btnStyle="primary"
+            [disabled]="emailForm().invalid()"
+            [iconTpl]="authApi.resendverifyEmailLoading() ? loaderIcon : envelopeIcon"
+            (clickedEv)="resendVerificationEmail()"
+        >
+            Resend Verification Email
+        </ZS-button>
+    </form>
+</div>
+
+<!-- Envelope Icon -->
+<ng-template #envelopeIcon>
+    <i class="fas fa-envelope mr-1.5"></i>
+</ng-template>
+
+<!-- Loader Icon -->
+<ng-template #loaderIcon>
+    <i class="fa fa-spinner fa-spin"></i>
+</ng-template>

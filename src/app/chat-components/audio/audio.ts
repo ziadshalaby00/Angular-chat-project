@@ -8,13 +8,13 @@ import {
   viewChild,
   inject
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Audio_message } from '../../services/chat-service/chat-service';
 import { RecordService } from '../../services/record-service/record-service';
 
 @Component({
   selector: 'app-audio',
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './audio.html',
   styleUrl: './audio.css',
 })

@@ -1,12 +1,13 @@
-import { Component, inject, signal, WritableSignal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { AuthApi } from '../../services/auth-services/auth-api';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Button, Input, Spinner } from '@ziadshalaby/ngx-zs-component';
-import { form, required, email } from '@angular/forms/signals';
+import { Spinner } from '@ziadshalaby/ngx-zs-component';
+import { ResendVerLink } from '../resend-ver-link/resend-ver-link';
+
 
 @Component({
   selector: 'app-verify-email',
-  imports: [Spinner, Button],
+  imports: [Spinner, ResendVerLink],
   templateUrl: './verify-email.html',
   styleUrl: './verify-email.css',
 })
@@ -25,20 +26,6 @@ export class VerifyEmail {
     this.authApi.verifyEmail(body, () => {
       this.router.navigate(['/login']);
     });
-  }
-
-  emailModel = signal('');
-  emailForm = form(this.emailModel, (schema: any) => {
-    required(schema);
-    email(schema);
-  });
-
-  resendVerificationEmail() { 
-    if (this.emailForm().invalid()) {
-      return;
-    }
-
-    const email = this.emailModel();
   }
 }
 

@@ -1,10 +1,10 @@
 import { Component, input } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Text_message } from '../../services/chat-service/chat-service';
 
 @Component({
   selector: 'app-text',
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './text.html',
   styleUrl: './text.css',
 })

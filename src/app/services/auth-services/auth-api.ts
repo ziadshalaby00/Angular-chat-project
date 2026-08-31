@@ -61,6 +61,7 @@ export class AuthApi {
   get deleteAccLoading() { return this.userShared.deleteAccLoading; }
 
   get verifyEmailLoading() { return this.userShared.verifyEmailLoading; }
+  get resendverifyEmailLoading() { return this.userShared.resendverifyEmailLoading; }
   get verifyEmailError() { return this.verifyEmailS.verifyEmailError; }
 
   // ====== RE-EXPORT METHODS ======
@@ -85,4 +86,5 @@ export class AuthApi {
 
   verifyAccess(...args: Parameters<AccessVerification['verifyAccess']>) { return this.accessVerification.verifyAccess(...args); }
   verifyEmail(...args: Parameters<VerifyEmail['verifyEmail']>) { return this.verifyEmailS.verifyEmail(...args); }
+  resendVerifyEmail(...args: Parameters<VerifyEmail['resendVerifyEmail']>) { return this.verifyEmailS.resendVerifyEmail(...args); }
 }
