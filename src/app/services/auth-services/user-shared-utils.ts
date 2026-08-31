@@ -49,4 +49,6 @@ export class UserSharedUtils {
   readonly getUsersProfileLoading = signal<boolean>(false);
 
   readonly deleteAccLoading = signal<boolean>(false);
+  
+  readonly verifyEmailLoading = signal<boolean>(false);
 }

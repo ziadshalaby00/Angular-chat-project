@@ -6,6 +6,7 @@ import { Logout } from './logout';
 import { GoogleAuth } from './google-auth';
 import { Auth } from './auth';
 import { AccessVerification } from './access-verification';
+import { VerifyEmail } from './verify-email';
 export type { UserDataType } from './user-shared-utils'
 
 @Injectable({
@@ -20,6 +21,9 @@ export class AuthApi {
   }
   private get passwordResetS(): PasswordReset {
     return this.injector.get(PasswordReset);
+  }
+  private get verifyEmailS(): VerifyEmail {
+    return this.injector.get(VerifyEmail);
   }
   private get user(): User {
     return this.injector.get(User);
@@ -56,6 +60,9 @@ export class AuthApi {
 
   get deleteAccLoading() { return this.userShared.deleteAccLoading; }
 
+  get verifyEmailLoading() { return this.userShared.verifyEmailLoading; }
+  get verifyEmailError() { return this.verifyEmailS.verifyEmailError; }
+
   // ====== RE-EXPORT METHODS ======
   me(...args: Parameters<User['me']>) { return this.user.me(...args); }
   getUsersProfile(...args: Parameters<User['getUsersProfile']>) { return this.user.getUsersProfile(...args); }
@@ -77,4 +84,5 @@ export class AuthApi {
   deleteAcc(...args: Parameters<Auth['deleteAcc']>) { return this.auth.deleteAcc(...args); }
 
   verifyAccess(...args: Parameters<AccessVerification['verifyAccess']>) { return this.accessVerification.verifyAccess(...args); }
+  verifyEmail(...args: Parameters<VerifyEmail['verifyEmail']>) { return this.verifyEmailS.verifyEmail(...args); }
 }

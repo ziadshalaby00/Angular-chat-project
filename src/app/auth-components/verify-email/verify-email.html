@@ -1,0 +1,100 @@
+<div class="min-h-[calc(100vh-10.25rem)] flex justify-center items-center m-4">
+    @if (authApi.verifyEmailLoading()) {
+        <ZS-spinner
+            [loading]="true"
+            [isFloating]="true"
+            type="pro"
+            size="lg"
+            color="blue"
+            [withBox]="true"
+        />
+    } @else if (authApi.verifyEmailError()) {
+        <div class="w-full max-w-md text-center">
+
+            <h2 class="text-xl font-semibold mb-2">
+                Email Verification Failed
+            </h2>
+
+            <p class="text-gray-500 mb-8">
+                This verification link is invalid or has expired.
+            </p>
+
+            <form
+                (submit)="$event.preventDefault(); resendVerificationEmail()"
+                class="text-left"
+            >
+                <!-- Email Input -->
+                <div class="mb-4">
+                    <label
+                        for="email"
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
+                    >
+                        Email Address
+                    </label>
+
+                    <div class="relative">
+                        <!-- Envelope Icon -->
+                        <i
+                            class="fas fa-envelope absolute left-3 top-1/2 -translate-y-1/2
+                                   text-blue-500"
+                        ></i>
+
+                        <input
+                            id="email"
+                            type="email"
+                            autocomplete="email"
+                            placeholder="Enter your email address"
+
+                            [field]="emailForm.email"
+
+                            class="w-full rounded-lg border border-gray-300
+                                   bg-white py-2.5 pl-10 pr-4
+                                   text-gray-900 placeholder-gray-400
+                                   outline-none transition-all
+
+                                   focus:border-blue-500
+                                   focus:ring-2 focus:ring-blue-500/20
+
+                                   dark:border-gray-600
+                                   dark:bg-gray-800
+                                   dark:text-white
+                                   dark:placeholder-gray-500
+                                   dark:focus:border-blue-500"
+                        />
+                    </div>
+
+                    @if (emailForm.email().touched() && emailForm.email().invalid()) {
+                        <p class="mt-1.5 text-sm text-red-500">
+                            @if (emailForm.email().errors().required) {
+                                Email is required.
+                            } @else if (emailForm.email().errors().email) {
+                                Please enter a valid email address.
+                            }
+                        </p>
+                    }
+                </div>
+
+                <ZS-button
+                    class="w-full"
+                    size="lg"
+                    btnStyle="primary"
+                    [disabled]="emailForm().invalid()"
+                    [iconTpl]="authApi.verifyEmailLoading() ? loaderIcon : envelopeIcon"
+                    (clickedEv)="resendVerificationEmail()"
+                >
+                    Resend Verification Email
+                </ZS-button>
+            </form>
+        </div>
+    }
+</div>
+
+<!-- Envelope Icon -->
+<ng-template #envelopeIcon>
+    <i class="fas fa-envelope mr-1.5"></i>
+</ng-template>
+
+<!-- Loader Icon -->
+<ng-template #loaderIcon>
+    <i class="fa fa-spinner fa-spin"></i>
+</ng-template>
