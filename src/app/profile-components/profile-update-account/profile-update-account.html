@@ -26,9 +26,9 @@
       [iconTpl]="userIcon"
       [type]="'text'"
       [inputStyle]="'secondary'"
-      [required]="true"
-      [(value)]="updateAccForm.fields.fullname().value"
-      (changedEv)="changeUpdateAccValues($event, 'fullname')"
+
+      [formField]="updateAccForm.fullname"
+
       class="w-full"
     >
     </ZS-input>
@@ -40,27 +40,12 @@
       [iconTpl]="userIcon"
       [type]="'text'"
       [inputStyle]="'secondary'"
-      [required]="true"
-      [(value)]="updateAccForm.fields.username().value"
-      (changedEv)="changeUpdateAccValues($event, 'username')"
+
+      [formField]="updateAccForm.username"
+
       class="w-full"
     >
     </ZS-input>
-
-    <!-- Email Field -->
-    <!-- <ZS-input
-      [label]="'Email Address'"
-      [placeholder]="'your.email@example.com'"
-      [hint]="'Enter a unique email address'"
-      [iconTpl]="envelopeIcon"
-      [type]="'email'"
-      [inputStyle]="'secondary'"
-      [required]="true"
-      [(value)]="updateAccForm.fields.email().value"
-      (changedEv)="changeUpdateAccValues($event, 'email')"
-      class="w-full"
-    >
-    </ZS-input> -->
 
     <!-- Bio Field -->
     <div class="flex flex-col gap-2">
@@ -71,8 +56,7 @@
         [iconTpl]="messageIcon"
         [type]="'text'"
         [inputStyle]="'secondary'"
-        [(value)]="updateAccForm.fields.bio().value"
-        (changedEv)="changeUpdateAccValues($event, 'bio')"
+        [formField]="updateAccForm.bio"
         class="w-full"
       >
       </ZS-input>
@@ -81,7 +65,7 @@
           Maximum 450 characters
         </p>
         <span class="text-xs text-gray-500 dark:text-gray-400">
-          {{ updateAccForm.fields.bio().value?.length || 0 }}/450
+          {{ updateAccModel().bio.length || 0 }}/450
         </span>
       </div>
     </div>

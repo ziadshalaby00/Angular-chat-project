@@ -1,8 +1,9 @@
 import { AuthApi } from '../../services/auth-services/auth-api';
-import { Component, effect, inject, viewChild, ChangeDetectionStrategy } from '@angular/core';
-import { Button, Card, ChangeEventType, Form, Input, ValidatorFn } from '@ziadshalaby/ngx-zs-component';
+import { Component, effect, inject, ChangeDetectionStrategy, signal } from '@angular/core';
+import { Button, Card, Input, Checkbox } from '@ziadshalaby/ngx-zs-component';
 import { Router } from '@angular/router';
 import { Or } from '../../other-components/or/or';
+import { email, form, FormField, required, validate, minLength } from '@angular/forms/signals';
 
 @Component({
   selector: 'app-signup',
@@ -10,8 +11,10 @@ import { Or } from '../../other-components/or/or';
     Card,
     Input,
     Button,
-    Or
-  ],
+    Or,
+    FormField,
+    Checkbox
+],
   templateUrl: './signup.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './signup.css',
@@ -23,47 +26,52 @@ export class Signup {
   ngAfterViewInit() {
     this.authApi.initCodeClient()
   }
-  
-  readonly pass = viewChild<Input>('password')
-  readonly conf_pass = viewChild<Input>('conf_password')
 
   // Form fields signals
-  form = new Form({
+  readonly model = signal({
     fullname: '',
     username: '',
     email: '',
     password: '',
-    conf_password: ''
+    conf_password: '',
+    terms: false
   })
 
-  changeValues(event: ChangeEventType, key: keyof typeof this.form.fields) {
-    this.form.set(key, event.value, event.valid);
+  readonly form = form(this.model, (schema) => {
+    required(schema.fullname, {message: 'username is required.'});
+    required(schema.username, {message: 'username is required.'});
+    required(schema.terms, {message: 'you should agree.'});
+    required(schema.email, {message: 'username is required.'});
+    email(schema.email, { message: 'Enter a valid email address' });
+    required(schema.password, {message: 'username is required.'});
+    minLength(schema.password, 8, {message: 'it must contain at least 8.'});
+    required(schema.conf_password, {message: 'username is required.'});
+    validate(schema.conf_password, (ctx) => {
+      const [password, conf_pass] = [ctx.valueOf(schema.password), ctx.value()];
 
-    if (event.fromForce) return;
-    
-    if (key === 'password') {
-      const conf = this.conf_pass();
-      if (conf) conf.forceChange();
-    }
+      if (conf_pass !== password) {
+        return {
+          kind: 'passwordMismatch',
+          message: 'The passwords do not match.'
+        };
+      }
 
-    if (key === 'conf_password') {
-      const pass = this.pass();
-      if (pass) pass.forceChange();
-    }
-  }
-
-  confPassValidate: ValidatorFn = (value: string | null) => {
-    if(this.form.get('password').value !== value)
-      return ['The passwords do not match.']
-    return []
-  }
+      return null;
+    });
+  })
 
   submit(event: SubmitEvent) {
     event.preventDefault();
-    this.form.submit((values) => {
-      this.authApi.signupLoading.set(true)
-      this.authApi.signup(values)
-    });
+
+    this.form().markAsTouched();
+
+    const invalid = this.form().invalid();
+    if(invalid) return;
+
+    const data = this.model()
+
+    this.authApi.signupLoading.set(true)
+    this.authApi.signup(data)
   }
 
   google() {

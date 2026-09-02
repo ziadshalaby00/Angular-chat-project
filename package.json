@@ -31,7 +31,7 @@
     "@angular/router": "^22.1.4",
     "@angular/service-worker": "^22.1.4",
     "@tailwindcss/postcss": "^4.1.17",
-    "@ziadshalaby/ngx-zs-component": "^3.4.0",
+    "@ziadshalaby/ngx-zs-component": "^4.6.3",
     "postcss": "^8.5.6",
     "rxjs": "~7.8.0",
     "tailwindcss": "^4.1.17",

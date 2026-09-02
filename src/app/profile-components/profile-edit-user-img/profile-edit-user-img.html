@@ -20,12 +20,10 @@
   <div class="flex flex-col gap-2">
     <ZS-file
       label="Upload New Image"
-      [isReadonly]="authApi.updateProfileLoading()"
-      [(touched)]="EditImgForm.fields.user_image().touched"
-      [required]="true"
+
+      [formField]="EditImgForm.user_image"
+
       [inputStyle]="'primary'"
-      (changeEv)="changeEditImgValues($event, 'user_image')"
-      [(files)]="filesType"
       class="w-full"
     >
     </ZS-file>

@@ -1,10 +1,10 @@
 import { Component, model, input, WritableSignal, viewChild, TemplateRef, inject, signal } from '@angular/core';
-import { Field, FieldInputStyle, Modal } from '@ziadshalaby/ngx-zs-component';
+import { Input, Modal } from '@ziadshalaby/ngx-zs-component';
 import { AuthApi } from '../../services/auth-services/auth-api';
 import { email, form, required, FormField } from '@angular/forms/signals';
 
 @Component({
-  imports: [Modal, Field, FormField, FieldInputStyle],
+  imports: [Modal, Input, FormField],
   selector: 'app-change-email',
   styleUrl: './change-email.css',
   templateUrl: './change-email.html',
@@ -27,6 +27,8 @@ export class ChangeEmail {
   });
 
   changeEmail() { 
+    this.changeEmailForm().markAsTouched();
+    
     if (this.changeEmailForm().invalid()) {
       return;
     }

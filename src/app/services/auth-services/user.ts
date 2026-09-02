@@ -2,13 +2,16 @@ import { inject, Injectable, Injector } from '@angular/core';
 import { UserSharedUtils } from './user-shared-utils';
 import { Logout } from './logout';
 
-export interface UpdateProfileBody {
+export interface UpdateProfileType {
   fullname?: string;
   username?: string;
-  email?: string;
   bio?: string;
+}
+export interface UpdateImageType {
   user_image?: File | null;
   rem_image?: boolean;
+}
+export interface UpdatePassType {
   password?: string;
   old_password?: string;
 }
@@ -21,14 +24,14 @@ export class User {
   private get userShared(): UserSharedUtils { return this.injector.get(UserSharedUtils); }
   private get logout(): Logout { return this.injector.get(Logout); }
 
-  private readonly meUrl = `${this.userShared.config.apiUrl}/api/auth/me/`;
+  private readonly meURL = `${this.userShared.config.apiUrl}/api/auth/me/`;
   private readonly getUsersProfileURL = `${this.userShared.config.apiUrl}/api/auth/users-profile`;
   private readonly updateProfileURL = `${this.userShared.config.apiUrl}/api/auth/update-profile/`;
   private readonly deleteUserImageURL = `${this.userShared.config.apiUrl}/api/auth/delete-user-image/`;
   private readonly changeEmailURL = `${this.userShared.config.apiUrl}/api/auth/change-email/`;
 
   me(successFn?: () => void, faildFn?: () => void) {
-    this.userShared.shared.http.get(this.meUrl, { withCredentials: true }).subscribe({
+    this.userShared.shared.http.get(this.meURL, { withCredentials: true }).subscribe({
       next: (res: any) => {
         this.userShared.userData.set(res)
         if(successFn) successFn();
@@ -57,7 +60,7 @@ export class User {
     })
   }
 
-  updateProfile(body: UpdateProfileBody, successFn?: () => void, faildFn?: () => void) {
+  updateProfile(body: UpdateProfileType | UpdateImageType | UpdatePassType, successFn?: () => void, faildFn?: () => void) {
     const formData = new FormData();
     Object.entries(body).forEach(([key, value]) => {
       if (value !== undefined && value !== null) {

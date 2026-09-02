@@ -1,8 +1,9 @@
 import { Component, effect, inject, signal, TemplateRef, viewChild, ChangeDetectionStrategy } from '@angular/core';
-import { Button, Card, ChangeEventType, Form, Input, Modal } from '@ziadshalaby/ngx-zs-component';
+import { Button, Card, Input, Modal } from '@ziadshalaby/ngx-zs-component';
 import { Router } from '@angular/router';
 import { AuthApi } from '../../services/auth-services/auth-api';
 import { Or } from '../../other-components/or/or';
+import { email, form, FormField, required } from '@angular/forms/signals';
 
 @Component({
   selector: 'app-login',
@@ -11,8 +12,9 @@ import { Or } from '../../other-components/or/or';
     Input,
     Button,
     Modal,
-    Or
-  ],
+    Or,
+    FormField,
+],
   templateUrl: './login.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './login.css',
@@ -27,43 +29,56 @@ export class Login {
     this.authApi.initCodeClient()
   }
 
-  readonly form = new Form({
+  readonly loginModel = signal({
     username: '',
     password: ''
   })
 
-  changeValues(event: ChangeEventType, key: keyof typeof this.form.fields) {
-    this.form.set(key, event.value, event.valid );
-  }
+  readonly loginForm = form(this.loginModel,  (schema) => {
+    required(schema.username, {message: 'username is required.'});
+    required(schema.password, {message: 'password is required.'});
+  })
 
   submit(event: SubmitEvent) {
     event.preventDefault();
-    this.form.submit((values) => {
-      this.authApi.loginLoading.set(true)
-      this.authApi.login(values)
-    })
+
+    this.loginForm().markAsTouched();
+
+    const invalid = this.loginForm().invalid();
+    if(invalid) return;
+
+    const data = this.loginModel();
+
+    this.authApi.loginLoading.set(true);
+    this.authApi.login(data);
   }
 
   google() {
-    this.authApi.googleLoading.set(true)
-    this.authApi.startRequestCode()
+    this.authApi.googleLoading.set(true);
+    this.authApi.startRequestCode();
   }
 
   // Password Reset
   readonly passwordResetModal = signal<boolean>(false)
-  readonly passwordResetForm = new Form({
+  readonly passwordResetModel = signal({
     email: ''
   })
 
-  chanegEmailValue(event: ChangeEventType) {
-    this.passwordResetForm.set('email', event.value, event.valid);
-  }
+  readonly passwordResetForm = form(this.passwordResetModel, (schema) => {
+    required(schema.email, {message: 'email is required.'});
+    email(schema.email, { message: 'Enter a valid email address' });
+  });
 
   confirmPasswordReset() {
-    this.passwordResetForm.submit((values) => {
-      this.authApi.passwordResetLoading.set(true)
-      this.authApi.passwordReset(values, () => { this.passwordResetModal.set(false) })
-    })
+    this.passwordResetForm().markAsTouched();
+
+    const invalid = this.passwordResetForm().invalid();
+    if(invalid) return;
+    
+    const data = this.passwordResetModel();
+
+    this.authApi.passwordResetLoading.set(true);
+    this.authApi.passwordReset(data, () => { this.passwordResetModal.set(false) });
   }
 
   constructor() {

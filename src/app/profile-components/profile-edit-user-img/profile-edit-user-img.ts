@@ -1,11 +1,12 @@
-import { Component, effect, inject, input, model, signal, TemplateRef, viewChild, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
-import { ChangeEventType, FileData, FileInput, Form, Modal, Button, FilesType } from '@ziadshalaby/ngx-zs-component';
+import { Component, inject, input, model, signal, TemplateRef, viewChild, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
+import { FileInput, Modal, Button, FilesType } from '@ziadshalaby/ngx-zs-component';
 import { AuthApi } from '../../services/auth-services/auth-api';
 import { Or } from '../../other-components/or/or';
+import { form, FormField, readonly, required } from '@angular/forms/signals';
 
 @Component({
   selector: 'app-profile-edit-user-img',
-  imports: [Modal, FileInput, Button, Or],
+  imports: [Modal, FileInput, Button, Or, FormField],
   templateUrl: './profile-edit-user-img.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './profile-edit-user-img.css',
@@ -21,50 +22,36 @@ export class ProfileEditUserImg {
 
   readonly loaderIconTpl = viewChild<TemplateRef<any>>('loaderIcon');
 
-  constructor() {
-    effect(() => {
-      const openEditImgModal = this.openEditImgModal();
-      if(!openEditImgModal) {
-        this.EditImgForm.reset();
-        this.filesType.set(new Map())
-      }
-    })
-  }
-
   // ================================== Edit User Image ================================== //
-  readonly EditImgForm = new Form<{
-    user_image: File | null;
-  }>({
-    user_image: null,
+  readonly EditImgModel = signal({
+    user_image: new Map() as FilesType,
   })
 
-  async changeEditImgValues(event: ChangeEventType<FileData[]>, key: keyof typeof this.EditImgForm.fields) {
-    const fileData = event.value.length ? event.value[0] : null;
-    if (!fileData || !fileData?.url) {
-      this.EditImgForm.set(key, null, event.valid);
-      return;
-    }
-
-    const blob = await fetch(fileData.url).then(res => res.blob());
-    const file = new File([blob], fileData.name, { type: fileData.type });
-    this.EditImgForm.set(key, file, event.valid);
-  }
+  readonly EditImgForm = form(this.EditImgModel, (schema) => {
+    required(schema.user_image, {message: "image is required."})
+    readonly(schema.user_image, {when: () => this.authApi.updateProfileLoading()})
+  })
 
   editImgProfile() {
-    this.EditImgForm.submit((user_image) => {
-      this.authApi.updateProfileLoading.set(true);
-      if (!user_image) {
-        this.handleCloseSuccess()?.(this.openEditImgModal);
-        this.authApi.updateProfileLoading.set(false);
-        return;
-      }
+    this.EditImgForm().markAsTouched();
 
-      this.authApi.updateProfile(
-        user_image,
-        () => this.handleCloseSuccess()?.(this.openEditImgModal),
-        this.handleCloseFail()
-      );
-    });
+    const invalid = this.EditImgForm().invalid();
+    if(invalid) return;
+
+    const data = this.EditImgModel().user_image.values().next().value?.file;
+
+    console.log(data)
+    if (!data) {
+      this.handleCloseSuccess()?.(this.openEditImgModal);
+      return;
+    }
+    
+    this.authApi.updateProfileLoading.set(true);
+    this.authApi.updateProfile(
+      {user_image: data},
+      () => this.handleCloseSuccess()?.(this.openEditImgModal),
+      this.handleCloseFail()
+    );
   }
 
   readonly confRemUserImg = signal<boolean>(false)

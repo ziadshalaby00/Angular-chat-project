@@ -1,10 +1,11 @@
-import { Component, effect, inject, input, model, signal, TemplateRef, untracked, viewChild, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
-import { ChangeEventType, Form, Modal, Input } from '@ziadshalaby/ngx-zs-component';
+import { Component, inject, input, model, signal, TemplateRef, viewChild, WritableSignal, ChangeDetectionStrategy, effect } from '@angular/core';
+import { Modal, Input } from '@ziadshalaby/ngx-zs-component';
 import { AuthApi, UserDataType } from '../../services/auth-services/auth-api';
+import { form, FormField, maxLength, required } from '@angular/forms/signals';
 
 @Component({
   selector: 'app-profile-update-account',
-  imports: [Modal, Input],
+  imports: [Modal, Input, FormField],
   templateUrl: './profile-update-account.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './profile-update-account.css',
@@ -24,48 +25,40 @@ export class ProfileUpdateAccount {
 
   constructor() {
     effect(() => {
-      const profileData = this.profileData();
-      const openUpdateAccModal = this.openUpdateAccModal();
-
-      untracked(() => {
-        const isProfileForUserLoggedIn = this.isProfileForUserLoggedIn();
-
-        if ((isProfileForUserLoggedIn || !openUpdateAccModal) && profileData) {
-          for (const item in this.updateAccForm.fields) {
-            if (item in profileData) {
-              this.updateAccForm.set(
-                item as keyof typeof this.updateAccForm.fields,
-                profileData[item as keyof typeof this.updateAccForm.fields] ?? ''
-              );
-            }
-          }
-        }
-      });
-    });
+        const data = this.profileData();
+        this.updateAccModel.set({
+            fullname: data?.fullname ?? '',
+            username: data?.username ?? '',
+            bio: data?.bio ?? '',
+        });
+    })
   }
 
-  // =============== Update Account Profile (username, fullname, email, bio) =============== //
-  readonly updateAccForm = new Form({
+  // =============== Update Account Profile (username, fullname, bio) =============== //
+  readonly updateAccModel = signal({
     fullname: '',
     username: '',
-    email: '',
     bio: '',
   })
 
-  changeUpdateAccValues(event: ChangeEventType, key: keyof typeof this.updateAccForm.fields) {
-    if(event.value === null) event.value = '';
-    this.updateAccForm.set(key, event.value, event.valid);
-  }
+  readonly updateAccForm = form(this.updateAccModel, (schema) => {
+    maxLength(schema.bio, 450, {message: 'maximum 450 characters.'})
+  })
 
   updateAccProfile() {
-    this.updateAccForm.submit((values) => {
-      this.authApi.updateProfileLoading.set(true);
-      this.authApi.updateProfile(
-        values,
+    this.updateAccForm().markAsTouched();
+    
+    const invalid = this.updateAccForm().invalid();
+    if(invalid) return;
+
+    const data = this.updateAccModel();
+
+    this.authApi.updateProfileLoading.set(true);
+    this.authApi.updateProfile(
+        data,
         () => this.handleCloseSuccess()?.(this.openUpdateAccModal),
         this.handleCloseFail()
-      );
-    }, ['bio']);
+    );
   }
   // ==============================/ Update Account Profile /============================== //
 }

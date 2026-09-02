@@ -19,26 +19,17 @@
 >
     <div class="flex flex-col gap-5 text-gray-800 dark:text-gray-300">
         <!-- Email Field -->
-        <ZS-field 
+        <ZS-input 
         id="email"
-        fieldStyle="secondary"
+        type="email"
+        inputStyle="secondary"
+        autocomplete="email"
         [iconTpl]="envelopeIcon"
+        [placeholder]="'your.email@example.com'"
         label="Email Address"
         [hint]="'Enter a unique email address'"
-
-        [required]="true"
-        [errors]="changeEmailForm.email().touched()
-        ? changeEmailForm.email().errors().map(value => value.message ?? '')
-        : []"
-        >
-            <input 
-                zsInputStyle
-                type="email"
-                autocomplete="email"
-                [placeholder]="'your.email@example.com'"
-                [formField]="changeEmailForm.email"
-            >
-        </ZS-field>
+        [formField]="changeEmailForm.email">
+        </ZS-input>
     </div>
 </ZS-modal>
 

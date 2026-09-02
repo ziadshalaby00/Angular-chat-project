@@ -6,26 +6,18 @@
     >
         <!-- Email Input -->
         <div class="mb-4">
-                <ZS-field 
+                <ZS-input 
                 id="email"
-                fieldStyle="primary"
+                type="email"
+                inputStyle="primary"
+                autocomplete="email"
+                placeholder="Enter your email address"
+                [formField]="emailForm.email"
                 [iconTpl]="envelopeIcon"
                 label="Email Address"
                 hint="Enter your email address, or enter a new one to change it."
-
-                [required]="true"
-                [errors]="emailForm.email().touched()
-                ? emailForm.email().errors().map(value => value.message ?? '')
-                : []"
                 >
-                    <input 
-                        zsInputStyle
-                        type="email"
-                        autocomplete="email"
-                        placeholder="Enter your email address"
-                        [formField]="emailForm.email"
-                    >
-                </ZS-field>
+                </ZS-input>
         </div>
         <!-- <div class="mb-4">
             <label
@@ -81,7 +73,6 @@
             class="w-full"
             size="lg"
             btnStyle="primary"
-            [disabled]="emailForm().invalid()"
             [iconTpl]="authApi.resendverifyEmailLoading() ? loaderIcon : resend"
             (clickedEv)="resendVerificationEmail()"
         >

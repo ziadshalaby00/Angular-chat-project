@@ -27,11 +27,10 @@
           [placeholder]="'Enter your full name'"
           [iconTpl]="userIcon"
   
-          (changedEv)="changeValues($event, 'fullname')"
-          [(touched)]="form.fields.fullname().touched"
-  
+          [formField]="form.fullname"
+
           [type]="'text'"
-          [required]="true"
+          
           [inputStyle]="'violet'"
         ></ZS-input>
       
@@ -41,11 +40,10 @@
           [placeholder]="'Enter your username'"
           [iconTpl]="userIcon"
   
-          (changedEv)="changeValues($event, 'username')"
-          [(touched)]="form.fields.username().touched"
+          [formField]="form.username"
   
           [type]="'text'"
-          [required]="true"
+          
           [inputStyle]="'violet'"
         ></ZS-input>
       
@@ -55,24 +53,22 @@
           [placeholder]="'Enter your email'"
           [iconTpl]="envelopeIcon"
   
-          (changedEv)="changeValues($event, 'email')"
-          [(touched)]="form.fields.email().touched"
+          [formField]="form.email"
   
           [type]="'email'"
-          [required]="true"
+          
           [inputStyle]="'violet'"
         ></ZS-input>
       
-        <ZS-input #password
+        <ZS-input
           [label]="'Password'"
           [placeholder]="'Enter password'"
           [iconTpl]="lockIcon"
   
-          (changedEv)="changeValues($event, 'password')"
-          [(touched)]="form.fields.password().touched"
+          [formField]="form.password"
   
           [type]="'password'"
-          [required]="true"
+          
           [inputStyle]="'violet'"
         ></ZS-input>
       
@@ -81,24 +77,24 @@
           [placeholder]="'Confirm password'"
           [iconTpl]="lockIcon"
   
-          (changedEv)="changeValues($event, 'conf_password')"
-          [(touched)]="form.fields.conf_password().touched"
-          [validateFns]="[confPassValidate]"
+          [formField]="form.conf_password"
   
           [type]="'password'"
-          [required]="true"
+          
           [inputStyle]="'violet'"
         ></ZS-input>
     
         <!-- Terms and Conditions -->
-        <div class="flex items-start gap-3 p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
-          <input 
-            type="checkbox" 
+        <div class="flex gap-3 p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg relative">
+          <ZS-checkbox 
             id="terms"
-            class="mt-1 w-4 h-4 bg-gray-100 border-gray-300 rounded 
-            dark:ring-offset-gray-800  dark:bg-gray-700 dark:border-gray-600"
+            size='sm'
+            inputStyle="violet"
+            variant="solid"
+            [formField]="form.terms"
           >
-          <label for="terms" class="text-sm text-slate-600 dark:text-slate-400">
+          </ZS-checkbox>
+          <label for="terms" class="text-sm text-slate-600 dark:text-slate-400 absolute top-[12px] left-[40px]">
             I agree to the 
             <a class="text-violet-600 hover:text-violet-700 dark:text-violet-400 
             dark:hover:text-violet-300 font-medium">

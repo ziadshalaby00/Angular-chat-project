@@ -59,11 +59,8 @@
           [placeholder]="'Delete ' + $safeNavigationMigration(profileData()?.username)"
           [type]="'text'"
           [inputStyle]="'danger'"
-          [required]="true"
-          [validateFns]="[del_UsernameValidate]"
-          [(value)]="del_Username().value"
-          (changedEv)="setDel_Username($event)"
-          [(touched)]="ddToCnSTouch"
+
+          [formField]="deleteAccountForm.confirmation"
         >
         </ZS-input>
   
@@ -72,6 +69,8 @@
           variant="outline"
           btnStyle="secondary"
           class="w-full"
+
+          [disabled]="deleteAccountForm.confirmation().invalid()"
         >
           Continue
         </ZS-button>
@@ -94,11 +93,9 @@
           [placeholder]="'Enter your password'"
           [type]="'password'"
           [inputStyle]="'danger'"
-          [required]="true"
           [iconTpl]="lockIcon"
-          [(value)]="passForDA().value"
-          (changedEv)="setPassForDA($event)"
-          [(touched)]="passForDATouch"
+
+          [formField]="deleteAccountForm.password"
         >
         </ZS-input>
 

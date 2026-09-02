@@ -69,8 +69,8 @@ export class Chats {
   }
 
   private readonly searchTerm = signal<string | null>(null);
-  onSearchForChat(value: string | null) {
-    this.searchTerm.set((value ?? '').toLowerCase().trim());
+  onSearchForChat(value: string | number | null) {
+    this.searchTerm.set(String(value ?? '').toLowerCase().trim());
   }
 
   readonly filteredChats = computed<ChatType[]>(() => {

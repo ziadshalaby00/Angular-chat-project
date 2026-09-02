@@ -5,7 +5,7 @@ import { Dir } from '../../services/shared-service/shared-utils';
 import { NavbarItem } from '@ziadshalaby/ngx-zs-component';
 import { RemoveMessage } from '../remove-message/remove-message';
 import { EditMessage } from '../edit-message/edit-message';
-import { ResultType, Text_message } from '../../services/chat-service/chat-service';
+import { ResultType } from '../../services/chat-service/chat-service';
 import { SendMessageService } from '../../services/send-message/send-message';
 
 @Component({

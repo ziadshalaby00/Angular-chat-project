@@ -26,11 +26,9 @@
           [placeholder]="'Enter your username'"
           [iconTpl]="userIcon"
   
-          (changedEv)="changeValues($event, 'username')"
-          [(touched)]="form.fields.username().touched"
+          [formField]="loginForm.username"
   
           [type]="'text'"
-          [required]="true"
           [inputStyle]="'primary'"
         ></ZS-input>
       
@@ -38,12 +36,10 @@
           [label]="'Password'"
           [placeholder]="'Enter password'"
           [iconTpl]="lockIcon"
-  
-          (changedEv)="changeValues($event, 'password')"
-          [(touched)]="form.fields.password().touched"
-  
+        
+          [formField]="loginForm.password"
+
           [type]="'password'"
-          [required]="true"
           [inputStyle]="'primary'"
         ></ZS-input>
       
@@ -163,17 +159,11 @@
     <ZS-input
       inputStyle="info"
       type="email"
+      autocomplete="email"
       [placeholder]="'Enter your email address'"
       [iconTpl]="envelopeIcon"
-      [required]="true"
       
-      [(touched)]="passwordResetForm.fields.email().touched"
-      (changedEv)="chanegEmailValue($event)"
-      
-      labelClass="font-medium text-slate-700 dark:text-slate-300 mb-2"
-      inputClass="rounded-xl py-3.5 px-4 bg-white dark:bg-slate-800 border-slate-300 
-      dark:border-slate-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 
-      dark:focus:ring-blue-900/50"
+      [formField]="passwordResetForm.email"
     >
     </ZS-input>
     
