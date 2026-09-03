@@ -1,60 +1,61 @@
-<div class="w-58 fixed sm:bottom-12 bottom-8 sm:right-10 right-6 z-10000">
-    <ZS-card
-        [cardStyle]="'primary'"
-        [variant]="{ shadow: true, border: true, border_hover: true }"
-        [animation]="'bottom-right'"
-        bodyClass="py-3 pl-4 pr-2 bg-slate-300/90 dark:bg-slate-800/90"
-    >
-        <div class="flex justify-start items-center rounded-lg relative group/card">
-            <!-- User Avatar -->
-            <app-user-avatar
-                [participant]="{user_info: participant()!}"
-                [isCurrentChat]="true"
-            >
-            </app-user-avatar>
+@if (incomingCall() && participant()) {
+  <div class="w-58 fixed sm:bottom-12 bottom-8 sm:right-10 right-6 z-10000">
+      <ZS-card
+          [cardStyle]="'primary'"
+          [variant]="{ shadow: true, border: true, border_hover: true }"
+          [animation]="'bottom-right'"
+          bodyClass="py-3 pl-4 pr-2 bg-slate-300/90 dark:bg-slate-800/90"
+      >
+          <div class="flex justify-start items-center rounded-lg relative group/card">
+              <app-user-avatar
+                  [participant]="{user_info: participant()!}"
+                  [isCurrentChat]="true"
+              >
+              </app-user-avatar>
 
-            <!-- User Info -->
-            <div class="mx-3 flex flex-col flex-1 min-w-0">
-                <p
-                    class="font-semibold leading-tight line-clamp-1 wrap-anywhere text-sm
-                    text-gray-800 dark:text-white transition-colors duration-300
-                    group-hover/card:text-green-600 dark:group-hover/card:text-green-400"
-                >
-                    {{ participant()?.fullname }}
-                </p>
+              <div class="mx-3 flex flex-col flex-1 min-w-0">
+                  <p
+                      class="font-semibold leading-tight line-clamp-1 wrap-anywhere text-sm
+                      text-gray-800 dark:text-white transition-colors duration-300
+                      group-hover/card:text-green-600 dark:group-hover/card:text-green-400"
+                  >
+                      {{ participant()?.fullname }}
+                  </p>
 
-                <p
-                    class="text-xs text-gray-600 dark:text-gray-400 wrap-anywhere leading-tight mt-0.5"
-                    [ngClass]="[
-                        participant()?.is_deleted ? 'line-clamp-2 italic' : 'line-clamp-1'
-                    ]"
-                >
-                    <span class="text-gray-500 dark:text-gray-400">
-                        @{{ participant()?.username }}
-                    </span>
-                </p>
+                  <p
+                      class="text-xs text-gray-600 dark:text-gray-400 wrap-anywhere leading-tight mt-0.5"
+                      [ngClass]="[
+                          participant()?.is_deleted ? 'line-clamp-2 italic' : 'line-clamp-1'
+                      ]"
+                  >
+                      <span class="text-gray-500 dark:text-gray-400">
+                          @{{ participant()?.username }}
+                      </span>
+                  </p>
 
-                <!-- Calling Status -->
-                <p class="text-xs text-green-600 dark:text-green-400 flex items-center gap-1 mt-1">
-                    <i class="fa-solid fa-phone animate-pulse"></i>
-                    <span>Calling you...</span>
-                </p>
-            </div>
-        </div>
+                  <p class="text-xs text-green-600 dark:text-green-400 flex items-center gap-1 mt-1">
+                      <i class="fa-solid fa-phone animate-pulse"></i>
+                      <span>Calling you...</span>
+                  </p>
+              </div>
+          </div>
 
-        <div class="flex justify-between">
-            <ZS-button
-                [btnStyle]="'success'"
-            >
-                Accept
-            </ZS-button>
+          <div class="flex justify-between">
+              <ZS-button
+                  [btnStyle]="'success'"
+                  (click)="accept()"
+              >
+                  Accept
+              </ZS-button>
 
-            <ZS-button
-                [btnStyle]="'danger'"
-                [variant]="'outline'"
-            >
-                Reject
-            </ZS-button>
-        </div>
-    </ZS-card>
-</div>
+              <ZS-button
+                  [btnStyle]="'danger'"
+                  [variant]="'outline'"
+                  (click)="reject()"
+              >
+                  Reject
+              </ZS-button>
+          </div>
+      </ZS-card>
+  </div>
+}

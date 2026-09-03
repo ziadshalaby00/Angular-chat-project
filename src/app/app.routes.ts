@@ -8,6 +8,7 @@ import { InitPage } from './other-components/init-page/init-page';
 import { Home } from './other-components/home/home';
 import { Chats } from './chats-components/chats/chats';
 import { VerifyEmail } from './auth-components/verify-email/verify-email';
+import { CallingPage } from './call-components/calling-page/calling-page';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -16,11 +17,13 @@ export const routes: Routes = [
 
     { path: 'login', component: Login},
     { path: 'signup', component: Signup},
-
+    
     { path: 'profile/:user_id', component: Profile},
-
+    
     { path: 'reset-password/:uid/:token', component: ResetPassword },
     { path: 'verify-email/:uid/:token', component: VerifyEmail },
+    
+    { path: 'calling-page', component: CallingPage},
 
     { path: 'init-page', component: InitPage },
     { path: '**', component: Page404Comp },

@@ -27,6 +27,20 @@ interface WebSocketMessageType {
   "chat_id"?: number
 }
 
+export interface IncomingCallType {
+  from_user_id: number;
+  chat_id: number;
+  sdp: RTCSessionDescriptionInit;
+  call_type: string;
+}
+
+interface CallSignalType {
+  type: 'call.answer' | 'call.ice_candidate' | 'call.end' | 'call.reject';
+  sdp?: RTCSessionDescriptionInit;
+  candidate?: RTCIceCandidateInit;
+  from_user_id: number;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -76,6 +90,8 @@ export class ChatsService {
   }
 
   private readonly chatSocket = signal<WebSocket | null>(null);
+  public readonly incomingCall = signal<IncomingCallType | null>(null);
+  public readonly callSignal = signal<CallSignalType | null>(null);
   public connectChats() {
     this.disconnectChats();
 
@@ -89,14 +105,22 @@ export class ChatsService {
       console.log('Ws chats opend')
     };
 
-    this.chatSocket()!.onmessage = (event) => {
-      const data: WebSocketMessageType = JSON.parse(event.data);
-      if(!data) return;
+    this.chatSocket()!.onerror = (error) => {
+      console.error(error);
+    };
 
-      if(data.type === 'chat_created') {
+    this.chatSocket()!.onclose = () => {
+      console.log('Ws chats closed')
+    };
+
+    this.chatSocket()!.onmessage = (event) => {
+      const data: any = JSON.parse(event.data);
+      if (!data) return;
+
+      if (data.type === 'chat_created') {
         this.chats.update((prev) => [...prev!, data.chat!]);
       }
-      else if(data.type === 'new_message_notification') {
+      else if (data.type === 'new_message_notification') {
         const chat_id = data.chat_id;
         if(this.chatService.currentChatId() === chat_id) return;
 
@@ -112,15 +136,17 @@ export class ChatsService {
           })
         )
       }
+      else if (data.type === 'call.offer') {
+        this.incomingCall.set(data);
+      }
+      else if (['call.answer', 'call.ice_candidate', 'call.end', 'call.reject'].includes(data.type)) {
+        this.callSignal.set(data);
+      }
     };
+  }
 
-    this.chatSocket()!.onerror = (error) => {
-      console.error(error);
-    };
-
-    this.chatSocket()!.onclose = () => {
-      console.log('Ws chats closed')
-    };
+  public sendCallSignal(payload: Record<string, any>): void {
+    this.chatSocket()?.send(JSON.stringify(payload));
   }
 
   public disconnectChats() {

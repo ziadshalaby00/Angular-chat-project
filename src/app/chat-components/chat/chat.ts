@@ -13,6 +13,7 @@ import { SettingsUi } from '../../other-components/settings-ui/settings-ui';
 import { Message } from '../message/message';
 import { SendMessage } from '../send-message/send-message';
 import { SendMessageService } from '../../services/send-message/send-message';
+import { WebrtcService } from '../../services/webrtc-service/webrtc-service';
 
 @Component({
   selector: 'app-chat',
@@ -206,7 +207,16 @@ export class Chat {
     this.chatService.loadMoreMessages();
   }
 
-  callUser(userId: number) {
+  startCall(participantId: number): void {
+    const chatId = this.currentChat()?.id;
+    if (!chatId) return;
 
+    this.router.navigate(['/calling-page'], {
+      queryParams: {
+        toUserId: participantId,
+        chatId,
+        role: 'caller',
+      },
+    })
   }
 }
