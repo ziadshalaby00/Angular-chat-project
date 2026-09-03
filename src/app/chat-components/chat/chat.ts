@@ -13,7 +13,6 @@ import { SettingsUi } from '../../other-components/settings-ui/settings-ui';
 import { Message } from '../message/message';
 import { SendMessage } from '../send-message/send-message';
 import { SendMessageService } from '../../services/send-message/send-message';
-import { WebrtcService } from '../../services/webrtc-service/webrtc-service';
 
 @Component({
   selector: 'app-chat',

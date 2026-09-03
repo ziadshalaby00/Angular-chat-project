@@ -34,9 +34,14 @@ export class CallingPage implements OnInit, OnDestroy {
   constructor() {
     effect(() => {
       const stream = this.webrtcService.localStream();
-      if (stream && this.localVideoRef?.nativeElement) {
-        this.localVideoRef.nativeElement.srcObject = stream;
-      }
+
+      if (!stream || !this.localVideoRef?.nativeElement) return;
+
+      const video = this.localVideoRef.nativeElement;
+
+      video.srcObject = stream;
+      video.muted = true;
+      video.volume = 0;
     });
 
     effect(() => {
@@ -46,7 +51,6 @@ export class CallingPage implements OnInit, OnDestroy {
       }
     });
 
-    // بيسمع لأي رسالة call.* جاية من ChatsService
     effect(() => {
       const signals = this.chatsService.callSignals();
 
@@ -79,17 +83,6 @@ export class CallingPage implements OnInit, OnDestroy {
     });
 
     await this.webrtcService.getLocalStream();
-
-    const stream = this.webrtcService.localStream();
-    console.log(
-      'LOCAL AUDIO TRACKS:',
-      stream?.getAudioTracks()
-    );
-    console.log(
-      'LOCAL VIDEO TRACKS:',
-      stream?.getVideoTracks()
-    );
-    
     this.webrtcService.attachLocalTracks();
 
     if (this.isCaller) {
@@ -102,7 +95,6 @@ export class CallingPage implements OnInit, OnDestroy {
         call_type: 'video',
       });
     } else {
-      // Callee: خد الـ offer المحفوظ من incomingCall واستهلكه
       const pendingOffer = this.chatsService.incomingCall();
 
       if (pendingOffer) {
@@ -116,7 +108,6 @@ export class CallingPage implements OnInit, OnDestroy {
         });
       }
 
-      // خلاص اتستخدم، امسحه عشان الكارت (app-call) يختفي
       this.chatsService.incomingCall.set(null);
       console.log('disappear (app-call)')
     }
@@ -125,7 +116,6 @@ export class CallingPage implements OnInit, OnDestroy {
   private async handleSignal(signal: any): Promise<void> {
     switch (signal.type) {
       case 'call.offer':
-        // لو انت الـ Callee ولسه ماعملتش setRemoteDescription
         await this.webrtcService.setRemoteDescription(signal.sdp);
         const answer = await this.webrtcService.createAnswer();
         this.chatsService.sendCallSignal({
