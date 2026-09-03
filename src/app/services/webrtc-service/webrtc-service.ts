@@ -29,6 +29,11 @@ export class WebrtcService {
 
     peerConnection.onicecandidate = (event) => {
       if (event.candidate) {
+        console.log(
+        '%c LOCAL ICE:',
+        'color: green; font-weight: bold',
+        event.candidate.toJSON()
+        );
         onIceCandidate(event.candidate.toJSON());
       }
     };
@@ -46,6 +51,12 @@ export class WebrtcService {
   // ==================== Set Remote Description ==================== //
 
   async setRemoteDescription(sdp: RTCSessionDescriptionInit): Promise<void> {
+    console.log(
+    '%c SET REMOTE DESCRIPTION:',
+    'color: purple; font-weight: bold',
+    sdp.type
+    );
+
     const peerConnection = this.peerConnection();
     if (!peerConnection) throw new Error('Peer connection not initialized');
 
@@ -61,6 +72,12 @@ export class WebrtcService {
   // ==================== Add ICE Candidate ==================== //
 
   async addIceCandidate(candidate: RTCIceCandidateInit): Promise<void> {
+    console.log(
+    '%c ADD REMOTE ICE:',
+    'color: orange; font-weight: bold',
+    candidate
+    );
+
     const peerConnection = this.peerConnection();
     if (!peerConnection) return;
 
@@ -112,6 +129,8 @@ export class WebrtcService {
     if (!peerConnection) throw new Error('Peer connection not initialized');
 
     const offer = await peerConnection.createOffer();
+    console.log('OFFER CREATED', offer);
+
     await peerConnection.setLocalDescription(offer);
     return offer;
   }
@@ -123,6 +142,8 @@ export class WebrtcService {
     if (!peerConnection) throw new Error('Peer connection not initialized');
 
     const answer = await peerConnection.createAnswer();
+    console.log('ANSWER CREATED', answer);
+    
     await peerConnection.setLocalDescription(answer);
     return answer;
   }

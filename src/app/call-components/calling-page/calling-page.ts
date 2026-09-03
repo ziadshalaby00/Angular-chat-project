@@ -48,10 +48,15 @@ export class CallingPage implements OnInit, OnDestroy {
 
     // بيسمع لأي رسالة call.* جاية من ChatsService
     effect(() => {
-      const signal = this.chatsService.callSignal();
-      if (!signal) return;
+      const signals = this.chatsService.callSignals();
 
-      this.handleSignal(signal);
+      if (!signals.length) return;
+
+      for (const signal of signals) {
+        this.handleSignal(signal);
+      }
+
+      this.chatsService.callSignals.set([]);
     });
   }
 
@@ -134,7 +139,7 @@ export class CallingPage implements OnInit, OnDestroy {
         break;
     }
 
-    this.chatsService.callSignal.set(null); // نصفّرها عشان مايتاخدش نفس الـ event مرتين
+    this.chatsService.callSignals.set([]);
   }
 
   toggleCamera(): void {

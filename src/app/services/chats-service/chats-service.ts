@@ -91,7 +91,7 @@ export class ChatsService {
 
   private readonly chatSocket = signal<WebSocket | null>(null);
   public readonly incomingCall = signal<IncomingCallType | null>(null);
-  public readonly callSignal = signal<CallSignalType | null>(null);
+  public readonly callSignals = signal<CallSignalType[]>([]);
   public connectChats() {
     this.disconnectChats();
 
@@ -117,6 +117,12 @@ export class ChatsService {
       const data: any = JSON.parse(event.data);
       if (!data) return;
 
+      console.log(
+      '%c WS RECEIVED:',
+      'color: blue; font-weight: bold',
+      data
+    );
+
       if (data.type === 'chat_created') {
         this.chats.update((prev) => [...prev!, data.chat!]);
       }
@@ -140,7 +146,7 @@ export class ChatsService {
         this.incomingCall.set(data);
       }
       else if (['call.answer', 'call.ice_candidate', 'call.end', 'call.reject'].includes(data.type)) {
-        this.callSignal.set(data);
+        this.callSignals.update(signals => [...signals, data]);
       }
     };
   }
