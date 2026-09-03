@@ -79,6 +79,17 @@ export class CallingPage implements OnInit, OnDestroy {
     });
 
     await this.webrtcService.getLocalStream();
+
+    const stream = this.webrtcService.localStream();
+    console.log(
+      'LOCAL AUDIO TRACKS:',
+      stream?.getAudioTracks()
+    );
+    console.log(
+      'LOCAL VIDEO TRACKS:',
+      stream?.getVideoTracks()
+    );
+    
     this.webrtcService.attachLocalTracks();
 
     if (this.isCaller) {
