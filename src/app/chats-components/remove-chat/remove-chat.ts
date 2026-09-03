@@ -6,7 +6,7 @@ import { ChatsService } from '../../services/chats-service/chats-service';
   selector: 'app-remove-chat',
   imports: [Modal],
   templateUrl: './remove-chat.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './remove-chat.css',
 })
 export class RemoveChat {

@@ -124,10 +124,13 @@ export class User {
           type: 'success'
         })
 
+        this.userShared.changeEmailLoading.set(false);
+
         if(sf) sf();
       },
       error: (err: any) => {
         this.userShared.shared.setErrors(err.error);
+        this.userShared.changeEmailLoading.set(false);
         if(fn) fn();
       }
     })

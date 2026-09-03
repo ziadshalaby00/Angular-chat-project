@@ -5,7 +5,7 @@ import { File_message } from '../../services/chat-service/chat-service';
   selector: 'app-file',
   imports: [],
   templateUrl: './file.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './file.css',
 })
 export class FileComp {

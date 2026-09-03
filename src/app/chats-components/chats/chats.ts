@@ -20,7 +20,7 @@ import { OverflowCard } from '../../services/overflow-card/overflow-card';
     Spinner, CommonModule, NewChat,
     IconContainer, RemoveChat, UserAvatar, SettingsUi],
   templateUrl: './chats.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './chats.css',
 })
 export class Chats {

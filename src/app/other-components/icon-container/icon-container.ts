@@ -7,7 +7,7 @@ export type ColorsType = 'blue' | 'red' | 'purple' | 'yellow' | 'indigo' | 'gree
   selector: 'app-icon-container',
   imports: [CommonModule],
   templateUrl: './icon-container.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './icon-container.css',
 })
 export class IconContainer {

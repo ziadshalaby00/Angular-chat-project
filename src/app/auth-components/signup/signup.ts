@@ -16,7 +16,7 @@ import { email, form, FormField, required, validate, minLength } from '@angular/
     Checkbox
 ],
   templateUrl: './signup.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './signup.css',
 })
 export class Signup {

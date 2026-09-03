@@ -14,7 +14,7 @@ import { SendMessageService } from '../../services/send-message/send-message';
   selector: 'app-message',
   imports: [CommonModule, MessageSettings, Text, Audio, FileComp],
   templateUrl: './message.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './message.css',
 })
 export class Message {

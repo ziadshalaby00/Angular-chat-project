@@ -1,14 +1,11 @@
-import { Component, effect, ElementRef, inject, input, signal, viewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ElementRef, inject, input, signal, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { SendMessageService } from '../../services/send-message/send-message';
-import { Text } from '../text/text';
-import { FileComp } from '../file/file';
-import { Audio } from '../audio/audio';
 
 @Component({
   selector: 'app-send-message',
   // imports: [Text, FileComp, Audio],
   templateUrl: './send-message.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './send-message.css',
 })
 export class SendMessage {

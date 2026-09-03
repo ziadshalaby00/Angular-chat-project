@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
   selector: 'app-user-avatar',
   imports: [CommonModule],
   templateUrl: './user-avatar.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './user-avatar.css',
 })
 export class UserAvatar {

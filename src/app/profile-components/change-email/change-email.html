@@ -7,14 +7,14 @@
   [confirmConfig]="{
     text: 'Change',
     btnStyle: 'primary',
-    disabled: authApi.updateProfileLoading(),
-    iconTpl: authApi.updateProfileLoading() ? loaderIconTpl : null
+    disabled: authApi.changeEmailLoading(),
+    iconTpl: authApi.changeEmailLoading() ? loaderIconTpl : null
   }"
   [cancelConfig]="{
-    disabled: authApi.updateProfileLoading()
+    disabled: authApi.changeEmailLoading()
   }"
-  [showCancelIcon]="!authApi.updateProfileLoading()"
-  [closeOnOverlay]="!authApi.updateProfileLoading()"
+  [showCancelIcon]="!authApi.changeEmailLoading()"
+  [closeOnOverlay]="!authApi.changeEmailLoading()"
   [modalStyle]="'primary'"
 >
     <div class="flex flex-col gap-5 text-gray-800 dark:text-gray-300">

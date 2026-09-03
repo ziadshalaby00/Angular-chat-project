@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
   selector: 'app-init-page',
   imports: [Spinner],
   templateUrl: './init-page.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './init-page.css',
 })
 export class InitPage {

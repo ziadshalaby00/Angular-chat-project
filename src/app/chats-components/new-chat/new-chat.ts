@@ -6,7 +6,7 @@ import { Button, Input, Modal, Spinner } from '@ziadshalaby/ngx-zs-component';
   selector: 'app-new-chat',
   imports: [Modal, Input, Button, Spinner],
   templateUrl: './new-chat.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './new-chat.css',
 })
 export class NewChat {

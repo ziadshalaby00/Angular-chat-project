@@ -53,4 +53,5 @@ export class UserSharedUtils {
   
   readonly verifyEmailLoading = signal<boolean>(false);
   readonly resendverifyEmailLoading = signal<boolean>(false);
+  readonly changeEmailLoading = signal<boolean>(false);
 }

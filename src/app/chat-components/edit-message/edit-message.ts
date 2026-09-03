@@ -6,7 +6,7 @@ import { Input, Modal } from '@ziadshalaby/ngx-zs-component';
   selector: 'app-edit-message',
   imports: [Modal],
   templateUrl: './edit-message.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './edit-message.css',
 })
 export class EditMessage {

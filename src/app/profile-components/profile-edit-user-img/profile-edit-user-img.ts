@@ -8,7 +8,7 @@ import { form, FormField, readonly, required } from '@angular/forms/signals';
   selector: 'app-profile-edit-user-img',
   imports: [Modal, FileInput, Button, Or, FormField],
   templateUrl: './profile-edit-user-img.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './profile-edit-user-img.css',
 })
 export class ProfileEditUserImg {

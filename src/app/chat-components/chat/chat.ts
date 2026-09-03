@@ -18,7 +18,7 @@ import { SendMessageService } from '../../services/send-message/send-message';
   selector: 'app-chat',
   imports: [CommonModule, Spinner, IconContainer, RemoveChat, UserAvatar, Message, SettingsUi, SendMessage],
   templateUrl: './chat.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './chat.css',
 })
 export class Chat {

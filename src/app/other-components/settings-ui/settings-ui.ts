@@ -6,7 +6,7 @@ import { Dir } from '../../services/shared-service/shared-utils';
   selector: 'app-settings-ui',
   imports: [NavItem],
   templateUrl: './settings-ui.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './settings-ui.css',
 })
 export class SettingsUi {

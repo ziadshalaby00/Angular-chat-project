@@ -62,6 +62,7 @@ export class AuthApi {
 
   get verifyEmailLoading() { return this.userShared.verifyEmailLoading; }
   get resendverifyEmailLoading() { return this.userShared.resendverifyEmailLoading; }
+  get changeEmailLoading() { return this.userShared.changeEmailLoading; }
   get verifyEmailError() { return this.verifyEmailS.verifyEmailError; }
 
   // ====== RE-EXPORT METHODS ======

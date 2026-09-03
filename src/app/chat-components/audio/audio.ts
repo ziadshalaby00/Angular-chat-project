@@ -17,7 +17,7 @@ import { RecordService } from '../../services/record-service/record-service';
   selector: 'app-audio',
   imports: [],
   templateUrl: './audio.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './audio.css',
 })
 export class Audio implements OnDestroy {

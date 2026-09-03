@@ -8,7 +8,7 @@ import { form, required, email, FormField, minLength } from '@angular/forms/sign
   selector: 'app-resend-ver-link',
   imports: [FormField, Button, Input],
   templateUrl: './resend-ver-link.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './resend-ver-link.css',
 })
 export class ResendVerLink {

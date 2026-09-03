@@ -16,7 +16,7 @@ import { email, form, FormField, required } from '@angular/forms/signals';
     FormField,
 ],
   templateUrl: './login.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './login.css',
 })
 export class Login {

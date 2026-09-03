@@ -8,7 +8,7 @@ import { form, FormField, required, validate } from '@angular/forms/signals';
   selector: 'app-reset-password',
   imports: [Card, Input, Button, FormField],
   templateUrl: './reset-password.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './reset-password.css',
 })
 export class ResetPassword {

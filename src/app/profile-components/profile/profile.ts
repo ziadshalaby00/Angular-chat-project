@@ -23,7 +23,7 @@ import { ChangeEmail } from '../change-email/change-email';
     ChangeEmail
   ],
   templateUrl: './profile.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './profile.css',
 })
 export class Profile {

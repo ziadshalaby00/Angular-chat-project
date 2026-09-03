@@ -5,7 +5,7 @@ import { Page404 } from '@ziadshalaby/ngx-zs-component';
   selector: 'app-page404',
   imports: [Page404],
   templateUrl: './page404.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './page404.css',
 })
 export class Page404Comp {

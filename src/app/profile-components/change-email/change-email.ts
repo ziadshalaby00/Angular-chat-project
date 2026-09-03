@@ -32,11 +32,10 @@ export class ChangeEmail {
     if (this.changeEmailForm().invalid()) {
       return;
     }
-
-    this.authApi.resendverifyEmailLoading.set(true);
+    
+    this.authApi.changeEmailLoading.set(true);
 
     const email = this.changeEmailModel().email;
-    this.authApi.updateProfileLoading.set(true);
     this.authApi.changeEmail(
       email,
       () => this.handleCloseSuccess()?.(this.openChangeEmailModal),

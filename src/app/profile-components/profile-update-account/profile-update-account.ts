@@ -7,7 +7,7 @@ import { form, FormField, maxLength, required } from '@angular/forms/signals';
   selector: 'app-profile-update-account',
   imports: [Modal, Input, FormField],
   templateUrl: './profile-update-account.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './profile-update-account.css',
 })
 export class ProfileUpdateAccount {

@@ -11,7 +11,7 @@ import { IconContainer } from '../icon-container/icon-container';
   selector: 'app-navbar',
   imports: [Navbar, RouterModule, CommonModule, IconContainer],
   templateUrl: './navbar.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './navbar.css',
 })
 export class NavbarComp {

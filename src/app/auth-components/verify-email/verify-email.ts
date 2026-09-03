@@ -9,7 +9,7 @@ import { ResendVerLink } from '../resend-ver-link/resend-ver-link';
   selector: 'app-verify-email',
   imports: [Spinner, ResendVerLink],
   templateUrl: './verify-email.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './verify-email.css',
 })
 export class VerifyEmail {

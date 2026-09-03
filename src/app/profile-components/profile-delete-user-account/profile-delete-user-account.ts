@@ -34,7 +34,7 @@ import {
     FormField
   ],
   templateUrl: './profile-delete-user-account.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './profile-delete-user-account.css',
 })
 export class ProfileDeleteUserAccount {

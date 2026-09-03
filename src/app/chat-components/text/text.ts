@@ -6,7 +6,7 @@ import { Text_message } from '../../services/chat-service/chat-service';
   selector: 'app-text',
   imports: [],
   templateUrl: './text.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './text.css',
 })
 export class Text {
