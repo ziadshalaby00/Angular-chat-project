@@ -4,6 +4,7 @@ import { User } from './user';
 import { Token } from './token';
 import { firstValueFrom } from 'rxjs';
 import { Logout } from './logout';
+import { InitAppService } from '../init-app-service/init-app-service';
 
 export interface RegBody {
   fullname: string,
@@ -23,6 +24,8 @@ export interface logBody {
 export class Auth {
   private readonly injector = inject(Injector);
   private get userShared(): UserSharedUtils { return this.injector.get(UserSharedUtils); }
+  private get initAppService(): InitAppService { return this.injector.get(InitAppService); }
+  
   private get user(): User { return this.injector.get(User); }
   private get token(): Token { return this.injector.get(Token); }
   private get logout(): Logout { return this.injector.get(Logout); }
@@ -61,7 +64,10 @@ export class Auth {
               type: 'success'
             })
             this.userShared.isLoggedin.set(true);
+
+            this.initAppService.startingInitChats();
             this.token.refreshEventLoop(this.userShared.accessTokenExpire);
+
             this.userShared.router.navigate(['/home']);
           },
           () => this.userShared.loginLoading.set(false)
@@ -85,7 +91,10 @@ export class Auth {
               type: 'success'
             })
             this.userShared.isLoggedin.set(true);
+
+            this.initAppService.startingInitChats();
             this.token.refreshEventLoop(this.userShared.accessTokenExpire);
+
             this.userShared.router.navigate(['/home']);
           },
           () => this.userShared.googleLoading.set(false)

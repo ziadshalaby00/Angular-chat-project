@@ -14,7 +14,7 @@
     </div>
 
     <div class="h-[40%] flex items-center justify-center bg-black/60 backdrop-blur-sm">
-        <div class="relative w-full sm:max-w-[60%] max-w-[90%] sm:max-h-[85%] max-h-[95%] aspect-video rounded-2xl overflow-hidden shadow-2xl border-2 border-white/20 mx-auto">
+        <div class="relative w-full sm:max-w-[60%] max-w-[90%] max-h-[90%] aspect-video rounded-2xl overflow-hidden shadow-2xl border-2 border-white/20 mx-auto">
             <video
             #localVideo
             autoplay
@@ -28,7 +28,17 @@
         </div>
     </div>
 
-    <div class="absolute bottom-4 right-4 flex justify-center items-center gap-6 z-10">
+    <div class="absolute bottom-4 right-4 flex justify-center items-center sm:gap-6 gap-3 z-10">
+        <button
+            (click)="switchCamera()"
+            class="sm:size-14 size-10 rounded-full flex items-center justify-center sm:text-2xl text-lg transition-all duration-200 shadow-lg hover:scale-105 active:scale-95"
+            [ngClass]="isFacingMode() 
+            ? 'bg-green-700/80 text-white hover:bg-green-600/80' 
+            : 'bg-blue-600/90 text-white hover:bg-blue-700/90'"
+        >
+            <i [class]="isFacingMode() ? 'fas fa-camera' : 'fas fa-camera-rotate'"></i>
+        </button>
+
         <button
             (click)="toggleMicrophone()"
             class="sm:size-14 size-10 rounded-full flex items-center justify-center sm:text-2xl text-lg transition-all duration-200 shadow-lg hover:scale-105 active:scale-95"

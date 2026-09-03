@@ -13,12 +13,15 @@ export class WebrtcService {
   readonly isCameraEnabled = signal<boolean>(true);
   readonly isMicrophoneEnabled = signal<boolean>(true);
 
+  readonly facingMode = signal<'user' | 'environment'>('user');
+
   private pendingIceCandidates: RTCIceCandidateInit[] = [];
   private remoteDescriptionSet = false;
 
   // ==================== Initialize WebRTC ==================== //
 
   initialize(onIceCandidate: (candidate: RTCIceCandidateInit) => void): void {
+    console.log('initialize');
 
     this.pendingIceCandidates = [];
     this.remoteDescriptionSet = false;
@@ -87,8 +90,9 @@ export class WebrtcService {
     });
 
     this.localStream.set(stream);
-      return stream;
-    }
+    this.toggleCamera();
+    return stream;
+  }
 
   // ==================== Attach Local Tracks ==================== //
 
@@ -172,9 +176,53 @@ export class WebrtcService {
   }
 
 
+  // ==================== Switch Camera ==================== //
+  
+  async switchCamera(): Promise<void> {
+    const peerConnection = this.peerConnection();
+    const oldStream = this.localStream();
+    if (!peerConnection || !oldStream) return;
+
+    const newFacingMode = this.facingMode() === 'user' ? 'environment' : 'user';
+
+    let newStream: MediaStream;
+    try {
+      newStream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { exact: newFacingMode } },
+      });
+    } catch {
+      // بعض الأجهزة (خصوصًا الديسكتوب) مش بتدعم exact، فبنعمل fallback
+      newStream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: newFacingMode },
+      });
+    }
+
+    const newVideoTrack = newStream.getVideoTracks()[0];
+    if (!newVideoTrack) return;
+
+    // استبدال التراك في الـ peer connection من غير renegotiation
+    const sender = peerConnection
+      .getSenders()
+      .find((s) => s.track?.kind === 'video');
+    if (sender) {
+      await sender.replaceTrack(newVideoTrack);
+    }
+
+    // وقف التراك القديم وتحديث الـ local stream
+    const oldVideoTrack = oldStream.getVideoTracks()[0];
+    oldVideoTrack?.stop();
+    if (oldVideoTrack) oldStream.removeTrack(oldVideoTrack);
+    oldStream.addTrack(newVideoTrack);
+
+    newVideoTrack.enabled = this.isCameraEnabled();
+    this.facingMode.set(newFacingMode);
+  }
+
   // ==================== Cancel Call ==================== //
 
   cancelCall(): void {
+    console.log('cancelCall');
+    
     this.localStream()?.getTracks().forEach((track) => track.stop());
     this.peerConnection()?.close();
 
@@ -183,6 +231,8 @@ export class WebrtcService {
     this.remoteStream.set(null);
     this.isCameraEnabled.set(true);
     this.isMicrophoneEnabled.set(true);
+    this.facingMode.set('user');
+
     this.pendingIceCandidates = [];
     this.remoteDescriptionSet = false;
   }

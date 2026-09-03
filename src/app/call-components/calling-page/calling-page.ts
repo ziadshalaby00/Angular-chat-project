@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import {
   Component, ElementRef, ViewChild, effect, inject,
   OnInit, OnDestroy,
+  computed,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { WebrtcService } from '../../services/webrtc-service/webrtc-service';
@@ -25,6 +26,9 @@ export class CallingPage implements OnInit, OnDestroy {
 
   readonly isCameraOn = this.webrtcService.isCameraEnabled;
   readonly isMicrophoneOn = this.webrtcService.isMicrophoneEnabled;
+
+  readonly isFacingMode = computed<boolean>(() => this.webrtcService.facingMode() === 'user');
+
   readonly remoteStream = this.webrtcService.remoteStream;
 
   private toUserId!: number;
@@ -148,6 +152,10 @@ export class CallingPage implements OnInit, OnDestroy {
 
   toggleMicrophone(): void {
     this.webrtcService.toggleMicrophone();
+  }
+
+  switchCamera(): void {
+    this.webrtcService.switchCamera();
   }
 
   endCall(): void {

@@ -1,4 +1,4 @@
-import { Component, computed, inject, input } from '@angular/core';
+import { Component, computed, effect, inject, input } from '@angular/core';
 import { Button, Card } from '@ziadshalaby/ngx-zs-component';
 import { CommonModule } from '@angular/common';
 import { UserAvatar } from '../../chats-components/user-avatar/user-avatar';
@@ -18,6 +18,30 @@ export class Call {
   readonly incomingCall = this.chatsService.incomingCall;
   readonly showCallerCard = this.chatsService.showCallerCard;
 
+  readonly lastCallSignals = computed(() => {
+    const callSignals = this.chatsService.callSignals();
+    return callSignals[callSignals.length - 1];
+  })
+
+  closeIfTheOntherEndedBeforIChoice() {
+    if(this.lastCallSignals().type === 'call.end') {
+      this.chatsService.callSignals.set([]);
+      return true
+    };
+    return false
+  }
+
+  constructor() {
+    effect(() => {
+      const signals = this.chatsService.callSignals();
+      for(const signal of signals) {
+        if(signal.type === 'call.end' || signal.type === 'call.reject') {
+          this.showCallerCard.set(false);
+        }
+      }
+    })
+  }
+
   readonly participant = computed<ParticipantType | undefined>(() => {
     const call = this.incomingCall();
     if (!call) return undefined;
@@ -33,7 +57,8 @@ export class Call {
     const call = this.incomingCall();
     if (!call) return;
 
-    this.chatsService.showCallerCard.set(false);
+    this.showCallerCard.set(false);
+    if (this.closeIfTheOntherEndedBeforIChoice()) return;
 
     this.router.navigate(['/calling-page'], {
       queryParams: {
@@ -48,7 +73,8 @@ export class Call {
     const call = this.incomingCall();
     if (!call) return;
 
-    this.chatsService.showCallerCard.set(false);
+    this.showCallerCard.set(false);
+    if (this.closeIfTheOntherEndedBeforIChoice()) return;
 
     this.chatsService.sendCallSignal({
       type: 'call.reject',

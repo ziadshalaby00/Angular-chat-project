@@ -137,6 +137,7 @@ export class ChatsService {
         this.showCallerCard.set(true);
       }
       else if (['call.answer', 'call.ice_candidate', 'call.end', 'call.reject'].includes(data.type)) {
+        console.log(data);
         this.callSignals.update(signals => [...signals, data]);
       }
     };
