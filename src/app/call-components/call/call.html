@@ -1,4 +1,4 @@
-@if (incomingCall() && participant()) {
+@if (incomingCall() && participant() && showCallerCard()) {
   <div class="w-58 fixed sm:bottom-12 bottom-8 sm:right-10 right-6 z-10000">
       <ZS-card
           [cardStyle]="'primary'"

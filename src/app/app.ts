@@ -1,5 +1,4 @@
-import { AuthApi } from './services/auth-services/auth-api';
-import { Component, effect, inject, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, NavigationStart, Router, RouterOutlet } from '@angular/router';
 import { NavbarComp } from './other-components/navbar/navbar';
 import { Alert, Footer, ThemeToggle } from '@ziadshalaby/ngx-zs-component'
@@ -29,7 +28,6 @@ export class App {
   private readonly router: Router = inject(Router);
   readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 
-  private readonly authApi: AuthApi = inject(AuthApi);
   public readonly themeService: ThemeService = inject(ThemeService);
   private readonly initAppService: InitAppService = inject(InitAppService);
 

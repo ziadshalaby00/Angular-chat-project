@@ -16,6 +16,7 @@ export class Call {
   private readonly chatsService = inject(ChatsService);
 
   readonly incomingCall = this.chatsService.incomingCall;
+  readonly showCallerCard = this.chatsService.showCallerCard;
 
   readonly participant = computed<ParticipantType | undefined>(() => {
     const call = this.incomingCall();
@@ -32,6 +33,8 @@ export class Call {
     const call = this.incomingCall();
     if (!call) return;
 
+    this.chatsService.showCallerCard.set(false);
+
     this.router.navigate(['/calling-page'], {
       queryParams: {
         toUserId: call.from_user_id,
@@ -44,6 +47,8 @@ export class Call {
   reject(): void {
     const call = this.incomingCall();
     if (!call) return;
+
+    this.chatsService.showCallerCard.set(false);
 
     this.chatsService.sendCallSignal({
       type: 'call.reject',

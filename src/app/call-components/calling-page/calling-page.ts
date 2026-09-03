@@ -136,7 +136,7 @@ export class CallingPage implements OnInit, OnDestroy {
       case 'call.end':
       case 'call.reject':
         this.webrtcService.cancelCall();
-        this.router.navigate(['/home']);
+        this.router.navigate(['/chats']);
         break;
     }
 
@@ -157,7 +157,7 @@ export class CallingPage implements OnInit, OnDestroy {
       to_user_id: this.toUserId,
     });
     this.webrtcService.cancelCall();
-    this.router.navigate(['/home']);
+    this.router.navigate(['/chats']);
   }
 
   ngOnDestroy(): void {

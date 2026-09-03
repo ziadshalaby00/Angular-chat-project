@@ -13,6 +13,7 @@ import { RemoveChat } from '../remove-chat/remove-chat';
 import { UserAvatar } from '../user-avatar/user-avatar';
 import { SettingsUi } from "../../other-components/settings-ui/settings-ui";
 import { OverflowCard } from '../../services/overflow-card/overflow-card';
+import { InitAppService } from '../../services/init-app-service/init-app-service';
 
 @Component({
   selector: 'app-chats',
@@ -25,6 +26,7 @@ import { OverflowCard } from '../../services/overflow-card/overflow-card';
 })
 export class Chats {
   readonly authApi: AuthApi = inject(AuthApi);
+  readonly initAppService: InitAppService = inject(InitAppService);
   readonly shared: SharedUtils = inject(SharedUtils);
   readonly chatsService: ChatsService = inject(ChatsService);
   readonly chatService: ChatService = inject(ChatService);
@@ -54,17 +56,7 @@ export class Chats {
     });
 
     if(this.authApi.isLoggedin()) {
-      this.startingInitChats();
-    }
-  }
-
-  startingInitChats() {
-    if(!this.chatsService.hasChats()) {
-      this.chatsService.chatsLoading.set(true);
-      this.chatsService.getChats();
-    }
-    if(!this.chatsService.isChatSocketConnected()) {
-      this.chatsService.connectChats();
+      this.initAppService.startingInitChats();
     }
   }
 

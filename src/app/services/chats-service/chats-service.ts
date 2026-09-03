@@ -57,6 +57,8 @@ export class ChatsService {
   public readonly chatAddedLoading = signal<boolean>(false);
   public readonly removeChatLoading = signal<boolean>(false);
 
+  public readonly showCallerCard = signal<boolean>(false);
+
   private readonly chatsURL = `${this.config.apiUrl}/api/chat/chats/`;
   private readonly deleteChatURL = `${this.config.apiUrl}/api/chat/chats/delete/`;
   private readonly markAsReadURL = `${this.config.apiUrl}/api/chat/mark-read/`;
@@ -144,6 +146,7 @@ export class ChatsService {
       }
       else if (data.type === 'call.offer') {
         this.incomingCall.set(data);
+        this.showCallerCard.set(true);
       }
       else if (['call.answer', 'call.ice_candidate', 'call.end', 'call.reject'].includes(data.type)) {
         this.callSignals.update(signals => [...signals, data]);
