@@ -109,7 +109,6 @@ export class CallingPage implements OnInit, OnDestroy {
       }
 
       this.chatsService.incomingCall.set(null);
-      console.log('disappear (app-call)')
     }
   }
 

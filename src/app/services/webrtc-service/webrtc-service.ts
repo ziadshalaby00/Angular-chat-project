@@ -29,11 +29,6 @@ export class WebrtcService {
 
     peerConnection.onicecandidate = (event) => {
       if (event.candidate) {
-        console.log(
-        '%c LOCAL ICE:',
-        'color: green; font-weight: bold',
-        event.candidate.toJSON()
-        );
         onIceCandidate(event.candidate.toJSON());
       }
     };
@@ -51,12 +46,6 @@ export class WebrtcService {
   // ==================== Set Remote Description ==================== //
 
   async setRemoteDescription(sdp: RTCSessionDescriptionInit): Promise<void> {
-    console.log(
-    '%c SET REMOTE DESCRIPTION:',
-    'color: purple; font-weight: bold',
-    sdp.type
-    );
-
     const peerConnection = this.peerConnection();
     if (!peerConnection) throw new Error('Peer connection not initialized');
 
@@ -72,12 +61,6 @@ export class WebrtcService {
   // ==================== Add ICE Candidate ==================== //
 
   async addIceCandidate(candidate: RTCIceCandidateInit): Promise<void> {
-    console.log(
-    '%c ADD REMOTE ICE:',
-    'color: orange; font-weight: bold',
-    candidate
-    );
-
     const peerConnection = this.peerConnection();
     if (!peerConnection) return;
 
@@ -94,17 +77,17 @@ export class WebrtcService {
   async getLocalStream(): Promise<MediaStream> {
     const existingStream = this.localStream();
     if (existingStream) {
-        existingStream.getTracks().forEach((track) => track.stop());
-        this.localStream.set(null);
+      existingStream.getTracks().forEach((track) => track.stop());
+      this.localStream.set(null);
     }
 
     const stream = await navigator.mediaDevices.getUserMedia({
-        audio: true,
-        video: true,
+      audio: true,
+      video: true,
     });
 
     this.localStream.set(stream);
-    return stream;
+      return stream;
     }
 
   // ==================== Attach Local Tracks ==================== //
@@ -129,7 +112,6 @@ export class WebrtcService {
     if (!peerConnection) throw new Error('Peer connection not initialized');
 
     const offer = await peerConnection.createOffer();
-    console.log('OFFER CREATED', offer);
 
     await peerConnection.setLocalDescription(offer);
     return offer;
@@ -142,7 +124,6 @@ export class WebrtcService {
     if (!peerConnection) throw new Error('Peer connection not initialized');
 
     const answer = await peerConnection.createAnswer();
-    console.log('ANSWER CREATED', answer);
     
     await peerConnection.setLocalDescription(answer);
     return answer;
@@ -193,16 +174,16 @@ export class WebrtcService {
 
   // ==================== Cancel Call ==================== //
 
-    cancelCall(): void {
-        this.localStream()?.getTracks().forEach((track) => track.stop());
-        this.peerConnection()?.close();
+  cancelCall(): void {
+    this.localStream()?.getTracks().forEach((track) => track.stop());
+    this.peerConnection()?.close();
 
-        this.peerConnection.set(null);
-        this.localStream.set(null);
-        this.remoteStream.set(null);
-        this.isCameraEnabled.set(true);
-        this.isMicrophoneEnabled.set(true);
-        this.pendingIceCandidates = [];
-        this.remoteDescriptionSet = false;
-    }
+    this.peerConnection.set(null);
+    this.localStream.set(null);
+    this.remoteStream.set(null);
+    this.isCameraEnabled.set(true);
+    this.isMicrophoneEnabled.set(true);
+    this.pendingIceCandidates = [];
+    this.remoteDescriptionSet = false;
+  }
 }

@@ -21,12 +21,6 @@ export interface ChatType {
   "unread_count": number;
 }
 
-interface WebSocketMessageType {
-  "type": 'chat_created' | 'new_message_notification';
-  "chat"?: ChatType
-  "chat_id"?: number
-}
-
 export interface IncomingCallType {
   from_user_id: number;
   chat_id: number;
@@ -118,12 +112,6 @@ export class ChatsService {
     this.chatSocket()!.onmessage = (event) => {
       const data: any = JSON.parse(event.data);
       if (!data) return;
-
-      console.log(
-      '%c WS RECEIVED:',
-      'color: blue; font-weight: bold',
-      data
-    );
 
       if (data.type === 'chat_created') {
         this.chats.update((prev) => [...prev!, data.chat!]);
