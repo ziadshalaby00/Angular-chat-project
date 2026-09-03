@@ -132,7 +132,7 @@ Proton features a complete, production-ready WebRTC implementation for seamless 
   "@angular/forms": "^22.1.4",
   "@angular/router": "^22.1.4",
   "@angular/service-worker": "^22.1.4",
-  "@ziadshalaby/ngx-zs-component": "^4.6.3",
+  "@ziadshalaby/ngx-zs-component": "^4.6.4",
   "tailwindcss": "^4.1.17",
   "rxjs": "~7.8.0"
 }
