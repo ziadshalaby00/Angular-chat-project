@@ -40,6 +40,20 @@
               </p>
             </div>
 
+            @if (!participant.user_info.is_deleted) {
+              <button 
+                (click)="callUser(participant.user_info.id)"
+                class="px-1.5 py-3.5 mr-8 cursor-pointer
+                hover:scale-[1.08] active:scale-[0.97]
+                text-green-700 dark:text-green-400
+                hover:text-green-600 dark:hover:text-green-300
+                transition-transform duration-200"
+                title="Call"
+              >
+                <i class="fa-solid fa-phone"></i>
+              </button>
+            }
+
             <!-- Leave Chat -->
             <button 
             (click)="exitChat()"

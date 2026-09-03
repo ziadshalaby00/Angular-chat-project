@@ -6,6 +6,7 @@ import { Alert, Footer, ThemeToggle } from '@ziadshalaby/ngx-zs-component'
 import { InitAppService } from './services/init-app-service/init-app-service';
 import { filter, take } from 'rxjs';
 import { ThemeService } from './services/theme-service/theme-service';
+import { Call } from './call-components/call/call';
 
 @Component({
   selector: 'app-root',
@@ -14,7 +15,8 @@ import { ThemeService } from './services/theme-service/theme-service';
     NavbarComp,
     ThemeToggle,
     Alert,
-    Footer
+    Footer,
+    Call
   ],
   templateUrl: './app.html',
   changeDetection: ChangeDetectionStrategy.Eager,

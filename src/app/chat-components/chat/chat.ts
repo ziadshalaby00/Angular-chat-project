@@ -205,4 +205,8 @@ export class Chat {
   onLoadMoreMessages() {
     this.chatService.loadMoreMessages();
   }
+
+  callUser(userId: number) {
+
+  }
 }
