@@ -6,6 +6,8 @@ import { InitAppService } from './services/init-app-service/init-app-service';
 import { filter, take } from 'rxjs';
 import { ThemeService } from './services/theme-service/theme-service';
 import { Call } from './call-components/call/call';
+import { CallService } from './services/call-service/call-service';
+import { CallingPage } from './call-components/calling-page/calling-page';
 
 @Component({
   selector: 'app-root',
@@ -15,7 +17,8 @@ import { Call } from './call-components/call/call';
     ThemeToggle,
     Alert,
     Footer,
-    Call
+    Call,
+    CallingPage
   ],
   templateUrl: './app.html',
   changeDetection: ChangeDetectionStrategy.Eager,
@@ -26,6 +29,7 @@ export class App {
   readonly isMobileMenuOpen = signal<boolean>(false);
 
   private readonly router: Router = inject(Router);
+  readonly callService: CallService = inject(CallService);
   readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 
   public readonly themeService: ThemeService = inject(ThemeService);

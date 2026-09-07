@@ -3,10 +3,12 @@ import {
   Component, ElementRef, ViewChild, effect, inject,
   OnInit, OnDestroy,
   computed,
+  signal,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { WebrtcService } from '../../services/webrtc-service/webrtc-service';
 import { ChatsService } from '../../services/chats-service/chats-service';
+import { CallService } from '../../services/call-service/call-service';
 
 @Component({
   imports: [CommonModule],
@@ -16,12 +18,13 @@ import { ChatsService } from '../../services/chats-service/chats-service';
 })
 export class CallingPage implements OnInit, OnDestroy {
 
-  private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
   private readonly webrtcService = inject(WebrtcService);
   private readonly chatsService = inject(ChatsService);
+  
+  readonly callService: CallService = inject(CallService);
 
   @ViewChild('remoteVideo') remoteVideoRef!: ElementRef<HTMLVideoElement>;
+  @ViewChild('remoteVideoMini') remoteVideoMiniRef!: ElementRef<HTMLVideoElement>;
   @ViewChild('localVideo') localVideoRef!: ElementRef<HTMLVideoElement>;
 
   readonly isCameraOn = this.webrtcService.isCameraEnabled;
@@ -50,10 +53,22 @@ export class CallingPage implements OnInit, OnDestroy {
 
     effect(() => {
       const stream = this.webrtcService.remoteStream();
-      if (stream && this.remoteVideoRef?.nativeElement) {
-        this.remoteVideoRef.nativeElement.srcObject = stream;
+
+      if (!stream) {
+        return;
       }
-    });
+
+      const remoteVideo = this.remoteVideoRef?.nativeElement;
+      const remoteVideoMini = this.remoteVideoMiniRef?.nativeElement;
+
+      if (remoteVideo && remoteVideo.srcObject !== stream) {
+        remoteVideo.srcObject = stream;
+      }
+
+      if (remoteVideoMini && remoteVideoMini.srcObject !== stream) {
+        remoteVideoMini.srcObject = stream;
+      }
+  });
 
     effect(() => {
       const signals = this.chatsService.callSignals();
@@ -73,10 +88,12 @@ export class CallingPage implements OnInit, OnDestroy {
     if (this.initialized) return;
     this.initialized = true;
 
-    const params = this.route.snapshot.queryParamMap;
-    this.toUserId = Number(params.get('toUserId'));
-    this.chatId = Number(params.get('chatId'));
-    this.isCaller = params.get('role') === 'caller';
+    const params = this.callService.currentCall();
+    this.toUserId = Number(params?.toUserId);
+    this.chatId = Number(params?.chatId);
+    this.isCaller = params?.role === 'caller';
+
+    console.log(params);
 
     this.webrtcService.initialize((candidate) => {
       this.chatsService.sendCallSignal({
@@ -138,8 +155,7 @@ export class CallingPage implements OnInit, OnDestroy {
 
       case 'call.end':
       case 'call.reject':
-        this.webrtcService.cancelCall();
-        this.router.navigate(['/chats']);
+        this.endCall();
         break;
     }
 
@@ -163,11 +179,79 @@ export class CallingPage implements OnInit, OnDestroy {
       type: 'call.end',
       to_user_id: this.toUserId,
     });
-    this.webrtcService.cancelCall();
-    this.router.navigate(['/chats']);
+    this.callService.endCall();
+  }
+
+  miniPosition = signal({
+    x: window.innerWidth - 192 - 16,
+    y: window.innerHeight - 108 - 16,
+  });
+
+  private isDragging = false;
+  private hasMoved = false;
+
+  private dragOffset = {
+    x: 0,
+    y: 0,
+  };
+
+  startDragging(event: PointerEvent) {
+    const element = event.currentTarget as HTMLElement;
+
+    this.isDragging = true;
+    this.hasMoved = false;
+
+    this.dragOffset.x = event.clientX - element.offsetLeft;
+    this.dragOffset.y = event.clientY - element.offsetTop;
+
+    element.setPointerCapture(event.pointerId);
+
+    event.preventDefault();
+  }
+
+  onDragging(event: PointerEvent) {
+    if (!this.isDragging) {
+      return;
+    }
+
+    this.hasMoved = true;
+
+    const element = event.currentTarget as HTMLElement;
+
+    const width = element.offsetWidth;
+    const height = element.offsetHeight;
+
+    let x = event.clientX - this.dragOffset.x;
+    let y = event.clientY - this.dragOffset.y;
+
+    // Keep inside viewport
+    x = Math.max(0, Math.min(x, window.innerWidth - width));
+    y = Math.max(0, Math.min(y, window.innerHeight - height));
+
+    this.miniPosition.set({ x, y });
+  }
+
+  stopDragging(event: PointerEvent) {
+    if (!this.isDragging) {
+      return;
+    }
+
+    this.isDragging = false;
+
+    const element = event.currentTarget as HTMLElement;
+
+    element.releasePointerCapture?.(event.pointerId);
+  }
+
+  restoreFromMini(event: MouseEvent) {
+    if (this.hasMoved) {
+      return;
+    }
+
+    this.callService.isMinimized.set(false);
   }
 
   ngOnDestroy(): void {
-    this.webrtcService.cancelCall();
+    this.endCall();
   }
 }

@@ -86,7 +86,12 @@ export class WebrtcService {
 
     const stream = await navigator.mediaDevices.getUserMedia({
       audio: true,
-      video: true,
+      video: {
+        facingMode: this.facingMode(),
+        aspectRatio: { ideal: 16 / 9 },
+        width: { ideal: 1280 },
+        height: { ideal: 720 },
+      },
     });
 
     this.localStream.set(stream);
@@ -185,22 +190,26 @@ export class WebrtcService {
 
     const newFacingMode = this.facingMode() === 'user' ? 'environment' : 'user';
 
+    const baseConstraints = {
+      aspectRatio: { ideal: 16 / 9 },
+      width: { ideal: 1280 },
+      height: { ideal: 720 },
+    };
+
     let newStream: MediaStream;
     try {
       newStream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: { exact: newFacingMode } },
+        video: { ...baseConstraints, facingMode: { exact: newFacingMode } },
       });
     } catch {
-      // بعض الأجهزة (خصوصًا الديسكتوب) مش بتدعم exact، فبنعمل fallback
       newStream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: newFacingMode },
+        video: { ...baseConstraints, facingMode: newFacingMode },
       });
     }
 
     const newVideoTrack = newStream.getVideoTracks()[0];
     if (!newVideoTrack) return;
 
-    // استبدال التراك في الـ peer connection من غير renegotiation
     const sender = peerConnection
       .getSenders()
       .find((s) => s.track?.kind === 'video');
@@ -208,7 +217,6 @@ export class WebrtcService {
       await sender.replaceTrack(newVideoTrack);
     }
 
-    // وقف التراك القديم وتحديث الـ local stream
     const oldVideoTrack = oldStream.getVideoTracks()[0];
     oldVideoTrack?.stop();
     if (oldVideoTrack) oldStream.removeTrack(oldVideoTrack);

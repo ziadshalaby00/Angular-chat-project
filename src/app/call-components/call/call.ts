@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { UserAvatar } from '../../chats-components/user-avatar/user-avatar';
 import { ChatsService, ParticipantType } from '../../services/chats-service/chats-service';
 import { Router } from '@angular/router';
+import { CallService } from '../../services/call-service/call-service';
 
 @Component({
   imports: [Card, Button, UserAvatar, CommonModule],
@@ -53,6 +54,7 @@ export class Call {
     )?.user_info;
   });
 
+  readonly callService: CallService = inject(CallService);
   accept(): void {
     const call = this.incomingCall();
     if (!call) return;
@@ -60,13 +62,11 @@ export class Call {
     this.showCallerCard.set(false);
     if (this.closeIfTheOntherEndedBeforIChoice()) return;
 
-    this.router.navigate(['/calling-page'], {
-      queryParams: {
-        toUserId: call.from_user_id,
-        chatId: call.chat_id,
-        role: 'callee',
-      },
-    });
+    this.callService.startCall(
+      call.from_user_id,
+      call.chat_id,
+      'callee'
+    )
   }
 
   reject(): void {

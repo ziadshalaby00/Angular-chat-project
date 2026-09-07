@@ -22,8 +22,6 @@ export const routes: Routes = [
     
     { path: 'reset-password/:uid/:token', component: ResetPassword },
     { path: 'verify-email/:uid/:token', component: VerifyEmail },
-    
-    { path: 'calling-page', component: CallingPage},
 
     { path: 'init-page', component: InitPage },
     { path: '**', component: Page404Comp },

@@ -13,6 +13,12 @@
   </ZS-theme-toggle>
 }
 
+@if (callService.isCallActive()) {
+  <app-calling-page></app-calling-page>
+}
+
+<app-call></app-call>
+
 <ZS-alert
 [defaultShowCloseButton]="true"
 [defaultAutoClose]="true"
@@ -20,5 +26,3 @@
 positionClass="top-17 right-1"
 maxh="max-h-[calc(100vh-5.8rem)]"
 ></ZS-alert>
-
-<app-call></app-call>
