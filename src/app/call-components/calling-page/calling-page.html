@@ -11,7 +11,7 @@ overflow-hidden bg-slate-900 dark:bg-black"
                 #remoteVideo
                 autoplay
                 playsinline
-                class="h-full w-full object-cover"
+                class="h-full w-full object-contain"
             ></video>
 
             @if (!remoteStream()) {
@@ -30,7 +30,7 @@ overflow-hidden bg-slate-900 dark:bg-black"
                 autoplay
                 playsinline
                 muted
-                class="h-full w-full object-cover"
+                class="h-full w-full object-contain"
             ></video>
 
             <div class="absolute top-2 left-2 text-white/70 text-xs font-medium bg-black/40 px-2 py-0.5 rounded-full">
@@ -133,6 +133,6 @@ overflow-hidden bg-slate-900 dark:bg-black"
         #remoteVideoMini
         autoplay
         playsinline
-        class="h-full w-full object-cover pointer-events-none"
+        class="h-full w-full object-contain pointer-events-none"
     ></video>
 </div>
