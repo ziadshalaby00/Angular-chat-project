@@ -4,6 +4,7 @@ import {
   OnInit, OnDestroy,
   computed,
   signal,
+  untracked,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { WebrtcService } from '../../services/webrtc-service/webrtc-service';
@@ -16,7 +17,7 @@ import { CallService } from '../../services/call-service/call-service';
   styleUrl: './calling-page.css',
   templateUrl: './calling-page.html',
 })
-export class CallingPage implements OnInit, OnDestroy {
+export class CallingPage {
 
   private readonly webrtcService = inject(WebrtcService);
   private readonly chatsService = inject(ChatsService);
@@ -37,6 +38,8 @@ export class CallingPage implements OnInit, OnDestroy {
   private toUserId!: number;
   private chatId!: number;
   private isCaller = false;
+
+  private callInitialized = false;
 
   constructor() {
     effect(() => {
@@ -68,7 +71,7 @@ export class CallingPage implements OnInit, OnDestroy {
       if (remoteVideoMini && remoteVideoMini.srcObject !== stream) {
         remoteVideoMini.srcObject = stream;
       }
-  });
+    });
 
     effect(() => {
       const signals = this.chatsService.callSignals();
@@ -81,20 +84,24 @@ export class CallingPage implements OnInit, OnDestroy {
 
       this.chatsService.callSignals.set([]);
     });
+
+    effect(() => {
+      const call = this.callService.currentCall();
+  
+      if (!call || this.callInitialized) return;
+
+      this.callInitialized = true;
+
+      this.toUserId = call.toUserId;
+      this.chatId = call.chatId;
+      this.isCaller = call.role === 'caller';
+
+      this.initializeCall();
+    });
   }
 
-  private initialized = false;
-  async ngOnInit(): Promise<void> {
-    if (this.initialized) return;
-    this.initialized = true;
-
-    const params = this.callService.currentCall();
-    this.toUserId = Number(params?.toUserId);
-    this.chatId = Number(params?.chatId);
-    this.isCaller = params?.role === 'caller';
-
-    console.log(params);
-
+  private async initializeCall(): Promise<void> {
+    console.log('initializeCall')
     this.webrtcService.initialize((candidate) => {
       this.chatsService.sendCallSignal({
         type: 'call.ice_candidate',
@@ -108,6 +115,7 @@ export class CallingPage implements OnInit, OnDestroy {
 
     if (this.isCaller) {
       const offer = await this.webrtcService.createOffer();
+
       this.chatsService.sendCallSignal({
         type: 'call.offer',
         to_user_id: this.toUserId,
@@ -120,6 +128,7 @@ export class CallingPage implements OnInit, OnDestroy {
 
       if (pendingOffer) {
         await this.webrtcService.setRemoteDescription(pendingOffer.sdp);
+
         const answer = await this.webrtcService.createAnswer();
 
         this.chatsService.sendCallSignal({
@@ -155,7 +164,8 @@ export class CallingPage implements OnInit, OnDestroy {
 
       case 'call.end':
       case 'call.reject':
-        this.endCall();
+        this.callInitialized = false;
+        this.callService.endCall();
         break;
     }
 
@@ -179,6 +189,8 @@ export class CallingPage implements OnInit, OnDestroy {
       type: 'call.end',
       to_user_id: this.toUserId,
     });
+
+    this.callInitialized = false;
     this.callService.endCall();
   }
 
@@ -188,7 +200,6 @@ export class CallingPage implements OnInit, OnDestroy {
   });
 
   private isDragging = false;
-  private hasMoved = false;
 
   private dragOffset = {
     x: 0,
@@ -199,22 +210,17 @@ export class CallingPage implements OnInit, OnDestroy {
     const element = event.currentTarget as HTMLElement;
 
     this.isDragging = true;
-    this.hasMoved = false;
 
     this.dragOffset.x = event.clientX - element.offsetLeft;
     this.dragOffset.y = event.clientY - element.offsetTop;
 
     element.setPointerCapture(event.pointerId);
-
-    event.preventDefault();
   }
 
   onDragging(event: PointerEvent) {
     if (!this.isDragging) {
       return;
     }
-
-    this.hasMoved = true;
 
     const element = event.currentTarget as HTMLElement;
 
@@ -244,14 +250,6 @@ export class CallingPage implements OnInit, OnDestroy {
   }
 
   restoreFromMini(event: MouseEvent) {
-    if (this.hasMoved) {
-      return;
-    }
-
     this.callService.isMinimized.set(false);
-  }
-
-  ngOnDestroy(): void {
-    this.endCall();
   }
 }
