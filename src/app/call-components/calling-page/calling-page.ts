@@ -195,8 +195,8 @@ export class CallingPage {
   }
 
   miniPosition = signal({
-    x: window.innerWidth - 192 - 16,
-    y: window.innerHeight - 108 - 16,
+    x: 16,
+    y: 16,
   });
 
   private isDragging = false;
