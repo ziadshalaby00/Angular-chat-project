@@ -117,7 +117,7 @@ export class SendMessageService {
 
     if (!this.messageSocket()) return;
     this.messageSocket()!.onopen = () => {
-      console.log('Ws messages opend')
+      console.log('Ws Messages Opend')
     };
 
     this.messageSocket()!.onmessage = (event) => {
@@ -169,7 +169,7 @@ export class SendMessageService {
     };
 
     this.messageSocket()!.onclose = () => {
-      console.log('Ws messages closed');
+      console.log('Ws Messages CLosed');
     };
   }
 

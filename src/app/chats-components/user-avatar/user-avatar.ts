@@ -12,4 +12,5 @@ import { CommonModule } from '@angular/common';
 export class UserAvatar {
   readonly participant = input<{ user_info: ParticipantType; }>();
   readonly isCurrentChat = input<boolean>(false);
+  readonly size = input<string | null>(null);
 }

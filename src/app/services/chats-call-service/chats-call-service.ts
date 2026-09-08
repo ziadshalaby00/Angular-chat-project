@@ -4,7 +4,7 @@ export interface IncomingCallType {
   from_user_id: number;
   chat_id: number;
   sdp: RTCSessionDescriptionInit;
-  call_type: string;
+  call_type: 'video';
 }
 
 export interface CallSignalType {
@@ -25,6 +25,8 @@ export class ChatsCallService {
     public readonly lastIceCandidate = signal<CallSignalType | null>(null);
     public readonly pendingIceCandidates = signal<CallSignalType[]>([]);
 
+    public readonly RemoteCamera = signal<boolean>(false);
+
     setToCall(data: IncomingCallType | CallSignalType, type:  | CallSignalType['type'] | 'call.offer') {
         switch(type) {
             case 'call.offer': this.callOffer(data as IncomingCallType);
@@ -44,33 +46,30 @@ export class ChatsCallService {
     }
 
     callOffer(data: IncomingCallType) {
-        console.log('callOffer');
+        console.log('Call Offer');
         this.incomingCall.set(data);
         this.showCallerCard.set(true);
     }
 
     callAnswer(data: CallSignalType) {
-        console.log('callAnswer');
-
+        console.log('Call Answer');
         this.answerSignal.set(data);
     }
 
     callIceCandidate(data: CallSignalType) {
-        console.log('callIceCandidate');
-
+        console.log('Call IceCandidate');
         if(this.lastIceCandidate() === null) {
-            console.log('set last signal');
+            console.log('Set Last Signal');
             this.lastIceCandidate.set(data);
             return;
         }
 
-        console.log('set pending signals');
+        console.log('Set Pending Signals');
         this.pendingIceCandidates.update(signals => [...signals, data]);
     }
 
     callEndOrReject(data: CallSignalType) {
-        console.log('callEndOrReject');
-
+        console.log('Call End Or Reject');
         this.endOrRejectSignal.set(data);
     }
 
@@ -81,7 +80,7 @@ export class ChatsCallService {
 
             untracked(() => {
                 if(lastCallSignal === null && pendingCallSignals().length) {
-                    console.log('get callsignal from pending to last signal');
+                    console.log('Set Last Signal From Pending Signal');
                     this.lastIceCandidate.set(pendingCallSignals()[0]);
                     this.pendingIceCandidates.update(signals => signals.slice(1));
                 }
@@ -90,7 +89,7 @@ export class ChatsCallService {
     }
 
     resetSignals() {
-        console.log('resetSignals');
+        console.log('Reset Signals');
 
         this.showCallerCard.set(false);
         this.incomingCall.set(null);

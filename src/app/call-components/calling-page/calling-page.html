@@ -22,6 +22,17 @@ overflow-hidden bg-slate-950 dark:bg-black"
                         <div class="w-12 h-12 border-4 border-white/20 border-t-white/80 rounded-full animate-spin"></div>
                         <span class="text-lg font-medium">Connecting...</span>
                     </div>
+                } 
+               @if (remoteStream() && !chatsCallService.RemoteCamera()) {
+                 <div class="absolute inset-0 flex items-center justify-center">
+                     <!-- User Avatar -->
+                     <app-user-avatar
+                     [participant]="{user_info: callService.OntherUser()!}"
+                     [isCurrentChat]="true"
+                     size="sm:size-56 sm:min-w-56 size-32 min-w-32 sm:text-[110px] text-[72px]"
+                     >
+                     </app-user-avatar>
+                 </div>
                 }
             </div>
         </div>
@@ -36,6 +47,18 @@ overflow-hidden bg-slate-950 dark:bg-black"
                     muted
                     class="h-full w-full object-contain"
                 ></video>
+
+                <div class="absolute inset-0 flex items-center justify-center">
+                    @if(!isCameraOn()) {
+                        <!-- User Avatar -->
+                        <app-user-avatar
+                        [participant]="{user_info: my()}"
+                        [isCurrentChat]="true"
+                        size="sm:size-56 sm:min-w-56 size-32 min-w-32 sm:text-[110px] text-[72px]"
+                        >
+                        </app-user-avatar>
+                    }
+                </div>
 
                 <!-- Local User Label -->
                 <div class="absolute top-3 left-3 text-white/80 text-sm font-medium bg-black/50 px-3 py-1 rounded-full backdrop-blur-sm border border-white/10">

@@ -2,7 +2,6 @@ import { ChatService } from './../chat-service/chat-service';
 import { inject, Injectable, signal } from '@angular/core';
 import { ConfigService } from '../config-service/config-service';
 import { SharedUtils } from '../shared-service/shared-utils';
-import { CallService } from '../call-service/call-service';
 import { ChatsCallService } from '../chats-call-service/chats-call-service';
 
 export interface ParticipantType {
@@ -84,7 +83,7 @@ export class ChatsService {
 
     if (!this.chatSocket()) return;
     this.chatSocket()!.onopen = () => {
-      console.log('Ws chats opend')
+      console.log('Ws Chats Opend')
     };
 
     this.chatSocket()!.onerror = (error) => {
@@ -92,7 +91,7 @@ export class ChatsService {
     };
 
     this.chatSocket()!.onclose = () => {
-      console.log('Ws chats closed')
+      console.log('Ws Chats Closed')
     };
 
     this.chatSocket()!.onmessage = (event) => {
@@ -120,6 +119,10 @@ export class ChatsService {
       }
       else  {
         this.chatsCallService.setToCall(data, data.type);
+      }
+      if (data.type === 'camera') {
+        this.chatsCallService.RemoteCamera.set(data.state);
+        console.log(data);
       }
     };
   }

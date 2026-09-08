@@ -95,7 +95,7 @@ export class Chat {
 
     const target = 0;
 
-    console.log('scroll')
+    console.log('Scroll')
     container.scrollTo({
       top: target,
       behavior: 'smooth'
@@ -105,7 +105,7 @@ export class Chat {
 
     if (Math.abs(container.scrollTop - target) > 2) {
       this.isAutoScrolling = false;
-      console.log('retry scroll')
+      console.log('Retry Scroll')
       return this.scrollToBottom(ifNear, retry + 1);
     }
 
@@ -215,7 +215,6 @@ export class Chat {
     if (!chatId) return;
 
     this.chatsCallService.resetSignals();
-    
     this.callService.startCall(
       participantId,
       chatId,

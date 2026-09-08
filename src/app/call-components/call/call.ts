@@ -19,6 +19,7 @@ export class Call {
 
   readonly incomingCall = this.chatsCallService.incomingCall;
   readonly showCallerCard = this.chatsCallService.showCallerCard;
+  readonly participant = this.callService.participant;
 
   constructor() {
     effect(() => {
@@ -32,22 +33,11 @@ export class Call {
     })
   }
 
-  readonly participant = computed<ParticipantType | undefined>(() => {
-    const call = this.incomingCall();
-    if (!call) return undefined;
-
-    const chat = this.chatsService.chats().find((c) => c.id === call.chat_id);
-
-    return chat?.participants.find(
-      (p) => p.user_info.id === call.from_user_id
-    )?.user_info;
-  });
-
   accept(): void {
     const call = this.incomingCall();
     if (!call) return;
 
-    console.log('accept');
+    console.log('Accept');
 
     this.showCallerCard.set(false);
     this.chatsCallService.endOrRejectSignal.set(null);
@@ -63,7 +53,7 @@ export class Call {
     const call = this.incomingCall();
     if (!call) return;
 
-    console.log('reject');
+    console.log('Reject');
 
     this.chatsService.sendCallSignal({
       type: 'call.reject',

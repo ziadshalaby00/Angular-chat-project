@@ -21,7 +21,7 @@ export class WebrtcService {
   // ==================== Initialize WebRTC ==================== //
 
   initialize(onIceCandidate: (candidate: RTCIceCandidateInit) => void): void {
-    console.log('initialize webRTC');
+    console.log('Initialize webRTC');
 
     this.pendingIceCandidates = [];
     this.remoteDescriptionSet = false;
@@ -117,7 +117,7 @@ export class WebrtcService {
   // ==================== Create Offer ==================== //
 
   async createOffer(): Promise<RTCSessionDescriptionInit> {
-    console.log('createOffer');
+    console.log('Create Offer');
 
     const peerConnection = this.peerConnection();
     if (!peerConnection) throw new Error('Peer connection not initialized');
@@ -131,7 +131,7 @@ export class WebrtcService {
   // ==================== Create Answer ==================== //
 
   async createAnswer(): Promise<RTCSessionDescriptionInit> {
-    console.log('createAnswer');
+    console.log('Create Answer');
 
     const peerConnection = this.peerConnection();
     if (!peerConnection) throw new Error('Peer connection not initialized');
@@ -143,7 +143,7 @@ export class WebrtcService {
   }
 
   // ==================== Toggle Camera ==================== //
-  toggleCamera(): void {
+  toggleCamera(): boolean | undefined {
     const stream = this.localStream();
     if (!stream) {
       return;
@@ -160,6 +160,7 @@ export class WebrtcService {
     });
 
     this.isCameraEnabled.set(nextEnabled);
+    return nextEnabled;
   }
 
 
@@ -233,7 +234,7 @@ export class WebrtcService {
   // ==================== Cancel Call ==================== //
 
   endWebRtcCall(): void {
-    console.log('endWebRtcCall');
+    console.log('End WebRTC Call');
     
     this.localStream()?.getTracks().forEach((track) => track.stop());
     this.peerConnection()?.close();

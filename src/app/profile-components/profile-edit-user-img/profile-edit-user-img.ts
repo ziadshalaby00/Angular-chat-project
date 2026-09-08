@@ -39,8 +39,8 @@ export class ProfileEditUserImg {
     if(invalid) return;
 
     const data = this.EditImgModel().user_image.values().next().value?.file;
+    console.log(data);
 
-    console.log(data)
     if (!data) {
       this.handleCloseSuccess()?.(this.openEditImgModal);
       return;

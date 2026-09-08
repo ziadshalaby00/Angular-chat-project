@@ -7,10 +7,12 @@ import {
 import { WebrtcService } from '../../services/webrtc-service/webrtc-service';
 import { ChatsService } from '../../services/chats-service/chats-service';
 import { CallService } from '../../services/call-service/call-service';
-import { CallSignalType, ChatsCallService, IncomingCallType } from '../../services/chats-call-service/chats-call-service';
+import { CallSignalType, ChatsCallService } from '../../services/chats-call-service/chats-call-service';
+import { UserAvatar } from '../../chats-components/user-avatar/user-avatar';
+import { AuthApi } from '../../services/auth-services/auth-api';
 
 @Component({
-  imports: [CommonModule],
+  imports: [CommonModule, UserAvatar],
   selector: 'app-calling-page',
   styleUrl: './calling-page.css',
   templateUrl: './calling-page.html',
@@ -19,8 +21,9 @@ export class CallingPage {
 
   private readonly webrtcService = inject(WebrtcService);
   private readonly chatsService = inject(ChatsService);
-  private readonly chatsCallService = inject(ChatsCallService);
+  readonly chatsCallService = inject(ChatsCallService);
   readonly callService: CallService = inject(CallService);
+  readonly authApi: AuthApi = inject(AuthApi);
 
   @ViewChild('remoteVideo') remoteVideoRef!: ElementRef<HTMLVideoElement>;
   @ViewChild('remoteVideoMini') remoteVideoMiniRef!: ElementRef<HTMLVideoElement>;
@@ -32,6 +35,7 @@ export class CallingPage {
   readonly isFacingMode = computed<boolean>(() => this.webrtcService.facingMode() === 'user');
 
   readonly remoteStream = this.webrtcService.remoteStream;
+  
 
   private toUserId!: number;
   private chatId!: number;
@@ -91,7 +95,6 @@ export class CallingPage {
 
     effect(async () => {
       const endOrRejectSignal = this.chatsCallService.endOrRejectSignal;
-      console.log('endOrRejectSignal', endOrRejectSignal)
 
       if(!endOrRejectSignal()) return;
       this.handleEndOrRejectSignal(endOrRejectSignal());
@@ -115,7 +118,7 @@ export class CallingPage {
   }
 
   async initializeCall(): Promise<void> {
-    console.log('initialize Call')
+    console.log('Initialize Call')
 
     this.webrtcService.initialize((candidate) => {
       this.chatsService.sendCallSignal({
@@ -129,7 +132,7 @@ export class CallingPage {
     this.webrtcService.attachLocalTracks();
 
     if (this.isCaller) {
-      console.log('this.isCaller')
+      console.log('This Is Caller')
 
       const offer = await this.webrtcService.createOffer();
 
@@ -141,7 +144,7 @@ export class CallingPage {
         call_type: 'video',
       });
     } else {
-      console.log('this.isCallee')
+      console.log('This Is Callee')
 
       const pendingOffer = this.chatsCallService.incomingCall();
 
@@ -164,23 +167,21 @@ export class CallingPage {
   async handleIceCandidate(signal: CallSignalType | null) {
     if(!signal || !signal.candidate) return;
 
-    console.log('handleIceCandidate');
-
+    console.log('Handle IceCandidate');
     await this.webrtcService.addIceCandidate(signal.candidate);
   }
 
   async handleAnswerSignal(signal: CallSignalType | null) {
     if(!signal || !signal.sdp) return;
 
-    console.log('handleAnswerSignal');
-
+    console.log('Handle Answer Signal');
     await this.webrtcService.setRemoteDescription(signal.sdp);
   }
 
   handleEndOrRejectSignal(signal: CallSignalType | null) {
-    console.log('handleSignal end/reject')
-
     if(!signal) return;
+
+    console.log('Handle Signal End/Reject')
 
     this.callInitialized = false;
     this.callService.endCallToMe();
@@ -188,7 +189,12 @@ export class CallingPage {
 
 
   toggleCamera(): void {
-    this.webrtcService.toggleCamera();
+    const state = this.webrtcService.toggleCamera();
+    this.chatsService.sendCallSignal({
+      type: 'camera',
+      to_user_id: this.toUserId,
+      state: state
+    })
   }
 
   toggleMicrophone(): void {
@@ -205,6 +211,17 @@ export class CallingPage {
     this.callService.endCallToMe();
   }
 
+
+  my() {
+    return {
+      'id': this.authApi.userData()!.id,
+      'fullname': this.authApi.userData()!.fullname,
+      'username': this.authApi.userData()!.username,
+      'user_image': this.authApi.userData()!.user_image,
+      'is_active': this.authApi.userData()!.is_active,
+      'is_deleted': false,    
+    }
+  }
 
 
   miniPosition = signal({
