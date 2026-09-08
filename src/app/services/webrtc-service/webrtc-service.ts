@@ -228,7 +228,7 @@ export class WebrtcService {
 
   // ==================== Cancel Call ==================== //
 
-  cancelCall(): void {
+  endWebRtcCall(): void {
     console.log('cancelCall');
     
     this.localStream()?.getTracks().forEach((track) => track.stop());

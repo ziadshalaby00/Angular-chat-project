@@ -1,9 +1,8 @@
-import { Component, computed, effect, inject, input } from '@angular/core';
+import { Component, computed, effect, inject, untracked } from '@angular/core';
 import { Button, Card } from '@ziadshalaby/ngx-zs-component';
 import { CommonModule } from '@angular/common';
 import { UserAvatar } from '../../chats-components/user-avatar/user-avatar';
 import { ChatsService, ParticipantType } from '../../services/chats-service/chats-service';
-import { Router } from '@angular/router';
 import { CallService } from '../../services/call-service/call-service';
 
 @Component({
@@ -13,33 +12,21 @@ import { CallService } from '../../services/call-service/call-service';
   templateUrl: './call.html',
 })
 export class Call {
-  private readonly router = inject(Router);
   private readonly chatsService = inject(ChatsService);
+  private readonly callService: CallService = inject(CallService);
 
   readonly incomingCall = this.chatsService.incomingCall;
   readonly showCallerCard = this.chatsService.showCallerCard;
 
-  readonly lastCallSignals = computed(() => {
-    const callSignals = this.chatsService.callSignals();
-    return callSignals[callSignals.length - 1];
-  })
-
-  closeIfTheOntherEndedBeforIChoice() {
-    if(this.lastCallSignals().type === 'call.end') {
-      this.chatsService.callSignals.set([]);
-      return true
-    };
-    return false
-  }
-
   constructor() {
     effect(() => {
-      const signals = this.chatsService.callSignals();
-      for(const signal of signals) {
-        if(signal.type === 'call.end' || signal.type === 'call.reject') {
+      const lastCallSignal = this.chatsService.lastCallSignal();
+
+      untracked(() => {
+        if(lastCallSignal?.type === 'call.end' && this.callService.currentCall() === null) {
           this.showCallerCard.set(false);
         }
-      }
+      })
     })
   }
 
@@ -54,13 +41,9 @@ export class Call {
     )?.user_info;
   });
 
-  readonly callService: CallService = inject(CallService);
   accept(): void {
     const call = this.incomingCall();
     if (!call) return;
-
-    this.showCallerCard.set(false);
-    if (this.closeIfTheOntherEndedBeforIChoice()) return;
 
     this.callService.startCall(
       call.from_user_id,
@@ -72,9 +55,6 @@ export class Call {
   reject(): void {
     const call = this.incomingCall();
     if (!call) return;
-
-    this.showCallerCard.set(false);
-    if (this.closeIfTheOntherEndedBeforIChoice()) return;
 
     this.chatsService.sendCallSignal({
       type: 'call.reject',

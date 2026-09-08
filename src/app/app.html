@@ -13,7 +13,7 @@
   </ZS-theme-toggle>
 }
 
-@if (callService.isCallActive()) {
+@if (callService.currentCall() !== null) {
   <app-calling-page></app-calling-page>
 }
 

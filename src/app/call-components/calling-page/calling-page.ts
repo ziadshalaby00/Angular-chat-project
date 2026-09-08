@@ -1,12 +1,9 @@
 import { CommonModule } from '@angular/common';
 import {
   Component, ElementRef, ViewChild, effect, inject,
-  OnInit, OnDestroy,
   computed,
   signal,
-  untracked,
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { WebrtcService } from '../../services/webrtc-service/webrtc-service';
 import { ChatsService } from '../../services/chats-service/chats-service';
 import { CallService } from '../../services/call-service/call-service';
@@ -74,15 +71,12 @@ export class CallingPage {
     });
 
     effect(() => {
-      const signals = this.chatsService.callSignals();
+      const lastCallSignal = this.chatsService.lastCallSignal;
 
-      if (!signals.length) return;
+      if (!lastCallSignal()) return;
+      this.handleSignal(lastCallSignal);
 
-      for (const signal of signals) {
-        this.handleSignal(signal);
-      }
-
-      this.chatsService.callSignals.set([]);
+      lastCallSignal.set(null);
     });
 
     effect(() => {
@@ -164,12 +158,11 @@ export class CallingPage {
 
       case 'call.end':
       case 'call.reject':
+        console.log('recived end call')
         this.callInitialized = false;
-        this.callService.endCall();
+        this.callService.endCallToMe();
         break;
     }
-
-    this.chatsService.callSignals.set([]);
   }
 
   toggleCamera(): void {
@@ -185,14 +178,12 @@ export class CallingPage {
   }
 
   endCall(): void {
-    this.chatsService.sendCallSignal({
-      type: 'call.end',
-      to_user_id: this.toUserId,
-    });
-
     this.callInitialized = false;
-    this.callService.endCall();
+    this.chatsService.sendEndCallSignals(this.toUserId);
+    this.callService.endCallToMe();
   }
+
+
 
   miniPosition = signal({
     x: 16,

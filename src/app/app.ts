@@ -1,4 +1,4 @@
-import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { ActivatedRoute, NavigationStart, Router, RouterOutlet } from '@angular/router';
 import { NavbarComp } from './other-components/navbar/navbar';
 import { Alert, Footer, ThemeToggle } from '@ziadshalaby/ngx-zs-component'

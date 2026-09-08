@@ -1,7 +1,8 @@
 import { ChatService } from './../chat-service/chat-service';
-import { inject, Injectable, signal } from '@angular/core';
+import { effect, inject, Injectable, signal, untracked } from '@angular/core';
 import { ConfigService } from '../config-service/config-service';
 import { SharedUtils } from '../shared-service/shared-utils';
+import { CallService } from '../call-service/call-service';
 
 export interface ParticipantType {
   "id": number,
@@ -28,7 +29,7 @@ export interface IncomingCallType {
   call_type: string;
 }
 
-interface CallSignalType {
+export interface CallSignalType {
   type: 'call.answer' | 'call.ice_candidate' | 'call.end' | 'call.reject';
   sdp?: RTCSessionDescriptionInit;
   candidate?: RTCIceCandidateInit;
@@ -52,6 +53,8 @@ export class ChatsService {
   public readonly removeChatLoading = signal<boolean>(false);
 
   public readonly showCallerCard = signal<boolean>(false);
+
+  private readonly callService: CallService  = inject(CallService);
 
   private readonly chatsURL = `${this.config.apiUrl}/api/chat/chats/`;
   private readonly deleteChatURL = `${this.config.apiUrl}/api/chat/chats/delete/`;
@@ -87,7 +90,8 @@ export class ChatsService {
 
   private readonly chatSocket = signal<WebSocket | null>(null);
   public readonly incomingCall = signal<IncomingCallType | null>(null);
-  public readonly callSignals = signal<CallSignalType[]>([]);
+  public readonly lastCallSignal = signal<CallSignalType | null>(null);
+  public readonly pendingCallSignals = signal<CallSignalType[]>([]);
   public connectChats() {
     this.disconnectChats();
 
@@ -137,14 +141,40 @@ export class ChatsService {
         this.showCallerCard.set(true);
       }
       else if (['call.answer', 'call.ice_candidate', 'call.end', 'call.reject'].includes(data.type)) {
-        console.log(data);
-        this.callSignals.update(signals => [...signals, data]);
+
+        if(!this.callService.currentCall() || this.lastCallSignal()) {
+          this.pendingCallSignals.update(signals => [...signals, data]);
+        }else {
+          this.lastCallSignal.set(data);
+        }
       }
     };
   }
 
+  constructor() {
+    effect(() => {
+      const lastCallSignal = this.lastCallSignal();
+      const pendingCallSignals = this.pendingCallSignals;
+
+      untracked(() => {
+        if(lastCallSignal === null && pendingCallSignals().length) {
+
+          this.lastCallSignal.set(pendingCallSignals()[0]);
+          this.pendingCallSignals.set(pendingCallSignals().slice(1, -1))
+        }
+      })
+    })
+  }
+
   public sendCallSignal(payload: Record<string, any>): void {
     this.chatSocket()?.send(JSON.stringify(payload));
+  }
+
+  sendEndCallSignals(toUserId: number) {
+    this.sendCallSignal({
+      type: 'call.end',
+      to_user_id: toUserId,
+    });
   }
 
   public disconnectChats() {

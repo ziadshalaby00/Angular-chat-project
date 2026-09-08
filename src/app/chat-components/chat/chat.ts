@@ -207,8 +207,7 @@ export class Chat {
     this.chatService.loadMoreMessages();
   }
 
-
-  readonly callService: CallService = inject(CallService);
+  private readonly callService: CallService = inject(CallService);
   startCall(participantId: number): void {
     const chatId = this.currentChat()?.id;
     if (!chatId) return;

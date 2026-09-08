@@ -1,5 +1,6 @@
-import { inject, Service, signal } from '@angular/core';
+import { computed, inject, Service, signal } from '@angular/core';
 import { WebrtcService } from '../webrtc-service/webrtc-service';
+import { CallSignalType, ChatsService } from '../chats-service/chats-service';
 
 interface callType { 
     toUserId: number; 
@@ -9,20 +10,17 @@ interface callType {
 
 @Service()
 export class CallService {
-    readonly webrtcService: WebrtcService = inject(WebrtcService);
+    private readonly webrtcService: WebrtcService = inject(WebrtcService);
 
-    readonly isCallActive = signal(false);
     readonly isMinimized = signal(false);
     readonly currentCall = signal<callType | null>(null);
 
     startCall(toUserId: callType["toUserId"], chatId: callType["chatId"], role: callType["role"]) {
         this.currentCall.set({ toUserId, chatId, role });
-        this.isCallActive.set(true);
     }
 
-    endCall() {
-        this.webrtcService.cancelCall();
-        this.isCallActive.set(false);
+    endCallToMe() {
+        this.webrtcService.endWebRtcCall();
         this.currentCall.set(null);
         this.isMinimized.set(false);
     }
