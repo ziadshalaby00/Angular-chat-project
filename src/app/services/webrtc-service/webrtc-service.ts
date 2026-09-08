@@ -21,7 +21,7 @@ export class WebrtcService {
   // ==================== Initialize WebRTC ==================== //
 
   initialize(onIceCandidate: (candidate: RTCIceCandidateInit) => void): void {
-    console.log('initialize');
+    console.log('initialize webRTC');
 
     this.pendingIceCandidates = [];
     this.remoteDescriptionSet = false;
@@ -117,6 +117,8 @@ export class WebrtcService {
   // ==================== Create Offer ==================== //
 
   async createOffer(): Promise<RTCSessionDescriptionInit> {
+    console.log('createOffer');
+
     const peerConnection = this.peerConnection();
     if (!peerConnection) throw new Error('Peer connection not initialized');
 
@@ -129,6 +131,8 @@ export class WebrtcService {
   // ==================== Create Answer ==================== //
 
   async createAnswer(): Promise<RTCSessionDescriptionInit> {
+    console.log('createAnswer');
+
     const peerConnection = this.peerConnection();
     if (!peerConnection) throw new Error('Peer connection not initialized');
 
@@ -229,7 +233,7 @@ export class WebrtcService {
   // ==================== Cancel Call ==================== //
 
   endWebRtcCall(): void {
-    console.log('cancelCall');
+    console.log('endWebRtcCall');
     
     this.localStream()?.getTracks().forEach((track) => track.stop());
     this.peerConnection()?.close();

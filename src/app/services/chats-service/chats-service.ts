@@ -1,8 +1,9 @@
 import { ChatService } from './../chat-service/chat-service';
-import { effect, inject, Injectable, signal, untracked } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { ConfigService } from '../config-service/config-service';
 import { SharedUtils } from '../shared-service/shared-utils';
 import { CallService } from '../call-service/call-service';
+import { ChatsCallService } from '../chats-call-service/chats-call-service';
 
 export interface ParticipantType {
   "id": number,
@@ -22,20 +23,6 @@ export interface ChatType {
   "unread_count": number;
 }
 
-export interface IncomingCallType {
-  from_user_id: number;
-  chat_id: number;
-  sdp: RTCSessionDescriptionInit;
-  call_type: string;
-}
-
-export interface CallSignalType {
-  type: 'call.answer' | 'call.ice_candidate' | 'call.end' | 'call.reject';
-  sdp?: RTCSessionDescriptionInit;
-  candidate?: RTCIceCandidateInit;
-  from_user_id: number;
-}
-
 @Injectable({
   providedIn: 'root',
 })
@@ -52,9 +39,7 @@ export class ChatsService {
   public readonly chatAddedLoading = signal<boolean>(false);
   public readonly removeChatLoading = signal<boolean>(false);
 
-  public readonly showCallerCard = signal<boolean>(false);
-
-  private readonly callService: CallService  = inject(CallService);
+  private readonly chatsCallService: ChatsCallService = inject(ChatsCallService);
 
   private readonly chatsURL = `${this.config.apiUrl}/api/chat/chats/`;
   private readonly deleteChatURL = `${this.config.apiUrl}/api/chat/chats/delete/`;
@@ -89,9 +74,6 @@ export class ChatsService {
   }
 
   private readonly chatSocket = signal<WebSocket | null>(null);
-  public readonly incomingCall = signal<IncomingCallType | null>(null);
-  public readonly lastCallSignal = signal<CallSignalType | null>(null);
-  public readonly pendingCallSignals = signal<CallSignalType[]>([]);
   public connectChats() {
     this.disconnectChats();
 
@@ -136,34 +118,10 @@ export class ChatsService {
           })
         )
       }
-      else if (data.type === 'call.offer') {
-        this.incomingCall.set(data);
-        this.showCallerCard.set(true);
-      }
-      else if (['call.answer', 'call.ice_candidate', 'call.end', 'call.reject'].includes(data.type)) {
-
-        if(!this.callService.currentCall() || this.lastCallSignal()) {
-          this.pendingCallSignals.update(signals => [...signals, data]);
-        }else {
-          this.lastCallSignal.set(data);
-        }
+      else  {
+        this.chatsCallService.setToCall(data, data.type);
       }
     };
-  }
-
-  constructor() {
-    effect(() => {
-      const lastCallSignal = this.lastCallSignal();
-      const pendingCallSignals = this.pendingCallSignals;
-
-      untracked(() => {
-        if(lastCallSignal === null && pendingCallSignals().length) {
-
-          this.lastCallSignal.set(pendingCallSignals()[0]);
-          this.pendingCallSignals.set(pendingCallSignals().slice(1, -1))
-        }
-      })
-    })
   }
 
   public sendCallSignal(payload: Record<string, any>): void {

@@ -13,9 +13,13 @@
   </ZS-theme-toggle>
 }
 
-@if (callService.currentCall() !== null) {
+
+<div [ngClass]="[
+  callService.currentCall()  ? 'block' : 'hidden'
+]">
   <app-calling-page></app-calling-page>
-}
+</div>
+
 
 <app-call></app-call>
 

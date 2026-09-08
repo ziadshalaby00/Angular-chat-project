@@ -14,6 +14,7 @@ import { Message } from '../message/message';
 import { SendMessage } from '../send-message/send-message';
 import { SendMessageService } from '../../services/send-message/send-message';
 import { CallService } from '../../services/call-service/call-service';
+import { ChatsCallService } from '../../services/chats-call-service/chats-call-service';
 
 @Component({
   selector: 'app-chat',
@@ -208,10 +209,13 @@ export class Chat {
   }
 
   private readonly callService: CallService = inject(CallService);
+  private readonly chatsCallService: ChatsCallService = inject(ChatsCallService);
   startCall(participantId: number): void {
     const chatId = this.currentChat()?.id;
     if (!chatId) return;
 
+    this.chatsCallService.resetSignals();
+    
     this.callService.startCall(
       participantId,
       chatId,

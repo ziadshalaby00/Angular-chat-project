@@ -7,6 +7,7 @@ import {
 import { WebrtcService } from '../../services/webrtc-service/webrtc-service';
 import { ChatsService } from '../../services/chats-service/chats-service';
 import { CallService } from '../../services/call-service/call-service';
+import { CallSignalType, ChatsCallService, IncomingCallType } from '../../services/chats-call-service/chats-call-service';
 
 @Component({
   imports: [CommonModule],
@@ -18,7 +19,7 @@ export class CallingPage {
 
   private readonly webrtcService = inject(WebrtcService);
   private readonly chatsService = inject(ChatsService);
-  
+  private readonly chatsCallService = inject(ChatsCallService);
   readonly callService: CallService = inject(CallService);
 
   @ViewChild('remoteVideo') remoteVideoRef!: ElementRef<HTMLVideoElement>;
@@ -70,13 +71,32 @@ export class CallingPage {
       }
     });
 
-    effect(() => {
-      const lastCallSignal = this.chatsService.lastCallSignal;
+    effect(async () => {
+      const lastIceCandidate = this.chatsCallService.lastIceCandidate;
 
-      if (!lastCallSignal()) return;
-      this.handleSignal(lastCallSignal);
+      if (!lastIceCandidate()) return;
+      await this.handleIceCandidate(lastIceCandidate());
 
-      lastCallSignal.set(null);
+      lastIceCandidate.set(null);
+    });
+
+    effect(async () => {
+      const answerSignal = this.chatsCallService.answerSignal;
+
+      if (!answerSignal()) return;
+      await this.handleAnswerSignal(answerSignal());
+
+      answerSignal.set(null);
+    });
+
+    effect(async () => {
+      const endOrRejectSignal = this.chatsCallService.endOrRejectSignal;
+      console.log('endOrRejectSignal', endOrRejectSignal)
+
+      if(!endOrRejectSignal()) return;
+      this.handleEndOrRejectSignal(endOrRejectSignal());
+
+      endOrRejectSignal.set(null);
     });
 
     effect(() => {
@@ -94,8 +114,9 @@ export class CallingPage {
     });
   }
 
-  private async initializeCall(): Promise<void> {
-    console.log('initializeCall')
+  async initializeCall(): Promise<void> {
+    console.log('initialize Call')
+
     this.webrtcService.initialize((candidate) => {
       this.chatsService.sendCallSignal({
         type: 'call.ice_candidate',
@@ -108,6 +129,8 @@ export class CallingPage {
     this.webrtcService.attachLocalTracks();
 
     if (this.isCaller) {
+      console.log('this.isCaller')
+
       const offer = await this.webrtcService.createOffer();
 
       this.chatsService.sendCallSignal({
@@ -118,7 +141,9 @@ export class CallingPage {
         call_type: 'video',
       });
     } else {
-      const pendingOffer = this.chatsService.incomingCall();
+      console.log('this.isCallee')
+
+      const pendingOffer = this.chatsCallService.incomingCall();
 
       if (pendingOffer) {
         await this.webrtcService.setRemoteDescription(pendingOffer.sdp);
@@ -132,38 +157,35 @@ export class CallingPage {
         });
       }
 
-      this.chatsService.incomingCall.set(null);
+      this.chatsCallService.incomingCall.set(null);
     }
   }
 
-  private async handleSignal(signal: any): Promise<void> {
-    switch (signal.type) {
-      case 'call.offer':
-        await this.webrtcService.setRemoteDescription(signal.sdp);
-        const answer = await this.webrtcService.createAnswer();
-        this.chatsService.sendCallSignal({
-          type: 'call.answer',
-          to_user_id: signal.from_user_id,
-          sdp: answer,
-        });
-        break;
+  async handleIceCandidate(signal: CallSignalType | null) {
+    if(!signal || !signal.candidate) return;
 
-      case 'call.answer':
-        await this.webrtcService.setRemoteDescription(signal.sdp);
-        break;
+    console.log('handleIceCandidate');
 
-      case 'call.ice_candidate':
-        await this.webrtcService.addIceCandidate(signal.candidate);
-        break;
-
-      case 'call.end':
-      case 'call.reject':
-        console.log('recived end call')
-        this.callInitialized = false;
-        this.callService.endCallToMe();
-        break;
-    }
+    await this.webrtcService.addIceCandidate(signal.candidate);
   }
+
+  async handleAnswerSignal(signal: CallSignalType | null) {
+    if(!signal || !signal.sdp) return;
+
+    console.log('handleAnswerSignal');
+
+    await this.webrtcService.setRemoteDescription(signal.sdp);
+  }
+
+  handleEndOrRejectSignal(signal: CallSignalType | null) {
+    console.log('handleSignal end/reject')
+
+    if(!signal) return;
+
+    this.callInitialized = false;
+    this.callService.endCallToMe();
+  }
+
 
   toggleCamera(): void {
     this.webrtcService.toggleCamera();

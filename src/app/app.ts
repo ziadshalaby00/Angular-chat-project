@@ -8,6 +8,7 @@ import { ThemeService } from './services/theme-service/theme-service';
 import { Call } from './call-components/call/call';
 import { CallService } from './services/call-service/call-service';
 import { CallingPage } from './call-components/calling-page/calling-page';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -18,8 +19,9 @@ import { CallingPage } from './call-components/calling-page/calling-page';
     Alert,
     Footer,
     Call,
-    CallingPage
-  ],
+    CallingPage,
+    NgClass
+],
   templateUrl: './app.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './app.css'
