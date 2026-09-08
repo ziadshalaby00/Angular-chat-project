@@ -76,12 +76,14 @@ export class CallingPage {
     });
 
     effect(async () => {
-      const lastIceCandidate = this.chatsCallService.lastIceCandidate;
+      const IceCandidates = this.chatsCallService.IceCandidates;
 
-      if (!lastIceCandidate()) return;
-      await this.handleIceCandidate(lastIceCandidate());
+      if (!IceCandidates().length) return;
+      for(const ice of IceCandidates()) {
+        await this.handleIceCandidate(ice);
+      }
 
-      lastIceCandidate.set(null);
+      IceCandidates.set([]);
     });
 
     effect(async () => {

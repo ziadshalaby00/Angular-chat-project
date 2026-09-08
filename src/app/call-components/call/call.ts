@@ -1,8 +1,8 @@
-import { Component, computed, effect, inject, untracked } from '@angular/core';
+import { Component, effect, inject, untracked } from '@angular/core';
 import { Button, Card } from '@ziadshalaby/ngx-zs-component';
 import { CommonModule } from '@angular/common';
 import { UserAvatar } from '../../chats-components/user-avatar/user-avatar';
-import { ChatsService, ParticipantType } from '../../services/chats-service/chats-service';
+import { ChatsService } from '../../services/chats-service/chats-service';
 import { CallService } from '../../services/call-service/call-service';
 import { ChatsCallService } from '../../services/chats-call-service/chats-call-service';
 

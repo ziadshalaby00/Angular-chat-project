@@ -22,8 +22,7 @@ export class ChatsCallService {
     public readonly answerSignal =  signal<CallSignalType | null>(null);
     public readonly endOrRejectSignal =  signal<CallSignalType | null>(null);
 
-    public readonly lastIceCandidate = signal<CallSignalType | null>(null);
-    public readonly pendingIceCandidates = signal<CallSignalType[]>([]);
+    public readonly IceCandidates = signal<CallSignalType[]>([]);
 
     public readonly RemoteCamera = signal<boolean>(false);
 
@@ -57,35 +56,12 @@ export class ChatsCallService {
     }
 
     callIceCandidate(data: CallSignalType) {
-        console.log('Call IceCandidate');
-        if(this.lastIceCandidate() === null) {
-            console.log('Set Last Signal');
-            this.lastIceCandidate.set(data);
-            return;
-        }
-
-        console.log('Set Pending Signals');
-        this.pendingIceCandidates.update(signals => [...signals, data]);
+        this.IceCandidates.update(signals => [...signals, data]);
     }
 
     callEndOrReject(data: CallSignalType) {
         console.log('Call End Or Reject');
         this.endOrRejectSignal.set(data);
-    }
-
-    constructor() {
-        effect(() => {
-            const lastCallSignal = this.lastIceCandidate();
-            const pendingCallSignals = this.pendingIceCandidates;
-
-            untracked(() => {
-                if(lastCallSignal === null && pendingCallSignals().length) {
-                    console.log('Set Last Signal From Pending Signal');
-                    this.lastIceCandidate.set(pendingCallSignals()[0]);
-                    this.pendingIceCandidates.update(signals => signals.slice(1));
-                }
-            })
-        })
     }
 
     resetSignals() {
@@ -97,7 +73,6 @@ export class ChatsCallService {
         this.answerSignal.set(null);
         this.endOrRejectSignal.set(null)
 
-        this.lastIceCandidate.set(null);
-        this.pendingIceCandidates.set([]);
+        this.IceCandidates.set([]);
     }
 }
