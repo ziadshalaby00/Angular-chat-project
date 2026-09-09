@@ -19,7 +19,7 @@ export class ConfigService {
   })();
 
   private readonly localApiUrl: string = 'http://localhost:8000';
-  private readonly prodApiUrl: string = 'https://desktop-97l1ctr.tailc9493e.ts.net';
+  private readonly prodApiUrl: string = 'https://ziadshalaby00.dpdns.org';
 
   private readonly localWsProtocol: string = 'ws';
   private readonly prodWsProtocol: string = 'wss';
