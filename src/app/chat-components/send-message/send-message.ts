@@ -81,7 +81,13 @@ export class SendMessage {
       this.audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
       // Create MediaRecorder
-      this.mediaRecorder = new MediaRecorder(this.audioStream);
+      this.mediaRecorder = new MediaRecorder(
+        this.audioStream,
+        {
+          mimeType: 'audio/webm;codecs=opus',
+          audioBitsPerSecond: 24000
+        }
+      );
       this.audioChunks = [];
 
       this.mediaRecorder.ondataavailable = (event) => {
@@ -91,7 +97,7 @@ export class SendMessage {
       };
 
       this.mediaRecorder.onstop = () => {
-        const audioBlob = new Blob(this.audioChunks, { type: 'audio/webm' });
+        const audioBlob = new Blob(this.audioChunks, { type: 'audio/webm;codecs=opus' });
         this.recordedBlob.set(audioBlob);
       };
 
@@ -145,6 +151,7 @@ export class SendMessage {
   }
 
   onSend() {
+    this.sendMessageService.userSendMessage.set(true);
     this.sendMessageService.sendMessage(
       {
         text: this.message(),

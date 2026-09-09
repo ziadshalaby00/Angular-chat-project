@@ -3,6 +3,7 @@ import { ConfigService } from '../config-service/config-service';
 import { SharedUtils } from '../shared-service/shared-utils';
 import { ChatService, ResultType } from '../chat-service/chat-service';
 import { ChatsService } from '../chats-service/chats-service';
+import { CompressionService } from '../compression-service/compression-service';
 export interface MessageType {
   'text': string;
   'file': File[];
@@ -18,6 +19,8 @@ export class SendMessageService {
   private readonly chatService: ChatService = inject(ChatService);
   private readonly chatsService: ChatsService = inject(ChatsService);
 
+  private readonly compressionService: CompressionService = inject(CompressionService);
+
   readonly userSendMessage = signal<boolean>(false);
   readonly sendedMessage = signal<boolean>(false);
 
@@ -28,16 +31,17 @@ export class SendMessageService {
   private readonly fileMessagesURL = `${this.config.apiUrl}/api/file_message`;
   private readonly audioMessagesURL = `${this.config.apiUrl}/api/audio_message`;
 
-  public sendMessage(message: MessageType, chatId: number) {
+  public async sendMessage(message: MessageType, chatId: number) {
     const reply_to = this.replyToMessage()?.id;
-
-    this.userSendMessage.set(true);
 
     if(message.text) {
       this.sendTextMessage(message.text, chatId, reply_to)
     }else if(message.file.length !== 0) {
-      this.sendFileMessage(message.file[0], chatId, reply_to)
+      this.sendingCount.update(c => c + 1);
+      const file = await this.compressionService.compressFile(message.file[0]); 
+      this.sendFileMessage(file, chatId, reply_to)
     }else if(message.audio) {
+      this.sendingCount.update(c => c + 1);
       this.sendAudioMessage(message.audio, chatId, reply_to)
     }
   }
@@ -63,8 +67,6 @@ export class SendMessageService {
   }
 
   private sendFileMessage(file: File, chatId: number, reply_to: number | undefined) {
-    this.sendingCount.update(c => c + 1);
-
     const formData = new FormData();
     formData.append('file', file);
 
@@ -85,8 +87,6 @@ export class SendMessageService {
   }
 
   private sendAudioMessage(audio: Blob, chatId: number,  reply_to: number | undefined) {
-    this.sendingCount.update(c => c + 1);
-
     const formData = new FormData();
     formData.append('audio', audio);
     
