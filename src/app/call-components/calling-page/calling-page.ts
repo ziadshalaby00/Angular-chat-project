@@ -77,8 +77,10 @@ export class CallingPage {
 
     effect(async () => {
       const IceCandidates = this.chatsCallService.IceCandidates;
-
       if (!IceCandidates().length) return;
+
+      if (!this.webrtcService.peerConnection()) return;
+
       for(const ice of IceCandidates()) {
         await this.handleIceCandidate(ice);
       }

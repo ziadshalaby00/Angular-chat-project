@@ -77,15 +77,21 @@ export class WebrtcService {
   // ==================== Add ICE Candidate ==================== //
 
   async addIceCandidate(candidate: RTCIceCandidateInit): Promise<void> {
-    const peerConnection = this.peerConnection();
-    if (!peerConnection) return;
+      const peerConnection = this.peerConnection();
 
-    if (!this.remoteDescriptionSet) {
-      this.pendingIceCandidates.push(candidate);
-      return;
-    }
+      if (!peerConnection) {
+        console.log('%c[ICE] DROPPED — no peerConnection yet!', 'color:red;font-weight:bold', candidate);
+        return;
+      }
 
-    await peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+      if (!this.remoteDescriptionSet) {
+        console.log('%c[ICE] queued internally (remote desc not set)', 'color:yellow', candidate);
+        this.pendingIceCandidates.push(candidate);
+        return;
+      }
+
+      console.log('%c[ICE] applied successfully', 'color:lightgreen', candidate);
+      await peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
   }
 
   // ==================== Local Stream ==================== //
