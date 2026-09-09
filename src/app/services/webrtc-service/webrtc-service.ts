@@ -27,11 +27,24 @@ export class WebrtcService {
     this.remoteDescriptionSet = false;
 
     const peerConnection = new RTCPeerConnection({
-      iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],
+      iceServers: [
+        {
+          urls: 'stun:stun.l.google.com:19302',
+        },
+        {
+          urls: [
+            'turn:free.expressturn.com:3478?transport=udp',
+            'turn:free.expressturn.com:3478?transport=tcp',
+          ],
+          username: '000000002104315238',
+          credential: 'YKpm9Nl5CJqTllz+VikFWKASzqg=',
+        },
+      ],
     });
 
     peerConnection.onicecandidate = (event) => {
       if (event.candidate) {
+        console.log(event.candidate.candidate);
         onIceCandidate(event.candidate.toJSON());
       }
     };
