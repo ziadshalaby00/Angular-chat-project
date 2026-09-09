@@ -49,7 +49,7 @@ export class SendMessage {
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files) {
-      this.selectedFiles.set(Array.from(input.files));
+      this.selectedFiles.set([input.files[0]]);
       this.message.set('');
     }
     input.value = '';

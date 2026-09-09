@@ -53,7 +53,7 @@ hover:shadow-md transition-shadow duration-200 w-full h-full min-h-full">
         <i class="fas fa-arrow-up-from-bracket text-lg"></i>
         </button>
     }
-    <input #fileInput type="file" class="hidden" (change)="onFileSelected($event)" multiple>
+    <input #fileInput type="file" class="hidden" (change)="onFileSelected($event)">
 
     <!-- File Preview (replaces textarea when file selected) -->
     @if(selectedFiles().length > 0) {
