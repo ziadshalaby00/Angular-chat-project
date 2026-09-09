@@ -3,6 +3,8 @@ import { FileInput, Modal, Button, FilesType } from '@ziadshalaby/ngx-zs-compone
 import { AuthApi } from '../../services/auth-services/auth-api';
 import { Or } from '../../other-components/or/or';
 import { form, FormField, readonly, required } from '@angular/forms/signals';
+import { CompressionService } from '../../services/compression-service/compression-service';
+import { SharedUtils } from '../../services/shared-service/shared-utils';
 
 @Component({
   selector: 'app-profile-edit-user-img',
@@ -13,6 +15,7 @@ import { form, FormField, readonly, required } from '@angular/forms/signals';
 })
 export class ProfileEditUserImg {
   readonly authApi: AuthApi = inject(AuthApi);
+  private readonly compressionService: CompressionService = inject(CompressionService);
   
   readonly handleCloseSuccess = input<(modalToClose?: WritableSignal<boolean>) => void>()
   readonly handleCloseFail = input<() => void>()
@@ -32,14 +35,14 @@ export class ProfileEditUserImg {
     readonly(schema.user_image, {when: () => this.authApi.updateProfileLoading()})
   })
 
-  editImgProfile() {
+  readonly sharedUtils: SharedUtils = inject(SharedUtils);
+  async editImgProfile() {
     this.EditImgForm().markAsTouched();
 
     const invalid = this.EditImgForm().invalid();
     if(invalid) return;
 
     const data = this.EditImgModel().user_image.values().next().value?.file;
-    console.log(data);
 
     if (!data) {
       this.handleCloseSuccess()?.(this.openEditImgModal);
@@ -47,8 +50,10 @@ export class ProfileEditUserImg {
     }
     
     this.authApi.updateProfileLoading.set(true);
+    const finalImage = await this.compressionService.compressFile(data);
+
     this.authApi.updateProfile(
-      {user_image: data},
+      {user_image: finalImage},
       () => this.handleCloseSuccess()?.(this.openEditImgModal),
       this.handleCloseFail()
     );

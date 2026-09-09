@@ -1,5 +1,6 @@
-import { Component, input, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, input, signal, ChangeDetectionStrategy, inject } from '@angular/core';
 import { File_message } from '../../services/chat-service/chat-service';
+import { SharedUtils } from '../../services/shared-service/shared-utils';
 
 @Component({
   selector: 'app-file',
@@ -10,6 +11,7 @@ import { File_message } from '../../services/chat-service/chat-service';
 })
 export class FileComp {
   readonly file_message = input.required<File_message>();
+  readonly sharedUtils: SharedUtils = inject(SharedUtils);
 
   getFileCategory(fileType: string): 'image' | 'video' | 'audio' | 'pdf' | 'document' | 'code' | 'archive' | 'unknown' {
     if (!fileType) return 'unknown';
@@ -51,12 +53,6 @@ export class FileComp {
     }
 
     return 'unknown';
-  }
-
-  formatFileSize(size: number): string {
-    if (size < 1024) return `${size} B`;
-    if (size < 1024 * 1024) return `${(size / 1024).toFixed(1)} KB`;
-    return `${(size / (1024 * 1024)).toFixed(1)} MB`;
   }
 
   readonly isImageZoomOpen = signal(false);

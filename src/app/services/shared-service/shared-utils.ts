@@ -39,6 +39,28 @@ export class SharedUtils {
     this.alertService.bulkAlert(errors, { type: 'danger' });
   }
 
+  public formatFileSize(bytes: number, decimals: number = 1): string {
+    if (!Number.isFinite(bytes) || bytes < 0) {
+      return '0 B';
+    }
+
+    if (bytes === 0) {
+      return '0 B';
+    }
+
+    const units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
+    const k = 1024;
+
+    const index = Math.min(
+      Math.floor(Math.log(bytes) / Math.log(k)),
+      units.length - 1
+    );
+
+    const value = bytes / Math.pow(k, index);
+
+    return `${parseFloat(value.toFixed(decimals))} ${units[index]}`;
+  }
+
   public extractCSRFToken(): string | null {
     const name = 'csrftoken=';
     const decodedCookie = decodeURIComponent(document.cookie);

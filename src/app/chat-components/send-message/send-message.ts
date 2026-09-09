@@ -1,5 +1,6 @@
 import { Component, ElementRef, inject, input, signal, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { SendMessageService } from '../../services/send-message/send-message';
+import { SharedUtils } from '../../services/shared-service/shared-utils';
 
 @Component({
   selector: 'app-send-message',
@@ -10,6 +11,8 @@ import { SendMessageService } from '../../services/send-message/send-message';
 })
 export class SendMessage {
   readonly sendMessageService: SendMessageService = inject(SendMessageService);
+  readonly sharedUtils: SharedUtils = inject(SharedUtils);
+  
   readonly chatId = input.required<number>();
 
   readonly messageInput = viewChild<ElementRef<HTMLTextAreaElement>>('messageInput');
@@ -64,14 +67,6 @@ export class SendMessage {
     if (type.includes('pdf')) return 'fas fa-file-pdf';
     if (type.includes('text')) return 'fas fa-file-lines';
     return 'fas fa-file';
-  }
-
-  formatFileSize(bytes: number): string {
-    if (bytes === 0) return '0 B';
-    const k = 1024;
-    const sizes = ['B', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
   }
 
   // ====== Real Audio Recording Methods ======
