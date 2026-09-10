@@ -124,6 +124,9 @@ export class ChatsService {
         this.chatsCallService.RemoteCamera.set(data.state);
         console.log(data);
       }
+      if (data.type === 'microphone') {                          // ⬅️ جديد
+        this.chatsCallService.RemoteMicrophone.set(data.state);
+      }
     };
   }
 

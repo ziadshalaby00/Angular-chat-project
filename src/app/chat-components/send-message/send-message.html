@@ -97,6 +97,7 @@ hover:shadow-md transition-shadow duration-200 w-full h-full min-h-full">
             <textarea
                 #messageInput
                 (input)="onInput($event)"
+                (keydown)="onKeyDown($event)"
                 [value]="message()"
                 [placeholder]="recordedBlob() ? '' : 'Write your message...'"
                 rows="1"

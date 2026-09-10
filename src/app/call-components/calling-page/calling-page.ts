@@ -202,7 +202,12 @@ export class CallingPage {
   }
 
   toggleMicrophone(): void {
-    this.webrtcService.toggleMicrophone();
+    const state = this.webrtcService.toggleMicrophone();
+    this.chatsService.sendCallSignal({
+      type: 'microphone',
+      to_user_id: this.toUserId,
+      state: state
+    });
   }
 
   switchCamera(): void {

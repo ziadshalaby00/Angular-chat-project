@@ -69,6 +69,13 @@ export class SendMessage {
     return 'fas fa-file';
   }
 
+  onKeyDown(event: KeyboardEvent) {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      this.onSend();
+    }
+  }
+
   // ====== Real Audio Recording Methods ======
   async startRecording() {
     try {

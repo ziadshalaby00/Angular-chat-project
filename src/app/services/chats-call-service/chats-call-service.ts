@@ -25,6 +25,7 @@ export class ChatsCallService {
     public readonly IceCandidates = signal<CallSignalType[]>([]);
 
     public readonly RemoteCamera = signal<boolean>(false);
+    public readonly RemoteMicrophone = signal<boolean>(true);
 
     setToCall(data: IncomingCallType | CallSignalType, type:  | CallSignalType['type'] | 'call.offer') {
         switch(type) {

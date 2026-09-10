@@ -185,7 +185,7 @@ export class WebrtcService {
 
   // ==================== Toggle Microphone ==================== //
 
-  toggleMicrophone(): void {
+  toggleMicrophone(): boolean | undefined {
     const stream = this.localStream();
     if (!stream) {
       return;
@@ -202,6 +202,7 @@ export class WebrtcService {
     });
 
     this.isMicrophoneEnabled.set(nextEnabled);
+    return nextEnabled;
   }
 
 
