@@ -199,8 +199,8 @@ overflow-hidden bg-slate-950 dark:bg-black"
 
     @if (remoteStream()) {
         <div class="absolute bottom-3 left-3 
-        w-12 h-12 rounded-full flex items-center justify-center 
-        text-lg transition-all duration-200 shadow-lg"
+        sm:w-12 sm:h-12 w-8 h-8 rounded-full flex items-center justify-center 
+        sm:text-lg text-sm transition-all duration-200 shadow-lg"
         [ngClass]="chatsCallService.RemoteMicrophone() 
         ? 'bg-slate-700/90 text-white' 
         : 'bg-red-600/90 text-white'">
