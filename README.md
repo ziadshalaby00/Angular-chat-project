@@ -2,8 +2,8 @@
 
 A modern, secure, and fully-featured real-time communication platform built with **Angular 20**. Proton goes beyond standard messaging with a **fully integrated WebRTC video/audio calling system**, real-time WebSocket messaging, rich media sharing, and a polished responsive UI.
 
-<img height="200"   alt="Proton-05-02-2026_05_58_PM" src="https://github.com/user-attachments/assets/0a644c7c-6b78-42ec-a296-71f414452028" />
 <img height="200"   alt="Proton-05-02-2026_06_00_PM" src="https://github.com/user-attachments/assets/33ad3147-0e54-4c2b-a11c-54b0c10f8335" />
+<img height="200"   alt="Proton-05-02-2026_05_58_PM" src="https://github.com/user-attachments/assets/0a644c7c-6b78-42ec-a296-71f414452028" />
 <img height="200"   alt="Proton-05-02-2026_05_53_PM" src="https://github.com/user-attachments/assets/0c57b9da-249e-4fbc-b7a6-8c26e48999af" />
 
 ---
