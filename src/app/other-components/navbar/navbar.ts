@@ -35,7 +35,7 @@ export class NavbarComp {
     }
   }
 
-  readonly logoUrl: string = 'https://i.postimg.cc/MpzpyjF1/android-chrome-512x512-proton.png';
+  readonly logoUrl: string = 'favicon/web-app-manifest-512x512.png';
 
   readonly isMobileMenuOpen = model<boolean>(false);
   readonly isUserMenuOpen = signal<boolean>(false);
