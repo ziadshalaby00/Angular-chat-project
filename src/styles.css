@@ -23,3 +23,20 @@ a, button {
 .message-highlight {
   animation: highlight-pulse 1.5s ease-in-out;
 }
+
+nav[aria-label="Main Navigation"] a[aria-label="Homepage"] img[alt="Proton"] {
+  height: 42px !important;
+  width: auto !important;
+}
+
+@media (min-width: 640px) {  /* sm */
+  nav[aria-label="Main Navigation"] a[aria-label="Homepage"] img[alt="Proton"] {
+    height: 60px !important;
+  }
+}
+
+@media (min-width: 1024px) { /* lg */
+  nav[aria-label="Main Navigation"] a[aria-label="Homepage"] img[alt="Proton"] {
+    height: 72px !important;
+  }
+}
