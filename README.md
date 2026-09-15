@@ -144,12 +144,4 @@ Proton features a complete, production-ready WebRTC implementation for seamless 
 
 ---
 
-## 📜 License
-
-Developed entirely by **Ziad Shalaby** ([@ziadshalaby00](https://github.com/ziadshalaby00)).
-
-This project is licensed under the **ISC License**.
-
----
-
 **Made with ❤️ by Ziad Shalaby**
