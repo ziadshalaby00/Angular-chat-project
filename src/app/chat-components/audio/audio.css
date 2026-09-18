@@ -1,16 +1,16 @@
 /* audio.component.css */
 
 .audio-message-container {
-  direction: ltr; /* عشان الwaveform يشتغل صح */
+  direction: ltr; 
 }
 
 .waveform-wrapper {
-  touch-action: none; /* منع scroll لما المستخدم يseek على الموبايل */
+  touch-action: none;
 }
 
 .waveform-bar {
-  width: calc(100% / 30); /* عدد الـ bars */
-  min-width: 0; /* مهم */
+  width: calc(100% / 30);
+  min-width: 0;
   border-radius: 9999px;
   transition: height 0.3s ease, background-color 0.2s ease;
 }
@@ -19,7 +19,6 @@
   background-color: #06b6d4 !important; /* cyan-500 */
 }
 
-/* Animation للbars لما يبقى playing */
 @keyframes sound-wave {
   0%, 100% { transform: scaleY(1); }
   50% { transform: scaleY(1.3); }
