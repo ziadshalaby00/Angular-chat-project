@@ -36,8 +36,8 @@ export class WebrtcService {
             'turn:free.expressturn.com:3478?transport=udp',
             'turn:free.expressturn.com:3478?transport=tcp',
           ],
-          username: '000000002104315238',
-          credential: 'YKpm9Nl5CJqTllz+VikFWKASzqg=',
+          username: '000000002104678516',
+          credential: 'FPO6GTN+TrAZtoH4hRWFPxUqhpw=',
         },
       ],
     });
